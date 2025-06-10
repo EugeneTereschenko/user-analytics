@@ -31,20 +31,19 @@ interface SummaryApiResponse {
   `
 })
 export class DashboardComponent implements OnInit {
-  summary: any;
+  summary: { users: number; active: number } | null = null;
   signupData: number[] = [];
   deviceData: any = {};
 
   constructor(private analyticsService: AnalyticsService) {}
 
   ngOnInit() {
-    this.analyticsService.getSummary().subscribe(data => {
-    // Map API response to expected input
-    this.summary = {
-      users: data.totalUsers,
-      active: data.activeUsers
-    };
-  });
+    this.analyticsService.getSummary().subscribe((data: SummaryApiResponse) => {
+      this.summary = {
+        users: data.totalUsers,
+        active: data.activeUsers
+      };
+    });
     this.analyticsService.getSignups().subscribe(data => this.signupData = data);
     this.analyticsService.getDevices().subscribe(data => this.deviceData = data);
   }
