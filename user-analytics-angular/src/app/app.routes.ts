@@ -4,7 +4,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
-    {
+  {
     path: 'users',
     loadComponent: () =>
       import('./pages/user-list/user-list.component').then(m => m.UserListComponent)
@@ -13,5 +13,11 @@ export const routes: Routes = [
     path: 'reports',
     loadComponent: () =>
       import('./pages/reports/reports.component').then(m => m.ReportsComponent)
-  }
+  },
+  {
+  path: 'profile',
+  loadComponent: () =>
+    import('./pages/profile/profile.component').then(m => m.ProfileComponent)
+ }
+
 ];
