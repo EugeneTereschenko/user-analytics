@@ -13,11 +13,6 @@ export const routes: Routes = [
     path: 'reports',
     loadComponent: () =>
       import('./pages/reports/reports.component').then(m => m.ReportsComponent)
-  },
-  {
-  path: 'profile',
-  loadComponent: () =>
-    import('./pages/profile/profile.component').then(m => m.ProfileComponent)
- }
+  }
 
 ];
