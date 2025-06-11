@@ -14,5 +14,4 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/reports/reports.component').then(m => m.ReportsComponent)
   }
-
 ];
