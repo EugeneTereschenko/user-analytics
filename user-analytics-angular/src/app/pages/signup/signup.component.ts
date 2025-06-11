@@ -2,6 +2,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -152,12 +153,14 @@ import { FormsModule } from '@angular/forms';
   `
 })
 export class SignupComponent {
+  
   email = '';
   password = '';
   confirmPassword = '';
 
   errorMessage = '';
   successMessage = '';
+  constructor(private authService: AuthService) {}
 
   signUp() {
     this.errorMessage = '';
@@ -171,5 +174,10 @@ export class SignupComponent {
     // Simulate API call
     console.log('Signing up user:', this.email);
     this.successMessage = 'Signup successful!';
+
+    this.authService.signUp(this.email, this.password, this.confirmPassword).subscribe({
+      next: () => this.successMessage = 'Signup successful!',
+      error: err => this.errorMessage = err.error.message || 'Signup failed'
+    });
   }
 }

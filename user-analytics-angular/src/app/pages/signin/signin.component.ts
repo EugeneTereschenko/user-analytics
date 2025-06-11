@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-signin',
@@ -100,18 +101,21 @@ export class SigninComponent {
   email = '';
   password = '';
 
+    constructor(private authService: AuthService) {}
+
   signIn() {
     console.log('Signing in:', this.email, this.password);
     // Call AuthService.login() here
+
+    this.authService.signIn(this.email, this.password).subscribe({
+      next: (response) => {
+        console.log('Sign in successful:', response);
+        // Handle successful sign-in, e.g., redirect to dashboard
+      },
+      error: (error) => {
+        console.error('Sign in failed:', error);
+        // Handle sign-in error, e.g., show an error message
+      }
+    });
   }
 }
-
-/*
-    <h2>Sign In</h2>
-    <form (ngSubmit)="signIn()">
-      <label>Email: <input [(ngModel)]="email" name="email"></label><br>
-      <label>Password: <input [(ngModel)]="password" type="password" name="password"></label><br>
-      <button type="submit">Sign In</button>
-    </form>
-
-*/
