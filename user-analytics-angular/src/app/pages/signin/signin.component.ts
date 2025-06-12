@@ -30,9 +30,15 @@ import { AuthService } from '../../auth.service';
             .rounded-bl-lg-5 {
               border-bottom-left-radius: 0.5rem;
           }
+
+            .signin-card-max-width {
+              max-width: 1000px;
+              margin-left: auto;
+              margin-right: auto;
+          }
         }
         </style>
-        <div class="card mb-3">
+        <div class="card mb-3 signin-card-max-width">
           <div class="row g-0 d-flex align-items-center">
             <div class="col-lg-4 d-none d-lg-flex">
               <img src="https://mdbootstrap.com/img/new/ecommerce/vertical/004.jpg" alt="Trendy Pants and Shoes"
