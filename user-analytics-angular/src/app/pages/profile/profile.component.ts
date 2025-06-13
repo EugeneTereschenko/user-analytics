@@ -5,14 +5,18 @@ import { CommonModule } from '@angular/common';
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule],
-  template: `
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.css'
+ })
+export class ProfileComponent {}
+
+
+/*
     <h2>My Profile</h2>
     <div class="card">
       <p><strong>Name:</strong> Jane Admin</p>
       <p><strong>Email:</strong> jane&#64;example.com</p>
       <p><strong>Role:</strong> Administrator</p>
     </div>
-  `
-})
-export class ProfileComponent {}
+*/
 

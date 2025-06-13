@@ -6,7 +6,7 @@ export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
   path: 'dashboard',
-  //canActivate: [authGuard],
+  canActivate: [authGuard],
   loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
@@ -28,6 +28,12 @@ export const routes: Routes = [
   path: 'signup',
   loadComponent: () =>
     import('./pages/signup/signup.component').then(m => m.SignupComponent)
+  },
+  {
+  path: 'profile',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/profile/profile.component').then(m => m.ProfileComponent)
   }
 
 ];
