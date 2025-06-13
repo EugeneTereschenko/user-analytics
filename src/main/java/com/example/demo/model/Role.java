@@ -11,11 +11,19 @@ import static jakarta.persistence.GenerationType.AUTO;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Role {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
     private String name;
+
+    public Role() {
+    }
+    public Role(String name) {
+        this.name = name;
+    }
+    public Role(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

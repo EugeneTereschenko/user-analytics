@@ -1,18 +1,26 @@
 package com.example.demo.dto;
 
+import lombok.ToString;
+
+import java.util.Collection;
+
+@ToString
 public class UserRequestDTO {
 
     private String username;
     private String email;
     private String password;
+    private Collection<String> roles; // Add roles field
+
 
     public UserRequestDTO() {
     }
 
-    public UserRequestDTO(String username, String email, String password) {
+    public UserRequestDTO(String username, String email, String password, Collection<String> roles) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.roles = roles; // Initialize roles
     }
 
     public String getUsername() {
@@ -39,6 +47,13 @@ public class UserRequestDTO {
         this.password = password;
     }
 
+    public Collection<String> getRoles() {
+        return roles;
+    }
+    public void setRoles(Collection<String> roles) {
+        this.roles = roles;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -47,6 +62,7 @@ public class UserRequestDTO {
         private String username;
         private String email;
         private String password;
+        private Collection<String> roles;
 
         public Builder username(String username) {
             this.username = username;
@@ -63,8 +79,13 @@ public class UserRequestDTO {
             return this;
         }
 
+        public Builder roles(Collection<String> roles) {
+            this.roles = roles;
+            return this;
+        }
+
         public UserRequestDTO build() {
-            return new UserRequestDTO(username, email, password);
+            return new UserRequestDTO(username, email, password, roles);
         }
     }
 }
