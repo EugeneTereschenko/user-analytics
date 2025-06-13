@@ -104,8 +104,10 @@ import { AuthService } from '../../auth.service';
   `
 })
 export class SigninComponent {
+  username = '';
   email = '';
   password = '';
+  roles: string[] = ['ROLE_USER']; // Default roles, can be modified as needed
 
     constructor(private authService: AuthService) {}
 
@@ -113,7 +115,7 @@ export class SigninComponent {
     console.log('Signing in:', this.email, this.password);
     // Call AuthService.login() here
 
-    this.authService.signIn(this.email, this.password).subscribe({
+    this.authService.signIn(this.username, this.email, this.password, this.roles).subscribe({
       next: (response) => {
         console.log('Sign in successful:', response);
         // Handle successful sign-in, e.g., redirect to dashboard
