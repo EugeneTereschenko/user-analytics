@@ -153,10 +153,13 @@ import { AuthService } from '../../auth.service';
   `
 })
 export class SignupComponent {
-  
+  firstName = '';
+  lastName = '';
+  username = '';
   email = '';
   password = '';
   confirmPassword = '';
+  roles: string[] = ['ROLE_USER'];
 
   errorMessage = '';
   successMessage = '';
@@ -171,11 +174,15 @@ export class SignupComponent {
       return;
     }
 
+    if (!this.firstName || !this.lastName){
+      this.username = this.firstName + ' ' + this.lastName;
+    }
+
     // Simulate API call
     console.log('Signing up user:', this.email);
     this.successMessage = 'Signup successful!';
 
-    this.authService.signUp(this.email, this.password, this.confirmPassword).subscribe({
+    this.authService.signUp(this.username, this.email, this.password, this.confirmPassword, this.roles).subscribe({
       next: () => this.successMessage = 'Signup successful!',
       error: err => this.errorMessage = err.error.message || 'Signup failed'
     });
