@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .roles(user.getRoles().stream().map(Object::toString).toArray(String[]::new))
+                .authorities(user.getRoles().stream()
+                        .map(Role::getName)  // Should return strings like "ROLE_USER"
+                        .toArray(String[]::new))
                 .build();
     }
 }
