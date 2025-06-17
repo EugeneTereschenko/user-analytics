@@ -39,6 +39,9 @@ export class AuthService {
     { username, email, password, roles }
   ).pipe(
     tap(response => {
+      console.log('Authentication token received:', response.token);
+      // Store the token in localStorage
+      console.log('tokenKey ', this.tokenKey);
       localStorage.setItem(this.tokenKey, response.token);
     })
   );
