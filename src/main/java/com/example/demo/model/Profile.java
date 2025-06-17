@@ -1,20 +1,23 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "profile")
+@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Version
+    private Long version;
 
     @Column(name = "firstname", length = 255)
     private String firstName;
@@ -31,21 +34,6 @@ public class Profile {
     @Column(name = "shippingAddress", length = 255)
     private String shippingAddress;
 
-    @ManyToOne
-    @JoinColumn(name = "card_id")
-    private Card card;
-
-    @ManyToOne
-    @JoinColumn(name = "details_id")
-    private Details details;
-
-    @ManyToMany
-    @JoinTable(
-            name = "profile_image",
-            joinColumns = @JoinColumn(name = "profile_id"),
-            inverseJoinColumns = @JoinColumn(name = "image_id")
-    )
-    private Set<Image> image;
 
     private Profile(Builder builder) {
         this.id = builder.id;
@@ -54,8 +42,6 @@ public class Profile {
         this.phoneNumber = builder.phoneNumber;
         this.address = builder.address;
         this.shippingAddress = builder.shippingAddress;
-        this.card = builder.card;
-        this.image = builder.image != null ? builder.image : new HashSet<>();
     }
 
     public static class Builder {
@@ -65,8 +51,6 @@ public class Profile {
         private String phoneNumber;
         private String address;
         private String shippingAddress;
-        private Card card;
-        private Set<Image> image;
 
         public Builder id(Long id) {
             this.id = id;
@@ -98,15 +82,6 @@ public class Profile {
             return this;
         }
 
-        public Builder card(Card card) {
-            this.card = card;
-            return this;
-        }
-
-        public Builder image(Set<Image> image) {
-            this.image = image;
-            return this;
-        }
 
         public Profile build() {
             return new Profile(this);
