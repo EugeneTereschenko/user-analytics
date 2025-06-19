@@ -6,7 +6,7 @@ export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
   path: 'dashboard',
-  //canActivate: [authGuard],
+  canActivate: [authGuard],
   loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
@@ -28,6 +28,53 @@ export const routes: Routes = [
   path: 'signup',
   loadComponent: () =>
     import('./pages/signup/signup.component').then(m => m.SignupComponent)
-  }
-
+  },
+  {
+  path: 'profile',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/profile/profile.component').then(m => m.ProfileComponent)
+  },
+  {
+  path: 'editprofile',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/edit-profile/edit-profile.component').then(m => m.EditProfileComponent)
+  },
+  {
+  path: 'editdetailsprofile',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/edit-details-profile/edit-details-profile.component').then(m => m.EditDetailsProfileComponent)
+  },
+  {
+  path: 'editskillsprofile',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/edit-skills-profile/edit-skills-profile.component').then(m => m.EditSkillsProfileComponent)
+  },
+  {
+  path: 'editcertificatesprofile',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/edit-certificates-profile/edit-certificates-profile.component').then(m => m.EditCertificatesProfileComponent) 
+  },
+  {
+  path: 'editeducationprofile',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/edit-education-profile/edit-education-profile.component').then(m => m.EditEducationProfileComponent)
+  },
+  {
+   path: 'editexperienceprofile',
+   canActivate: [authGuard],
+   loadComponent: () =>
+     import('./pages/edit-experience-profile/edit-experience-profile.component').then(m => m.EditExperienceProfileComponent)
+  },
+  {
+  path: 'editprojectsprofile',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/edit-projects-profile/edit-projects-profile.component').then(m => m.EditProjectsProfileComponent)
+  }   
 ];
