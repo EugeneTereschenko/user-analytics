@@ -52,5 +52,29 @@ export const routes: Routes = [
   canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/edit-skills-profile/edit-skills-profile.component').then(m => m.EditSkillsProfileComponent)
-  }
+  },
+  {
+  path: 'editcertificatesprofile',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/edit-certificates-profile/edit-certificates-profile.component').then(m => m.EditCertificatesProfileComponent) 
+  },
+  {
+  path: 'editeducationprofile',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/edit-education-profile/edit-education-profile.component').then(m => m.EditEducationProfileComponent)
+  },
+  {
+   path: 'editexperienceprofile',
+   canActivate: [authGuard],
+   loadComponent: () =>
+     import('./pages/edit-experience-profile/edit-experience-profile.component').then(m => m.EditExperienceProfileComponent)
+  },
+  {
+  path: 'editprojectsprofile',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/edit-projects-profile/edit-projects-profile.component').then(m => m.EditProjectsProfileComponent)
+  }   
 ];

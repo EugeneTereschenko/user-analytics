@@ -1,13 +1,20 @@
-<nav>
-  <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-  <a routerLink="/profile" routerLinkActive="active">Profile</a>
-  <a routerLink="/editprofile" routerLinkActive="active">Edit-profile</a>
-  <a routerLink="/editdetailsprofile" routerLinkActive="active">Edit-details-profile</a>
-  <a routerLink="/editskillsprofile" routerLinkActive="active">Edit-skills-profile</a>
-  <a routerLink="/users" routerLinkActive="active">Users</a>
-  <a routerLink="/reports" routerLinkActive="active">Reports</a>
-  <a routerLink="/signin" routerLinkActive="active">Sign In</a>
-  <a routerLink="/signup" routerLinkActive="active">Sign Up</a>
-</nav>
 <router-outlet></router-outlet>
+<nav>
+  <ul>
+  <li><a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a></li>
+  <li><a routerLink="/profile" routerLinkActive="active">Profile</a></li>
+  <li><a routerLink="/editprofile" routerLinkActive="active">Edit-profile</a></li>
+  <li><a routerLink="/editdetailsprofile" routerLinkActive="active">Edit-details-profile</a></li>
+  <li><a routerLink="/editskillsprofile" routerLinkActive="active">Edit-skills-profile</a></li>
+  <li><a routerLink="/editexperienceprofile" routerLinkActive="active">Edit-experience-profile</a></li>
+  <li><a routerLink="/editeducationprofile" routerLinkActive="active">Edit-education</a></li>
+  <li><a routerLink="/editprojectsprofile" routerLinkActive="active">Edit-projects-profile</a></li>
+  <li><a routerLink="/editcertificatesprofile" routerLinkActive="active">Edit-certificates-profile</a></li>
+  <li><a routerLink="/users" routerLinkActive="active">Users</a></li>
+  <li><a routerLink="/reports" routerLinkActive="active">Reports</a></li>
+  <li><a routerLink="/signin" routerLinkActive="active">Sign In</a></li>
+  <li><a routerLink="/signup" routerLinkActive="active">Sign Up</a></li>
+  </ul>
+</nav>
+
 
