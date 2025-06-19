@@ -68,33 +68,33 @@
                 <div class="row pt-1">
                     <div class="col">
                         <h6>Role:</h6>
-                        <input type="text" class="form-control" placeholder="Role:" value="">
+                        <input type="text" class="form-control" placeholder="Role:" ([ngModel)]="roleName">
                     </div>
                 </div>
                 <div class="row pt-1">
                     <div class="col">
                         <h6>Date From:</h6>
-                        <input type="text" class="form-control" placeholder="Date From:" value="">
+                        <input type="text" class="form-control" placeholder="Date From:" ([ngModel)]="dateFrom">
                     </div>
                     <div class="col">
                         <h6>Date To:</h6>
-                        <input type="text" class="form-control" placeholder="Date To:" value="">
+                        <input type="text" class="form-control" placeholder="Date To:" ([ngModel)]="dateTo">
                     </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col">
                     <h6>Company:</h6>
-                    <input type="text" class="form-control" placeholder="Company:" value="">
+                    <input type="text" class="form-control" placeholder="Company:" ([ngModel)]="companyName">
                   </div>
                   <div class="col">
                     <h6>Country, City:</h6>
-                    <input type="text" class="form-control" placeholder="Country, City:" value="">
+                    <input type="text" class="form-control" placeholder="Country, City:" ([ngModel)]="countryCity">
                   </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col">
                     <h6>Service:</h6>
-                    <textarea class="form-control" rows="5" id="profile-experience-servcie"></textarea>
+                    <textarea class="form-control" rows="5" id="profile-experience-servcie" ([ngModel)]="service"></textarea>
                   </div>
                 </div>
                 <div class="row pt-1">
@@ -102,7 +102,11 @@
                     <button type="button" class="btn btn-lg btn-primary" disabled>Refresh</button>
                   </div>
                   <div class="col-6 mb-3">
-                    <button type="button" class="btn btn-lg btn-primary" disabled>Update</button>
+                    <button type="button" class="btn btn-lg btn-primary"
+                            [disabled]="!roleName || !dateFrom || !dateTo || !companyName || !countryCity || !service"
+                            (click)="updateExperience()">
+                      Update
+                    </button>
                   </div>
                 </div>
                 <h6>Experience</h6>

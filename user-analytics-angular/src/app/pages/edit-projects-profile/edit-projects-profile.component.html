@@ -68,23 +68,23 @@
                 <div class="row pt-1">
                     <div class="col">
                         <h6>Project:</h6>
-                        <input type="text" class="form-control" placeholder="Project:" value="">
+                        <input type="text" class="form-control" placeholder="Project:" ([ngModel)]="projectName">
                     </div>
                 </div>
                 <div class="row pt-1">
                     <div class="col">
                         <h6>Date From:</h6>
-                        <input type="text" class="form-control" placeholder="Date From:" value="">
+                        <input type="text" class="form-control" placeholder="Date From:" ([ngModel)]="dateFrom">
                     </div>
                     <div class="col">
                         <h6>Date To:</h6>
-                        <input type="text" class="form-control" placeholder="Date To:" value="">
+                        <input type="text" class="form-control" placeholder="Date To:" ([ngModel)]="dateTo">
                     </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col">
                     <h6>Structure:</h6>
-                    <textarea class="form-control" rows="5" id="profile-experience-servcie"></textarea>
+                    <textarea class="form-control" rows="5" id="profile-experience-servcie" [(ngModel)]="structure"></textarea>
                   </div>
                 </div>
                 <div class="row pt-1">
@@ -92,7 +92,9 @@
                     <button type="button" class="btn btn-lg btn-primary" disabled>Refresh</button>
                   </div>
                   <div class="col-6 mb-3">
-                    <button type="button" class="btn btn-lg btn-primary" disabled>Update</button>
+                    <button type="button" class="btn btn-lg btn-primary"
+                    [disabled]="!projectName || !dateFrom || !dateTo || !structure"
+                    (click)="updateProjects()">Update</button>
                   </div>
                 </div>
                 <h6>Experience</h6>

@@ -68,25 +68,25 @@
                 <div class="row pt-1">
                     <div class="col">
                         <h6>Notification</h6>
-                        <input type="text" class="form-control" placeholder="Notification" value="">
+                        <input type="text" class="form-control" placeholder="Notification" [(ngModel)]="notification">
                     </div>
                 </div>
                 <div class="row pt-1">
                     <div class="col">
                         <h6>Message</h6>
-                        <input type="text" class="form-control" placeholder="Message" value="">
+                        <input type="text" class="form-control" placeholder="Message" [(ngModel)]="message">
                     </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col">
                     <h6>Staff</h6>
-                    <input type="text" class="form-control" placeholder="Staff" value="">
+                    <input type="text" class="form-control" placeholder="Staff" [(ngModel)]="staff">
                   </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col">
                     <h6>Bio</h6>
-                        <textarea class="form-control" rows="2" id="profile-username"></textarea>
+                        <textarea class="form-control" rows="2" id="profile-username" [(ngModel)]="bio"></textarea>
                   </div>
                 </div>
                 <div class="row pt-1">
@@ -94,7 +94,9 @@
                     <button type="button" class="btn btn-lg btn-primary" disabled>Refresh</button>
                   </div>
                   <div class="col-6 mb-3">
-                    <button type="button" class="btn btn-lg btn-primary" disabled>Update</button>
+                    <button type="button" class="btn btn-lg btn-primary"
+                            [disabled]="!notification || !message || !staff || !bio"
+                            (click)="updateDetails()">Update</button>
                   </div>
                 </div>
                 <h6>Projects</h6>

@@ -68,37 +68,37 @@
                 <div class="row pt-1">
                     <div class="col">
                         <h6>Programming Languages:</h6>
-                        <input type="text" class="form-control" placeholder="Programming Languages:" value="">
+                        <input type="text" class="form-control" placeholder="Programming Languages:" [(ngModel)]="programmingLanguages">
                     </div>
                 </div>
                 <div class="row pt-1">
                     <div class="col">
                         <h6>Web Frameworks:</h6>
-                        <input type="text" class="form-control" placeholder="Web Frameworks:" value="">
+                        <input type="text" class="form-control" placeholder="Web Frameworks:" [(ngModel)]="webFrameworks">
                     </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col">
                     <h6>DevOps:</h6>
-                    <input type="text" class="form-control" placeholder="DevOps:" value="">
+                    <input type="text" class="form-control" placeholder="DevOps:" [(ngModel)]="devOps">
                   </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col">
                     <h6>SQL:</h6>
-                    <input type="text" class="form-control" placeholder="SQL:" value="">
+                    <input type="text" class="form-control" placeholder="SQL:" [(ngModel)]="sql">
                   </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col">
                     <h6>VCS:</h6>
-                    <input type="text" class="form-control" placeholder="VCS:" value="">
+                    <input type="text" class="form-control" placeholder="VCS:" [(ngModel)]="vcs">
                   </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col">
                     <h6>TOOLS:</h6>
-                    <input type="text" class="form-control" placeholder="TOOLS:" value="">
+                    <input type="text" class="form-control" placeholder="TOOLS:" [(ngModel)]="tools">
                   </div>
                 </div>
                 <div class="row pt-1">
@@ -106,7 +106,9 @@
                     <button type="button" class="btn btn-lg btn-primary" disabled>Refresh</button>
                   </div>
                   <div class="col-6 mb-3">
-                    <button type="button" class="btn btn-lg btn-primary" disabled>Update</button>
+                    <button type="button" class="btn btn-lg btn-primary"
+                    [disabled]="!programmingLanguages || !webFrameworks || !devOps || !sql || !vcs || !tools"
+                            (click)="saveSkills()">Update</button>
                   </div>
                 </div>
                 <h6>Projects</h6>

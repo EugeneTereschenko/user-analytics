@@ -68,47 +68,47 @@
                 <div class="row pt-1">
                   <div class="col-6 mb-3">
                     <h6>First Name</h6>
-                    <input type="text" class="form-control" placeholder="first name" value="">
+                    <input type="text" class="form-control" placeholder="first name" [(ngModel)]="firstName" >
                   </div>
                   <div class="col-6 mb-3">
                     <h6>Last Name</h6>
-                    <input type="text" class="form-control" placeholder="last name" value="">
+                    <input type="text" class="form-control" placeholder="last name" [(ngModel)]="lastName">
                   </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col-6 mb-3">
                     <h6>Email</h6>
-                    <input type="text" class="form-control" placeholder="Email" value="">
+                    <input type="text" class="form-control" placeholder="Email" [(ngModel)]="email">
                   </div>
                   <div class="col-6 mb-3">
                     <h6>linkedin</h6>
-                    <input type="text" class="form-control" placeholder="linkedin" value="">
+                    <input type="text" class="form-control" placeholder="linkedin" [(ngModel)]="linkedin">
                   </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col-6 mb-3">
                     <h6>Skype *</h6>
-                    <input type="text" class="form-control" placeholder="Skype *" value="">
+                    <input type="text" class="form-control" placeholder="Skype *" [(ngModel)]="skype">
                   </div>
                   <div class="col-6 mb-3">
                     <h6>github</h6>
-                    <input type="text" class="form-control" placeholder="github" value="">
+                    <input type="text" class="form-control" placeholder="github" [(ngModel)]="github">
                   </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col-6 mb-3">
                     <h6>Address</h6>
-                    <input type="text" class="form-control" placeholder="Address" value="">
+                    <input type="text" class="form-control" placeholder="Address" [(ngModel)]="address">
                   </div>
                   <div class="col-6 mb-3">
                     <h6>Shipping Address</h6>
-                    <input type="text" class="form-control" placeholder="Shipping Address" value="">
+                    <input type="text" class="form-control" placeholder="Shipping Address" [(ngModel)]="shippingAddress">
                   </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col-6 mb-3">
                     <h6>Phone</h6>
-                    <input type="text" class="form-control" placeholder="Phone" value="">
+                    <input type="text" class="form-control" placeholder="Phone" [(ngModel)]="phone">
                   </div>
                   <div class="col-6 mb-3">
                   </div>
@@ -118,7 +118,9 @@
                     <button type="button" class="btn btn-lg btn-primary" disabled>Refresh</button>
                   </div>
                   <div class="col-6 mb-3">
-                    <button type="button" class="btn btn-lg btn-primary" disabled>Update</button>
+                    <button type="button" class="btn btn-lg btn-primary"
+                    [disabled]="!firstName || !lastName || !email || !skype || !address || !shippingAddress || !phone"
+                    (click)="updateProfile()">Update</button>
                   </div>
                 </div>
                 <h6>Projects</h6>
