@@ -7,6 +7,7 @@ import { tap } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private tokenKey = 'auth_token';
+  private url = 'http://localhost:8080/api/auth'; // Base URL for authentication API
 
   constructor(private http: HttpClient, private router: Router) {}
   /**
@@ -17,7 +18,7 @@ export class AuthService {
    * @returns An observable that emits the server response.
    */
   signUp(username: string, email: string, password: string, confirmPassword: string, roles: string[] = []) {
-    return this.http.post('http://localhost:8080/api/auth/signup', { username, email, password, confirmPassword, roles }).pipe(
+    return this.http.post(this.url + '/signup', { username, email, password, confirmPassword, roles }).pipe(
       tap(() => {
         // Optionally, you can redirect or perform other actions after successful signup
         this.router.navigate(['/signin']);
@@ -35,7 +36,7 @@ export class AuthService {
    */
   signIn(username: string, email: string, password: string, roles: string[] = []) {
   return this.http.post<{ token: string }>(
-    'http://localhost:8080/api/auth/signin',
+    this.url + '/signin',
     { username, email, password, roles }
   ).pipe(
     tap(response => {

@@ -7,6 +7,7 @@ import { response } from 'express';
 export class ProfileImageService {
   private uploadUrl = 'http://localhost:8080/api/profile/upload-image';
   private getImageUrl = 'http://localhost:8080/api/profile/getImage';
+  private getProfileInfoUrl = 'http://localhost:8080/api/profile/information';
 
   constructor(private http: HttpClient) {}
 
@@ -39,6 +40,6 @@ export class ProfileImageService {
   }
 
   getProfileInformation(): Observable<any> {
-    return this.http.get('/api/profile/information');
+    return this.http.get(this.getProfileInfoUrl);
   }   
 }
