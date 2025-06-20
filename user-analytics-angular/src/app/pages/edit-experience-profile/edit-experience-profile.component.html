@@ -15,8 +15,8 @@
             <div class="col-md-4 gradient-custom text-center text-white"
               style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
             <div class="card-body p-4">
-              <h5>Marie Horwitz</h5>
-              <p class="mb-2 text-center">Web Designer</p>
+              <h5 class="large-title">Marie Horwitz</h5>
+              <p class="mb-2 text-center large-title">Web Designer</p>
               <div class="col-md-8 mb-3 mx-auto d-flex flex-column align-items-center">
                  <div class="row pt-1 w-100 justify-content-center">
                    <div class="col-6 mb-3 d-flex justify-content-center">
@@ -63,17 +63,17 @@
             </div>
             <div class="col-md-8">
               <div class="card-body p-4">
-                <h6>Experience</h6>
+                <h6 class="large-title">Experience</h6>
                 <hr class="mt-0 mb-4">
                 <div class="row pt-1">
                     <div class="col">
-                        <h6>Role:</h6>
+                        <h6 class="large-title">Role:</h6>
                         <input type="text" class="form-control" placeholder="Role:" [(ngModel)]="roleName">
                     </div>
                 </div>
                 <div class="row align-items-end">
                   <div class="col-6">
-                    <h6 class="mb-1" style="margin-bottom: 2px;">Date From:</h6>
+                    <h6 class="mb-1 large-title" style="margin-bottom: 2px;">Date From:</h6>
                     <mat-form-field appearance="fill" class="tight-field w-100">
                       <mat-label>Date From</mat-label>
                       <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="dateFrom">
@@ -82,7 +82,7 @@
                     </mat-form-field>
                   </div>
                   <div class="col-6">
-                    <h6 class="mb-1" style="margin-bottom: 2px;">Date To:</h6>
+                    <h6 class="mb-1 large-title" style="margin-bottom: 2px;">Date To:</h6>
                     <mat-form-field appearance="fill" class="tight-field w-100">
                       <mat-label>Date To</mat-label>
                       <input matInput [matDatepicker]="pickerTo" [(ngModel)]="dateTo">
@@ -93,17 +93,17 @@
                 </div>
                 <div class="row pt-1">
                   <div class="col">
-                    <h6>Company:</h6>
+                    <h6 class="large-title">Company:</h6>
                     <input type="text" class="form-control" placeholder="Company:" [(ngModel)]="companyName">
                   </div>
                   <div class="col">
-                    <h6>Country, City:</h6>
+                    <h6 class="large-title">Country, City:</h6>
                     <input type="text" class="form-control" placeholder="Country, City:" [(ngModel)]="countryCity">
                   </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col">
-                    <h6>Service:</h6>
+                    <h6 class="large-title">Service:</h6>
                     <textarea class="form-control" rows="5" id="profile-experience-servcie" [(ngModel)]="service"></textarea>
                   </div>
                 </div>
@@ -119,15 +119,15 @@
                     </button>
                   </div>
                 </div>
-                <h6>Experience</h6>
+                <h6 class="large-title">Experience</h6>
                 <hr class="mt-0 mb-4">
                 <div class="row pt-1">
                   <div class="col-6 mb-3">
-                    <h6>Recent</h6>
+                    <h6 class="large-title">Recent</h6>
                     <p class="text-muted">Lorem ipsum</p>
                   </div>
                   <div class="col-6 mb-3">
-                    <h6>Most Viewed</h6>
+                    <h6 class="large-title">Most Viewed</h6>
                     <p class="text-muted">Dolor sit amet</p>
                   </div>
                 </div>

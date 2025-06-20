@@ -16,3 +16,7 @@ background: linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 1
   padding: 0 !important;
   width: 100% !important;
 }
+
+.large-title {
+  font-size: 1.0rem;
+}
