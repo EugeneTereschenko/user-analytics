@@ -15,6 +15,10 @@ import { RouterModule } from '@angular/router';
 export class ProfileComponent {
 
   profileImageUrl = 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp';
+  email = '';
+  phone = '';
+  recentProject = '';
+  mostViewedProject = '';
 
   constructor(
     private profileImageService: ProfileImageService,
@@ -23,6 +27,7 @@ export class ProfileComponent {
 
   ngOnInit() {
     this.loadProfileImage();
+    this.loadProfileInformation();
   }
 
   loadProfileImage() {
@@ -61,4 +66,20 @@ export class ProfileComponent {
       }
     });
   }
+
+  loadProfileInformation() {
+  this.profileImageService.getProfileInformation().subscribe({
+    next: (res: any) => {
+      // Assign the received data to component properties
+      this.email = res.email;
+      this.phone = res.phone;
+      this.recentProject = res.recentProject;
+      this.mostViewedProject = res.mostViewedProject;
+      // Add more assignments as needed
+    },
+    error: (err: any) => {
+      console.error('Failed to load profile information', err);
+    }
+  });
+}
 }

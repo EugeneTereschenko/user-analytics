@@ -15,8 +15,8 @@
             <div class="col-md-4 gradient-custom text-center text-white"
               style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
             <div class="card-body p-4">
-              <h5>Marie Horwitz</h5>
-              <p class="mb-2 text-center">Web Designer</p>
+              <h5 class="large-title">Marie Horwitz</h5>
+              <p class="mb-2 text-center large-title">Web Designer</p>
               <div class="col-md-8 mb-3 mx-auto d-flex flex-column align-items-center">
                  <div class="row pt-1 w-100 justify-content-center">
                    <div class="col-6 mb-3 d-flex justify-content-center">
@@ -63,54 +63,58 @@
             </div>
             <div class="col-md-8">
               <div class="card-body p-4">
-                <h6>Education</h6>
+                <h6 class="large-title">Education</h6>
                 <hr class="mt-0 mb-4">
                 <div class="row pt-1">
                     <div class="col">
-                        <h6>University:</h6>
-                        <input type="text" class="form-control" placeholder="Role:" value="">
+                        <h6 class="large-title">University:</h6>
+                        <input type="text" class="form-control" placeholder="University" [(ngModel)]="universityName">
                     </div>
                 </div>
-                <div class="row pt-1">
-                    <div class="col">
-                        <h6>Date From:</h6>
-                        <input type="text" class="form-control" placeholder="Date From:" value="">
-                    </div>
-                    <div class="col">
-                        <h6>Date To:</h6>
-                        <input type="text" class="form-control" placeholder="Date To:" value="">
-                    </div>
+                <div class="row align-items-end">
+                  <div class="col-6">
+                    <h6 class="mb-1" style="margin-bottom: 2px;">Date From:</h6>
+                    <mat-form-field appearance="fill" class="tight-field w-100">
+                      <mat-label>Date From</mat-label>
+                      <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="dateFrom">
+                      <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerFrom></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <h6 class="mb-1" style="margin-bottom: 2px;">Date To:</h6>
+                    <mat-form-field appearance="fill" class="tight-field w-100">
+                      <mat-label>Date To</mat-label>
+                      <input matInput [matDatepicker]="pickerTo" [(ngModel)]="dateTo">
+                      <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerTo></mat-datepicker>
+                    </mat-form-field>
+                  </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col">
-                    <h6>Country, City:</h6>
-                    <input type="text" class="form-control" placeholder="Country, City:" value="">
+                    <h6 class="large-title">Country, City:</h6>
+                    <input type="text" class="form-control" placeholder="Country, City:" [(ngModel)]="countryCity">
                   </div>
                   <div class="col">
-                    <h6>Degree:</h6>
-                    <input type="text" class="form-control" placeholder="Company:" value="">
+                    <h6 class="large-title">Degree:</h6>
+                    <input type="text" class="form-control" placeholder="Company:" [(ngModel)]="degree">
                   </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col-6 mb-3">
-                    <button type="button" class="btn btn-lg btn-primary" disabled>Refresh</button>
+                    <button type="button" class="btn btn-lg btn-primary"
+                    (click)="readpayload()">Refresh</button>
                   </div>
                   <div class="col-6 mb-3">
-                    <button type="button" class="btn btn-lg btn-primary" disabled>Update</button>
+                    <button type="button" class="btn btn-lg btn-primary"
+                            [disabled]="!universityName || !dateFrom || !dateTo || !countryCity || !degree"
+                            (click)="updateEducation()">Update</button>
                   </div>
                 </div>
-                <h6>Projects</h6>
+                <h6 class="large-title">Education</h6>
                 <hr class="mt-0 mb-4">
-                <div class="row pt-1">
-                  <div class="col-6 mb-3">
-                    <h6>Recent</h6>
-                    <p class="text-muted">Lorem ipsum</p>
-                  </div>
-                  <div class="col-6 mb-3">
-                    <h6>Most Viewed</h6>
-                    <p class="text-muted">Dolor sit amet</p>
-                  </div>
-                </div>
+                <div id="profile-education"></div>
                 <div class="d-flex justify-content-start">
                   <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
                   <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>

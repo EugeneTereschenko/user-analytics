@@ -37,4 +37,8 @@ export class ProfileImageService {
 
     return this.http.get(this.getImageUrl, { headers, responseType: 'blob' });
   }
+
+  getProfileInformation(): Observable<any> {
+    return this.http.get('/api/profile/information');
+  }   
 }
