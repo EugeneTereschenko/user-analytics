@@ -7,7 +7,7 @@ export class ProfileEditService {
   constructor(private http: HttpClient) {}
 
   updateCertificateDates(payload: { certificateName: string, dateFrom: string; dateTo: string }): Observable<any> {
-    return this.http.post('/api/certificates/update-dates', payload);
+    return this.http.post('/api/profile/update-dates', payload);
   }
 
   updateProfile(payload: any): Observable<any> {

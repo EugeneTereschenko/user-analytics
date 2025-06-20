@@ -71,15 +71,25 @@
                         <input type="text" class="form-control" placeholder="Certificate:" [(ngModel)]="certificateName">
                     </div>
                 </div>
-                <div class="row pt-1">
-                    <div class="col">
-                        <h6>Date From:</h6>
-                        <input type="text" class="form-control" placeholder="Date From:" [(ngModel)]="dateFrom">
-                    </div>
-                    <div class="col">
-                        <h6>Date To:</h6>
-                        <input type="text" class="form-control" placeholder="Date To:" [(ngModel)]="dateTo">
-                    </div>
+                <div class="row align-items-end">
+                  <div class="col-6">
+                    <h6 class="mb-1" style="margin-bottom: 2px;">Date From:</h6>
+                    <mat-form-field appearance="fill" class="tight-field w-100">
+                      <mat-label>Date From</mat-label>
+                      <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="dateFrom">
+                      <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerFrom></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <h6 class="mb-1" style="margin-bottom: 2px;">Date To:</h6>
+                    <mat-form-field appearance="fill" class="tight-field w-100">
+                      <mat-label>Date To</mat-label>
+                      <input matInput [matDatepicker]="pickerTo" [(ngModel)]="dateTo">
+                      <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerTo></mat-datepicker>
+                    </mat-form-field>
+                  </div>
                 </div>
                 <div class="row pt-1">
                   <div class="col-6 mb-3">

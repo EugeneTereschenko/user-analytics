@@ -2,11 +2,20 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ProfileEditService } from '../../profile-edit.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-edit-experience-profile',
   standalone: true,
-  imports: [FormsModule, RouterModule],
+  imports: [RouterModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule],
   templateUrl: './edit-experience-profile.component.html',
   styleUrl: './edit-experience-profile.component.css'
 })
