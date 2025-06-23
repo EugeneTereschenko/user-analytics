@@ -1,5 +1,11 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.ProfileDTO;
+import com.example.demo.dto.EducationDTO;
+import com.example.demo.dto.ExperienceDTO;
+import com.example.demo.dto.ProjectDTO;
+import com.example.demo.dto.SkillsDTO;
+import com.example.demo.dto.DetailsDTO;
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +44,7 @@ public class ProfileService {
             }
             if (user.isPresent() && !profiles.isEmpty()) {
                 log.info("User {} has existing profiles, saving image to the first profile.", user.get().getUsername());
-                return String.valueOf(saveImage(file, profiles.get(0).getId()).getId());
+                return String.valueOf(saveImage(file, profiles.stream().reduce((first, second) -> second).get().getId()).getId());
             }
         } catch (Exception e) {
             log.error("Error uploading image: {}", e.getMessage());
@@ -107,6 +113,163 @@ public class ProfileService {
         }
         log.error("Failed to create profile for user ID: {}", userId);
         throw new RuntimeException("Failed to create profile for user ID: " + userId);
+    }
+
+    @Transactional
+    public ProfileDTO getProfileInformation() {
+        Optional<User> user = userService.getAuthenticatedUser();
+        if (user.isEmpty()) {
+            log.warn("No authenticated user found.");
+            throw new RuntimeException("No authenticated user found.");
+        }
+
+        List<Profile> profiles = profileRepository.findProfilesByUserId(user.get().getUserId());
+        if (profiles.isEmpty()) {
+            log.warn("No profiles found for user: {}", user.get().getUsername());
+            throw new RuntimeException("No profiles found for user: " + user.get().getUsername());
+        }
+
+        Profile profile = profiles.stream().reduce((first, second) -> second).get(); // Assuming the last profile is used
+
+        List<Project> projects = profileRepository.findProjectsByUserId(user.get().getUserId());
+        if (projects.isEmpty()) {
+            log.warn("No projects found for user: {}", user.get().getUsername());
+            throw new RuntimeException("No projects found for user: " + user.get().getUsername());
+        }
+        Project recentProject = projects.stream().reduce((first, second) -> second).get(); // Assuming the last project is used
+        if (recentProject.getProjectName() == null) {
+            log.warn("No recent project found for user: {}", user.get().getUsername());
+            throw new RuntimeException("No recent project found for user: " + user.get().getUsername());
+        }
+        Project mostViewedProject = projects.stream().findFirst().get(); // Assuming the first project is the most viewed
+        return new ProfileDTO.Builder()
+                .email(user.get().getEmail())
+                .phone(profile.getPhoneNumber())
+                .recentProject(recentProject.getProjectName())
+                .mostViewedProject(mostViewedProject.getProjectName())
+                .build();
+    }
+
+    @Transactional
+    public EducationDTO getEducation() {
+        Optional<User> user = userService.getAuthenticatedUser();
+        if (user.isEmpty()) {
+            log.warn("No authenticated user found.");
+            throw new RuntimeException("No authenticated user found.");
+        }
+
+        List<Education> educationList = profileRepository.findEducationByUserId(user.get().getUserId());
+        if (educationList.isEmpty()) {
+            log.warn("No education records found for user: {}", user.get().getUsername());
+            throw new RuntimeException("No education records found for user: " + user.get().getUsername());
+        }
+
+        Education education = educationList.get(0); // Assuming the first education record is used
+        return new EducationDTO.Builder()
+                .universityName(education.getUniversityName())
+                .dateFrom(education.getDateFrom())
+                .dateTo(education.getDateTo())
+                .countryCity(education.getCountryCity())
+                .degree(education.getDegree())
+                .build();
+    }
+
+    @Transactional
+    public DetailsDTO getDetails() {
+        Optional<User> user = userService.getAuthenticatedUser();
+        if (user.isEmpty()) {
+            log.warn("No authenticated user found.");
+            throw new RuntimeException("No authenticated user found.");
+        }
+
+        List<Details> details = profileRepository.findDetailsByUserId(user.get().getUserId());
+        if (details.isEmpty()) {
+            log.warn("No details found for user: {}", user.get().getUsername());
+            throw new RuntimeException("No details found for user: " + user.get().getUsername());
+        }
+
+        Details excitsDetails = details.stream().reduce((first, second) -> second).get(); // Assuming the first details record is used
+
+        return new DetailsDTO.Builder()
+                .notification(String.valueOf(excitsDetails.getNotification()))
+                .staff(excitsDetails.getStaff())
+                .bio(excitsDetails.getBio())
+                .message(excitsDetails.getMessage())
+                .build();
+    }
+
+    @Transactional
+    public ExperienceDTO getExperience() {
+        Optional<User> user = userService.getAuthenticatedUser();
+        if (user.isEmpty()) {
+            log.warn("No authenticated user found.");
+            throw new RuntimeException("No authenticated user found.");
+        }
+
+        List<Experience> experiences = profileRepository.findExperienceByUserId(user.get().getUserId());
+        if (experiences.isEmpty()) {
+            log.warn("No experience records found for user: {}", user.get().getUsername());
+            throw new RuntimeException("No experience records found for user: " + user.get().getUsername());
+        }
+
+        Experience experience = experiences.stream().reduce((first, second) -> second).get(); // Assuming the first experience record is used
+        return new ExperienceDTO.Builder()
+                .roleName(experience.getRoleName())
+                .dateFrom(experience.getDateFrom())
+                .dateTo(experience.getDateTo())
+                .companyName(experience.getCompanyName())
+                .countryCity(experience.getCountryCity())
+                .service(experience.getService())
+                .build();
+    }
+
+    @Transactional
+    public SkillsDTO getSkills() {
+        Optional<User> user = userService.getAuthenticatedUser();
+        if (user.isEmpty()) {
+            log.warn("No authenticated user found.");
+            throw new RuntimeException("No authenticated user found.");
+        }
+
+        List<Skills> skills = profileRepository.findSkillsByUserId(user.get().getUserId());
+        if (skills.isEmpty()) {
+            log.warn("No skills found for user: {}", user.get().getUsername());
+            throw new RuntimeException("No skills found for user: " + user.get().getUsername());
+        }
+
+        Skills skill = skills.stream().reduce((first, second) -> second).get(); // Assuming the first skills record is used
+
+        return new SkillsDTO.Builder()
+                .programmingLanguages(skill.getProgrammingLanguages())
+                .webFrameworks(skill.getWebFrameworks())
+                .devOps(skill.getDevOps())
+                .sql(skill.getSql())
+                .vcs(skill.getVcs())
+                .tools(skill.getTools())
+                .build();
+    }
+
+    @Transactional
+    public ProjectDTO getProjects() {
+        Optional<User> user = userService.getAuthenticatedUser();
+        if (user.isEmpty()) {
+            log.warn("No authenticated user found.");
+            throw new RuntimeException("No authenticated user found.");
+        }
+
+        List<Project> projects = profileRepository.findProjectsByUserId(user.get().getUserId());
+        if (projects.isEmpty()) {
+            log.warn("No projects found for user: {}", user.get().getUsername());
+            throw new RuntimeException("No projects found for user: " + user.get().getUsername());
+        }
+
+        Project project = projects.get(0); // Assuming the first project is used
+        return new ProjectDTO.Builder()
+                .projectName(project.getProjectName())
+                .dateFrom(project.getDateFrom())
+                .dateTo(project.getDateTo())
+                .structure(project.getStructure())
+                .build();
     }
 
 }

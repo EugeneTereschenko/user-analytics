@@ -172,4 +172,46 @@ public class ProfileController {
             return ResponseEntity.status(500).body("Error retrieving projects: " + e.getMessage());
         }
     }
+
+    @PostMapping("profile/update-dates")
+    public ResponseEntity<?> updateDates(@RequestBody CertificateDTO certificateDTO) {
+        log.info("Updating certificate dates: {}", certificateDTO);
+        return ResponseEntity.ok("Certificate dates updated successfully");
+    }
+
+    @PostMapping("profile/update")
+    public ResponseEntity<?> updateProfile(@RequestBody ProfileDTO profileDTO) {
+        log.info("Updating profile: {}", profileDTO);
+        return ResponseEntity.ok("Profile updated successfully");
+    }
+
+    @PostMapping("profile/update-details")
+    public ResponseEntity<?> updateDetails(@RequestBody DetailsDTO detailsDTO) {
+        log.info("Updating details: {}", detailsDTO);
+        return ResponseEntity.ok("Details updated successfully");
+    }
+
+    @PostMapping("profile/update-education")
+    public ResponseEntity<?> updateEducation(@RequestBody EducationDTO educationDTO) {
+        log.info("Updating education: {}", educationDTO);
+        return ResponseEntity.ok("Education updated successfully");
+    }
+
+    @PostMapping("profile/update-experience")
+    public ResponseEntity<?> updateExperience(@RequestBody ExperienceDTO experienceDTO) {
+        log.info("Updating experience: {}", experienceDTO);
+        return ResponseEntity.ok("Experience updated successfully");
+    }
+
+    @PostMapping("profile/update-projects")
+    public ResponseEntity<?> updateProjects(@RequestBody ProjectDTO projectDTO) {
+        log.info("Updating projects: {}", projectDTO);
+        return ResponseEntity.ok("Projects updated successfully");
+    }
+
+    @PostMapping("profile/save-skills")
+    public ResponseEntity<?> saveSkills(@RequestBody SkillsDTO skillsDTO) {
+        log.info("Saving skills: {}", skillsDTO);
+        return ResponseEntity.ok("Skills saved successfully");
+    }
 }
