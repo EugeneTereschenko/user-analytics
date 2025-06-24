@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class ProfileEditService {
 
+  private tokenKey = 'auth_token';
   private apiUrl = 'http://localhost:8080/api/profile'; // Adjust the base URL as needed
   constructor(private http: HttpClient) {}
   
@@ -18,58 +19,111 @@ export class ProfileEditService {
   }
 
   updateProfile(payload: any): Observable<any> {
-    // Adjust the URL to match your backend API endpoint
-    return this.http.post(this.apiUrl + '/update', payload);
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
+    return this.http.post(this.apiUrl + '/update', payload, { headers });
   }
 
   getProfile(): Observable<any> {
-    return this.http.get(this.apiUrl + '/get-profile');
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
+    return this.http.get(this.apiUrl + '/get-profile', { headers });
   }
 
   updateDetails(payload: any): Observable<any> {
-    // Adjust the URL to match your backend API endpoint
-    return this.http.post(this.apiUrl + '/update-details', payload);
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
+    return this.http.post(this.apiUrl + '/update-details', payload, { headers });
   }
 
   getDetails(): Observable<any> {
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
     console.log('Fetching profile details');
-    return this.http.get(this.apiUrl + '/details');
+    return this.http.get(this.apiUrl + '/details', { headers });
   }
 
   updateEducation(payload: any): Observable<any> {
-    // Adjust the URL to match your backend API endpoint
-    return this.http.post(this.apiUrl + '/update-education', payload);
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
+    return this.http.post(this.apiUrl + '/update-education', payload, { headers });
   }
 
   getEducation(): Observable<any> {
-    return this.http.get(this.apiUrl + '/education');
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
+    return this.http.get(this.apiUrl + '/education', { headers });
   }
 
   updateExperience(payload: any): Observable<any> {
-    // Adjust the URL to match your backend API endpoint
-    return this.http.post(this.apiUrl + '/update-experience', payload);
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
+    return this.http.post(this.apiUrl + '/update-experience', payload, { headers });
   }
 
   getExperience(): Observable<any> {
-    return this.http.get(this.apiUrl + '/experience');
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
+    return this.http.get(this.apiUrl + '/experience', { headers });
   }
 
   updateProjects(payload: any): Observable<any> {
-    // Adjust the URL to match your backend API endpoint
-    return this.http.post(this.apiUrl + '/update-projects', payload);
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
+    return this.http.post(this.apiUrl + '/update-projects', payload, { headers });
   }
 
   getProjects(): Observable<any> {
-    return this.http.get(this.apiUrl + '/projects');
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
+    return this.http.get(this.apiUrl + '/projects', { headers });
   }
 
   saveSkills(payload: any): Observable<any> {
-    // Adjust the URL to match your backend API endpoint
-    return this.http.post(this.apiUrl + '/save-skills', payload);
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
+    return this.http.post(this.apiUrl + '/save-skills', payload, { headers });
   }
 
   getSkills(): Observable<any> {
-    // Adjust the URL to match your backend API endpoint
-    return this.http.get(this.apiUrl + '/skills');
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
+    return this.http.get(this.apiUrl + '/skills', { headers });
   }
 }
