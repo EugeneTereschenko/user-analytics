@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProfileEducationRepository extends JpaRepository<ProfileEducation, Long> {
+    ProfileEducation findByProfileIdAndEducationId(Long id, Long id1);
 }

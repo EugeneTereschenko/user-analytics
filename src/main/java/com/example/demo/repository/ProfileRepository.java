@@ -11,7 +11,10 @@ import java.util.Optional;
 
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
-    @Query("SELECT p FROM Profile p JOIN UserProfile up ON p.id = up.profileId WHERE up.userId = :userId")
+    @Query("SELECT p " +
+            "FROM Profile p " +
+            "JOIN UserProfile up ON p.id = up.profileId " +
+            "WHERE up.userId = :userId")
     List<Profile> findProfilesByUserId(@Param("userId") Long userId);
 
     @Query("SELECT new com.example.demo.model.Image(i.id, i.name, i.data) " +
@@ -28,31 +31,30 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
             "WHERE up.userId = :userId")
     List<Project> findProjectsByUserId(@Param("userId") Long userId);
 
-    @Query("SELECT e" +
-            " FROM Education e " +
-            "JOIN ProfileEducation pe ON e.Id = pe.educationId " +
+    @Query("SELECT new com.example.demo.model.Education(e.id, e.universityName, e.dateFrom, e.dateTo, e.countryCity, e.degree) " +
+            "FROM Education e " +
+            "JOIN ProfileEducation pe ON e.id = pe.educationId " +
             "JOIN UserProfile up ON pe.profileId = up.profileId " +
             "WHERE up.userId = :userId")
     List<Education> findEducationByUserId(@Param("userId") Long userId);
 
-    @Query("SELECT d " +
+    @Query("SELECT new com.example.demo.model.Details(d.id, d.notification, d.staff, d.bio, d.message) " +
             "FROM Details d " +
-            "JOIN ProfileDetails pd ON d.Id = pd.detailsId " +
+            "JOIN ProfileDetails pd ON d.id = pd.detailsId " +
             "JOIN UserProfile up ON pd.profileId = up.profileId " +
             "WHERE up.userId = :userId")
     List<Details> findDetailsByUserId(@Param("userId") Long userId);
 
-    @Query("SELECT e " +
+    @Query("SELECT new com.example.demo.model.Experience(e.Id, e.roleName, e.dateFrom, e.dateTo, e.companyName, e.countryCity, e.service) " +
             "FROM Experience e " +
             "JOIN ProfileExperience pe ON e.Id = pe.experienceId " +
             "JOIN UserProfile up ON pe.profileId = up.profileId " +
             "WHERE up.userId = :userId")
     List<Experience> findExperienceByUserId(@Param("userId") Long userId);
 
-
-    @Query("SELECT s " +
+    @Query("SELECT new com.example.demo.model.Skills(s.Id, s.programmingLanguages, s.webFrameworks, s.devOps, s.sql, s.vcs, s.tools) " +
             "FROM Skills s " +
-            "JOIN ProfileSkills ps ON s.Id = ps.skillsId " +
+            "JOIN ProfileSkills ps ON s.id = ps.skillsId " +
             "JOIN UserProfile up ON ps.profileId = up.profileId " +
             "WHERE up.userId = :userId")
     List<Skills> findSkillsByUserId(@Param("userId") Long userId);

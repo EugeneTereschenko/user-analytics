@@ -83,6 +83,13 @@ public class ProfileController {
         try {
             return ResponseEntity.ok(new ProfileDTO.Builder()
                     .email("test@test.com")
+                            .firstName("John")
+                            .lastName("Doe")
+                            .linkedin("https://www.linkedin.com/in/johndoe")
+                            .skype("johndoe.skype")
+                            .github("www.github.com/johndoe")
+                    .address("123 Main St, Example City, Country")
+                    .shippingAddress("456 Secondary St, Example City, Country")
                     .phone("1234567890")
                     .recentProject("Project A")
                     .mostViewedProject("Project B")
@@ -181,20 +188,35 @@ public class ProfileController {
 
     @PostMapping("profile/update")
     public ResponseEntity<?> updateProfile(@RequestBody ProfileDTO profileDTO) {
-        log.info("Updating profile: {}", profileDTO);
-        return ResponseEntity.ok("Profile updated successfully");
+        try {
+            log.info("Updating profile: {}", profileDTO);
+            return ResponseEntity.ok(profileService.updateProfile(profileDTO));
+        } catch (Exception e) {
+            log.error("Error updating profile: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error updating profile: " + e.getMessage());
+        }
     }
 
     @PostMapping("profile/update-details")
     public ResponseEntity<?> updateDetails(@RequestBody DetailsDTO detailsDTO) {
-        log.info("Updating details: {}", detailsDTO);
-        return ResponseEntity.ok("Details updated successfully");
+        try {
+            log.info("Updating details: {}", detailsDTO);
+            return ResponseEntity.ok(profileService.updateDetails(detailsDTO));
+        } catch (Exception e) {
+            log.error("Error updating details: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error updating details: " + e.getMessage());
+        }
     }
 
     @PostMapping("profile/update-education")
     public ResponseEntity<?> updateEducation(@RequestBody EducationDTO educationDTO) {
-        log.info("Updating education: {}", educationDTO);
-        return ResponseEntity.ok("Education updated successfully");
+        try {
+            log.info("Updating education: {}", educationDTO);
+            return ResponseEntity.ok(profileService.updateEducation(educationDTO));
+        } catch (Exception e) {
+            log.error("Error updating education: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error updating education: " + e.getMessage());
+        }
     }
 
     @PostMapping("profile/update-experience")

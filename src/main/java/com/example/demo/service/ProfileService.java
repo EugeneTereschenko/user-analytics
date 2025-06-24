@@ -1,11 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.ProfileDTO;
-import com.example.demo.dto.EducationDTO;
-import com.example.demo.dto.ExperienceDTO;
-import com.example.demo.dto.ProjectDTO;
-import com.example.demo.dto.SkillsDTO;
-import com.example.demo.dto.DetailsDTO;
+import com.example.demo.dto.*;
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +22,9 @@ public class ProfileService {
 
     private final UserService userService;
     private final DetailsRepository detailsRepository;
+    private final ProfileDetailsRepository profileDetailsRepository;
+    private final EducationRepository educationRepository;
+    private final ProfileEducationRepository profileEducationRepository;
     private final CardRepository cardRepository;
     private final UserProfileRepository userProfileRepository;
     private final ProfileRepository profileRepository;
@@ -123,13 +121,7 @@ public class ProfileService {
             throw new RuntimeException("No authenticated user found.");
         }
 
-        List<Profile> profiles = profileRepository.findProfilesByUserId(user.get().getUserId());
-        if (profiles.isEmpty()) {
-            log.warn("No profiles found for user: {}", user.get().getUsername());
-            throw new RuntimeException("No profiles found for user: " + user.get().getUsername());
-        }
-
-        Profile profile = profiles.stream().reduce((first, second) -> second).get(); // Assuming the last profile is used
+        Profile profile = getProfileByUser(user);
 
         List<Project> projects = profileRepository.findProjectsByUserId(user.get().getUserId());
         if (projects.isEmpty()) {
@@ -141,7 +133,7 @@ public class ProfileService {
             log.warn("No recent project found for user: {}", user.get().getUsername());
             throw new RuntimeException("No recent project found for user: " + user.get().getUsername());
         }
-        Project mostViewedProject = projects.stream().findFirst().get(); // Assuming the first project is the most viewed
+        Project mostViewedProject = projects.stream().reduce((first, second) -> second).get();; // Assuming the first project is the most viewed
         return new ProfileDTO.Builder()
                 .email(user.get().getEmail())
                 .phone(profile.getPhoneNumber())
@@ -149,6 +141,30 @@ public class ProfileService {
                 .mostViewedProject(mostViewedProject.getProjectName())
                 .build();
     }
+
+
+    @Transactional
+    public ResponseDTO updateProfile(ProfileDTO profileDTO) {
+
+        Optional<User> user = userService.getAuthenticatedUser();
+        if (user.isEmpty()) {
+            log.warn("No authenticated user found.");
+            throw new RuntimeException("No authenticated user found.");
+        }
+
+        Profile profile = getProfileByUser(user);
+
+        profile.setFirstName(profileDTO.getFirstName());
+        profile.setLastName(profileDTO.getLastName());
+        profile.setAddress(profileDTO.getAddress());
+        profile.setShippingAddress(profileDTO.getShippingAddress());
+        profile.setPhoneNumber(profileDTO.getPhone());
+        profileRepository.saveAndFlush(profile);
+
+        log.info("Profile updated successfully for user: {}", user.get().getUsername());
+        return new ResponseDTO("\"Profile updated successfully\"", "200", "true");
+    }
+
 
     @Transactional
     public EducationDTO getEducation() {
@@ -164,7 +180,7 @@ public class ProfileService {
             throw new RuntimeException("No education records found for user: " + user.get().getUsername());
         }
 
-        Education education = educationList.get(0); // Assuming the first education record is used
+        Education education = educationList.stream().reduce((first, second) -> second).get();; // Assuming the first education record is used
         return new EducationDTO.Builder()
                 .universityName(education.getUniversityName())
                 .dateFrom(education.getDateFrom())
@@ -172,6 +188,84 @@ public class ProfileService {
                 .countryCity(education.getCountryCity())
                 .degree(education.getDegree())
                 .build();
+    }
+
+    @Transactional
+    public ResponseDTO updateEducation(EducationDTO educationDTO) {
+        Optional<User> user = userService.getAuthenticatedUser();
+        if (user.isEmpty()) {
+            log.warn("No authenticated user found.");
+            throw new RuntimeException("No authenticated user found.");
+        }
+
+        Profile existsProfile = getProfileByUser(user);
+
+        List<Education> educationList = profileRepository.findEducationByUserId(user.get().getUserId());
+        Education education = null;
+        if (educationList.isEmpty()) {
+            education = createEducation(existsProfile.getId());
+            if (education == null) {
+                log.error("Failed to create education for user: {}", user.get().getUsername());
+                throw new RuntimeException("Failed to create education for user: " + user.get().getUsername());
+            }
+        } else {
+            education = educationList.stream().reduce((first, second) -> second).get(); // Assuming the last education record is used
+        }
+
+        education.setUniversityName(educationDTO.getUniversityName());
+        education.setDateFrom(educationDTO.getDateFrom());
+        education.setDateTo(educationDTO.getDateTo());
+        education.setCountryCity(educationDTO.getCountryCity());
+        education.setDegree(educationDTO.getDegree());
+        Education existsEducation = educationRepository.saveAndFlush(education);
+
+
+        ProfileEducation existingProfileEducation = profileEducationRepository.findByProfileIdAndEducationId(existsProfile.getId(), existsEducation.getId());
+        if (existingProfileEducation != null) {
+            log.info("Updating existing education for profile ID: {}", existsProfile.getId());
+            existingProfileEducation.setEducationId(existsEducation.getId());
+            profileEducationRepository.saveAndFlush(existingProfileEducation);
+        } else {
+            ProfileEducation profileEducation = new ProfileEducation.Builder()
+                    .profileId(existsProfile.getId())
+                    .educationId(existsEducation.getId())
+                    .build();
+            profileEducationRepository.saveAndFlush(profileEducation);
+        }
+
+        log.info("Education updated successfully for user: {}", user.get().getUsername());
+        return new ResponseDTO.Builder()
+                .message("Education updated successfully")
+                .status("200")
+                .data(true)
+                .build();
+    }
+
+
+    @Transactional
+    public Education createEducation(Long profileId) {
+        Education education = new Education.Builder()
+                .universityName("Default University")
+                .dateFrom("2020-01-01")
+                .dateTo("2024-01-01")
+                .countryCity("Default City")
+                .degree("Bachelor's Degree")
+                .build();
+
+        Education savedEducation = educationRepository.saveAndFlush(education);
+        if (savedEducation == null) {
+            log.error("Failed to create education for profile ID: {}", profileId);
+            throw new RuntimeException("Failed to create education for profile ID: " + profileId);
+        }
+
+        ProfileEducation profileEducation = new ProfileEducation.Builder()
+                .profileId(profileId)
+                .educationId(savedEducation.getId())
+                .build();
+        profileEducationRepository.saveAndFlush(profileEducation);
+
+        return savedEducation;
+
     }
 
     @Transactional
@@ -195,6 +289,50 @@ public class ProfileService {
                 .staff(excitsDetails.getStaff())
                 .bio(excitsDetails.getBio())
                 .message(excitsDetails.getMessage())
+                .build();
+    }
+
+    @Transactional
+    public ResponseDTO updateDetails(DetailsDTO detailsDTO) {
+        Optional<User> user = userService.getAuthenticatedUser();
+        if (user.isEmpty()) {
+            log.warn("No authenticated user found.");
+            throw new RuntimeException("No authenticated user found.");
+        }
+
+        Profile profile = getProfileByUser(user);
+
+        List<Details> detailsList = profileRepository.findDetailsByUserId(user.get().getUserId());
+        Details details = null;
+        if (detailsList.isEmpty()) {
+            details = new Details.Builder()
+                    .notification(false)
+                    .staff("Default Staff")
+                    .bio("Default Bio")
+                    .message("Default Message")
+                    .build();
+            detailsRepository.saveAndFlush(details);
+
+            ProfileDetails profileDetails = new ProfileDetails.Builder()
+                    .profileId(profile.getId())
+                    .detailsId(details.getId())
+                    .build();
+            profileDetailsRepository.saveAndFlush(profileDetails);
+        } else {
+            details = detailsList.stream().reduce((first, second) -> second).get(); // Assuming the last details record is used
+        }
+
+        details.setNotification(Boolean.parseBoolean(detailsDTO.getNotification()));
+        details.setStaff(detailsDTO.getStaff());
+        details.setBio(detailsDTO.getBio());
+        details.setMessage(detailsDTO.getMessage());
+        detailsRepository.saveAndFlush(details);
+
+        log.info("Details updated successfully for user: {}", user.get().getUsername());
+        return new ResponseDTO.Builder()
+                .message("Details updated successfully")
+                .status("200")
+                .data(true)
                 .build();
     }
 
@@ -270,6 +408,22 @@ public class ProfileService {
                 .dateTo(project.getDateTo())
                 .structure(project.getStructure())
                 .build();
+    }
+
+    private Profile getProfileByUser(Optional<User> user) {
+        List<Profile> profiles = profileRepository.findProfilesByUserId(user.get().getUserId());
+        Profile profile = null;
+        if (profiles.isEmpty()) {
+            log.warn("No profiles found for user: {}", user.get().getUsername());
+            profile = createProfile(user.get().getUserId());
+            if (profile == null) {
+                log.error("Failed to create profile for user: {}", user.get().getUsername());
+                throw new RuntimeException("Failed to create profile for user: " + user.get().getUsername());
+            }
+        } else {
+            profile = profiles.stream().reduce((first, second) -> second).get(); // Assuming the last profile is used
+        }
+        return profile;
     }
 
 }
