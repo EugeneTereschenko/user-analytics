@@ -9,7 +9,11 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +47,7 @@ public class UserService {
                 return createUserResponseDTO("", "Login failed: User details not found", "false");
             }
             log.debug("User details loaded for: {}", userDetails.getUsername());
-            String token = jwtUtil.generateToken(userDTO.getUsername());
+            String token = jwtUtil.generateToken(userDetails.getUsername());
             return createUserResponseDTO(token, "Login successful", "true");
         } catch (Exception e) {
             log.error("Failed to login: {}", e.getMessage());
@@ -80,6 +84,15 @@ public class UserService {
             log.error("Failed to create user: {}", e.getMessage());
             return createUserResponseDTO("", "Signup failed: " + e.getMessage(), "false");
         }
+    }
+
+    public Optional<User> getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+            throw new UsernameNotFoundException("User not authenticated");
+        }
+        String username = authentication.getName();
+        return userRepository.findByUsername(username);
     }
 
     private UserResponseDTO createUserResponseDTO(String token, String message, String success) {

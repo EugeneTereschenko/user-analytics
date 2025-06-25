@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Table(name = "\"users\"")
+@Table(name = "\"user\"")
 @Entity
 @Data
 public class User implements UserDetails {
@@ -30,10 +30,12 @@ public class User implements UserDetails {
     private String salt;
     @Column(name = "secret_key")
     private String SecretKey;
+
     @Column(name = "is_active", length = 255)
     private boolean isActive;
     @Column(name = "is_two_factor", length = 255)
     private boolean isTwoFactorEnabled;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
