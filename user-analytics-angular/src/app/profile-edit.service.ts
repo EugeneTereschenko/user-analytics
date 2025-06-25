@@ -11,11 +11,21 @@ export class ProfileEditService {
   
 
   updateCertificateDates(payload: { certificateName: string, dateFrom: string; dateTo: string }): Observable<any> {
-    return this.http.post(this.apiUrl + '/update-dates', payload);
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
+    return this.http.post(this.apiUrl + '/update-certificate-dates', payload, { headers });
   }
 
   getCertificateDates(): Observable<any> {
-    return this.http.get(this.apiUrl + '/certificate-dates');
+    const token = localStorage.getItem(this.tokenKey);
+    let headers = {};
+    if (token) {
+      headers = { 'Authorization': `Bearer ${token}` };
+    }
+    return this.http.get(this.apiUrl + '/certificate-dates', { headers });
   }
 
   updateProfile(payload: any): Observable<any> {
