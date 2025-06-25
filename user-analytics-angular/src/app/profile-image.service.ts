@@ -40,6 +40,11 @@ export class ProfileImageService {
   }
 
   getProfileInformation(): Observable<any> {
-    return this.http.get(this.getProfileInfoUrl);
+    const token = localStorage.getItem('auth_token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.get(this.getProfileInfoUrl, { headers});
   }   
 }
