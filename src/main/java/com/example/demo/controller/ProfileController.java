@@ -50,13 +50,7 @@ public class ProfileController {
     @GetMapping("profile/information")
     public ResponseEntity<?> getProfileInformation() {
         try {
-            //return ResponseEntity.ok(profileService.getProfileInformation());
-            return ResponseEntity.ok(new ProfileDTO.Builder()
-                    .email("test@test.com")
-                    .phone("1234567890")
-                    .recentProject("Project A")
-                    .mostViewedProject("Project B")
-                    .build());
+            return ResponseEntity.ok(profileService.getProfileInformation());
         } catch (Exception e) {
             log.error("Error retrieving profile information: {}", e.getMessage());
             return ResponseEntity.status(500).body("Error retrieving profile information: " + e.getMessage());
@@ -66,124 +60,32 @@ public class ProfileController {
     @GetMapping("profile/certificate-dates")
     public ResponseEntity<?> getCertificateDates() {
         try {
-            //return ResponseEntity.ok(profileService.getCertificateDates());
-            return ResponseEntity.ok(new CertificateDTO.Builder()
-                    .certificateName("Java Programming")
-                    .dateFrom("2023-01-01")
-                    .dateTo("2024-01-01")
-                    .build());
+            return ResponseEntity.ok(profileService.getCertificates());
         } catch (Exception e) {
             log.error("Error retrieving certificate dates: {}", e.getMessage());
             return ResponseEntity.status(500).body("Error retrieving certificate dates: " + e.getMessage());
         }
     }
 
+    @PostMapping("profile/update-certificate-dates")
+    public ResponseEntity<?> updateCertificateDates(@RequestBody CertificateDTO certificateDTO) {
+       try {
+            log.info("Updating certificate dates: {}", certificateDTO);
+            return ResponseEntity.ok(profileService.updateCertificateDates(certificateDTO));
+        } catch (Exception e) {
+            log.error("Error updating certificate dates: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error updating certificate dates: " + e.getMessage());
+        }
+    }
+
     @GetMapping("profile/get-profile")
     public ResponseEntity<?> getProfile() {
         try {
-            return ResponseEntity.ok(new ProfileDTO.Builder()
-                    .email("test@test.com")
-                            .firstName("John")
-                            .lastName("Doe")
-                            .linkedin("https://www.linkedin.com/in/johndoe")
-                            .skype("johndoe.skype")
-                            .github("www.github.com/johndoe")
-                    .address("123 Main St, Example City, Country")
-                    .shippingAddress("456 Secondary St, Example City, Country")
-                    .phone("1234567890")
-                    .recentProject("Project A")
-                    .mostViewedProject("Project B")
-                    .build());
+            return ResponseEntity.ok(profileService.getProfile());
         } catch (Exception e) {
             log.error("Error retrieving profile: {}", e.getMessage());
             return ResponseEntity.status(500).body("Error retrieving profile: " + e.getMessage());
         }
-    }
-
-    @GetMapping("profile/education")
-    public ResponseEntity<?> getEducation() {
-        try {
-            return ResponseEntity.ok(new EducationDTO.Builder()
-                    .universityName("Example University")
-                    .dateFrom("2015-09-01")
-                    .dateTo("2019-06-01")
-                    .countryCity("Example City, Country")
-                    .degree("Bachelor's Degree")
-                    .build());
-        } catch (Exception e) {
-            log.error("Error retrieving education: {}", e.getMessage());
-            return ResponseEntity.status(500).body("Error retrieving education: " + e.getMessage());
-        }
-    }
-
-    @GetMapping("profile/details")
-    public ResponseEntity<?> getDetails() {
-        try {
-            return ResponseEntity.ok(new DetailsDTO.Builder()
-                    .notification("Enabled")
-                    .staff("John Doe")
-                    .bio("Software Developer with 5 years of experience.")
-                    .message("Welcome to my profile!")
-                    .build());
-        } catch (Exception e) {
-            log.error("Error retrieving details: {}", e.getMessage());
-            return ResponseEntity.status(500).body("Error retrieving details: " + e.getMessage());
-        }
-    }
-
-    @GetMapping("profile/experience")
-    public ResponseEntity<?> getExperience() {
-        try {
-            return ResponseEntity.ok(new ExperienceDTO.Builder()
-                    .roleName("Software Engineer")
-                    .dateFrom("2020-01-01")
-                    .dateTo("2023-01-01")
-                    .companyName("Tech Company")
-                    .countryCity("Example City, Country")
-                    .service("Developed web applications.")
-                    .build());
-        } catch (Exception e) {
-            log.error("Error retrieving experience: {}", e.getMessage());
-            return ResponseEntity.status(500).body("Error retrieving experience: " + e.getMessage());
-        }
-    }
-
-    @GetMapping("profile/skills")
-    public ResponseEntity<?> getSkills() {
-        try {
-            return ResponseEntity.ok(new SkillsDTO.Builder()
-                    .programmingLanguages("Java, Python, JavaScript")
-                    .webFrameworks("Spring Boot, Angular")
-                    .devOps("Docker, Kubernetes")
-                    .sql("PostgreSQL, MySQL")
-                    .vcs("Git")
-                    .tools("IntelliJ IDEA, VS Code")
-                    .build());
-        } catch (Exception e) {
-            log.error("Error retrieving skills: {}", e.getMessage());
-            return ResponseEntity.status(500).body("Error retrieving skills: " + e.getMessage());
-        }
-    }
-
-    @GetMapping("profile/projects")
-    public ResponseEntity<?> getProjects() {
-        try {
-            return ResponseEntity.ok(new ProjectDTO.Builder()
-                    .projectName("Project Management System")
-                    .dateFrom("2021-01-01")
-                    .dateTo("2022-01-01")
-                    .structure("Microservices Architecture")
-                    .build());
-        } catch (Exception e) {
-            log.error("Error retrieving projects: {}", e.getMessage());
-            return ResponseEntity.status(500).body("Error retrieving projects: " + e.getMessage());
-        }
-    }
-
-    @PostMapping("profile/update-dates")
-    public ResponseEntity<?> updateDates(@RequestBody CertificateDTO certificateDTO) {
-        log.info("Updating certificate dates: {}", certificateDTO);
-        return ResponseEntity.ok("Certificate dates updated successfully");
     }
 
     @PostMapping("profile/update")
@@ -197,14 +99,13 @@ public class ProfileController {
         }
     }
 
-    @PostMapping("profile/update-details")
-    public ResponseEntity<?> updateDetails(@RequestBody DetailsDTO detailsDTO) {
+    @GetMapping("profile/education")
+    public ResponseEntity<?> getEducation() {
         try {
-            log.info("Updating details: {}", detailsDTO);
-            return ResponseEntity.ok(profileService.updateDetails(detailsDTO));
+            return ResponseEntity.ok(profileService.getEducation());
         } catch (Exception e) {
-            log.error("Error updating details: {}", e.getMessage());
-            return ResponseEntity.status(500).body("Error updating details: " + e.getMessage());
+            log.error("Error retrieving education: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error retrieving education: " + e.getMessage());
         }
     }
 
@@ -219,21 +120,89 @@ public class ProfileController {
         }
     }
 
-    @PostMapping("profile/update-experience")
-    public ResponseEntity<?> updateExperience(@RequestBody ExperienceDTO experienceDTO) {
-        log.info("Updating experience: {}", experienceDTO);
-        return ResponseEntity.ok("Experience updated successfully");
+    @GetMapping("profile/details")
+    public ResponseEntity<?> getDetails() {
+        try {
+            return ResponseEntity.ok(profileService.getDetails());
+        } catch (Exception e) {
+            log.error("Error retrieving details: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error retrieving details: " + e.getMessage());
+        }
     }
 
-    @PostMapping("profile/update-projects")
-    public ResponseEntity<?> updateProjects(@RequestBody ProjectDTO projectDTO) {
-        log.info("Updating projects: {}", projectDTO);
-        return ResponseEntity.ok("Projects updated successfully");
+
+    @PostMapping("profile/update-details")
+    public ResponseEntity<?> updateDetails(@RequestBody DetailsDTO detailsDTO) {
+        try {
+            log.info("Updating details: {}", detailsDTO);
+            return ResponseEntity.ok(profileService.updateDetails(detailsDTO));
+        } catch (Exception e) {
+            log.error("Error updating details: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error updating details: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("profile/experience")
+    public ResponseEntity<?> getExperience() {
+        try {
+            return ResponseEntity.ok(profileService.getExperience());
+        } catch (Exception e) {
+            log.error("Error retrieving experience: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error retrieving experience: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("profile/update-experience")
+    public ResponseEntity<?> updateExperience(@RequestBody ExperienceDTO experienceDTO) {
+        try {
+            log.info("Updating experience: {}", experienceDTO);
+            return ResponseEntity.ok(profileService.updateExperience(experienceDTO));
+        } catch (Exception e) {
+            log.error("Error updating experience: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error updating experience: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("profile/skills")
+    public ResponseEntity<?> getSkills() {
+        try {
+            return ResponseEntity.ok(profileService.getSkills());
+        } catch (Exception e) {
+            log.error("Error retrieving skills: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error retrieving skills: " + e.getMessage());
+        }
     }
 
     @PostMapping("profile/save-skills")
     public ResponseEntity<?> saveSkills(@RequestBody SkillsDTO skillsDTO) {
-        log.info("Saving skills: {}", skillsDTO);
-        return ResponseEntity.ok("Skills saved successfully");
+        try {
+            log.info("Saving skills: {}", skillsDTO);
+            return ResponseEntity.ok(profileService.saveSkills(skillsDTO));
+        } catch (Exception e) {
+            log.error("Error saving skills: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error saving skills: " + e.getMessage());
+        }
     }
+
+    @GetMapping("profile/projects")
+    public ResponseEntity<?> getProjects() {
+        try {
+            return ResponseEntity.ok(profileService.getProjects());
+        } catch (Exception e) {
+            log.error("Error retrieving projects: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error retrieving projects: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("profile/update-projects")
+    public ResponseEntity<?> updateProjects(@RequestBody ProjectDTO projectDTO) {
+        try {
+            log.info("Updating projects: {}", projectDTO);
+            return ResponseEntity.ok(profileService.updateProjects(projectDTO));
+        } catch (Exception e) {
+            log.error("Error updating projects: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error updating projects: " + e.getMessage());
+        }
+    }
+
 }

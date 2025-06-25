@@ -24,7 +24,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
             "WHERE up.userId = :userId")
     List<Image> findImagesByUserId(@Param("userId") Long userId);
 
-    @Query("Select pr " +
+    @Query("SELECT new com.example.demo.model.Project(pr.Id, pr.projectName, pr.dateFrom, pr.dateTo, pr.structure) " +
             "FROM Project pr " +
             "JOIN ProfileProject pp ON pr.Id = pp.projectId " +
             "JOIN UserProfile up ON pp.profileId = up.profileId " +
@@ -58,5 +58,12 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
             "JOIN UserProfile up ON ps.profileId = up.profileId " +
             "WHERE up.userId = :userId")
     List<Skills> findSkillsByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT new com.example.demo.model.Certificate(c.Id, c.certificateName, c.dateFrom, c.dateTo, c.countryCity, c.institutionName, c.certificateUrl) " +
+            "FROM Certificate c " +
+            "JOIN ProfileCertificate pc ON c.Id = pc.certificateId " +
+            "JOIN UserProfile up ON pc.profileId = up.profileId " +
+            "WHERE up.userId = :userId")
+    List<Certificate> findCertificatesByUserId(@Param("userId") Long userId);
 
 }
