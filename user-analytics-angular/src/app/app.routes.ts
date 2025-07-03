@@ -76,5 +76,19 @@ export const routes: Routes = [
   canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/edit-projects-profile/edit-projects-profile.component').then(m => m.EditProjectsProfileComponent)
-  }   
+  },
+  {
+    path: 'editcardprofile',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/card-profile/card-profile.component').then(m => m.CardProfileComponent)
+  },
+  {
+    path: 'addcardprofile',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/add-card-profile/add-card-profile.component').then(m => m.AddCardProfileComponent)
+  }
+
+
 ];
