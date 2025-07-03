@@ -4,8 +4,10 @@ import com.example.demo.dto.UserRequestDTO;
 import com.example.demo.dto.UserResponseDTO;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
+import com.example.demo.model.UserRoles;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.UserRolesRepository;
 import com.example.demo.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final UserRolesRepository userRolesRepository;
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
@@ -79,6 +82,13 @@ public class UserService {
             log.debug("User created: {}", user.getUsername());
             userRepository.save(user);
             log.debug("User saved to repository: {}", user.getUsername());
+            UserRoles userRoles = new UserRoles.Builder()
+                    .userId(user.getUserId())
+                    .roleId(roles.stream().findFirst().get().getId()) // Assuming one role for simplicity
+                    .build();
+
+            log.debug("UserRoles created for user: {}", userRoles.getRoleId(), "with userId: {}", userRoles.getUserId());
+            userRolesRepository.save(userRoles);
             return createUserResponseDTO("", "Signup successful", "true");
         } catch (Exception e) {
             log.error("Failed to create user: {}", e.getMessage());
