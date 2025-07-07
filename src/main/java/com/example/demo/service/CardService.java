@@ -23,12 +23,13 @@ public class CardService {
 
     private final UserService userService;
     private final CardRepository cardRepository;
+    private final ProfileService profileService;
     private final ProfileCardRepository profileCardRepository;
     private final ProfileRepository profileRepository;
 
 
     public ResponseDTO createCard(CardDTO cardDTO) {
-        log.debug("Creating card with details: {}", cardDTO);
+        log.info("Creating card with details: {}", cardDTO);
         try {
             Optional<Card> existingCard = cardRepository.findByCardNumber(cardDTO.getCardNumber());
             if (existingCard.isPresent()) {
@@ -38,17 +39,31 @@ public class CardService {
 
             Optional<User> user = userService.getAuthenticatedUser();
 
-            Profile profileExisting = profileRepository.findProfilesByUserId(user.get().getUserId())
-                    .stream()
-                    .reduce((first, second) -> second)
-                    .get();
+            List<Profile> profiles = profileRepository.findProfilesByUserId(user.get().getUserId());
+            Profile profileExisting = profiles.isEmpty()
+                    ? null
+                    : profiles.get(profiles.size() - 1);
+            if (profileExisting == null) {
+                try {
+                    profileExisting = profileService.createProfile(user.get().getUserId());
+                } catch (Exception e) {
+                    log.error("Failed to create profile for user: {}", e.getMessage());
+                    throw new RuntimeException("Failed to create profile for user: " + e.getMessage());
+                }
+            }
 
             Card card = new Card.Builder()
-                    .cardNumber(cardDTO.getCardNumber())
-                    .cardExpiryDate(cardDTO.getExpirationDate())
-                    .cvv(cardDTO.getCvv())
-                    .nameOfCard(cardDTO.getCardName())
+                    .cardNumber(Optional.ofNullable(cardDTO.getCardNumber())
+                            .orElseThrow(() -> new RuntimeException("Card number is required")))
+                    .cardExpiryDate(Optional.ofNullable(cardDTO.getExpirationDate())
+                            .orElseThrow(() -> new RuntimeException("Card expiration date is required")))
+                    .cvv(Optional.ofNullable(cardDTO.getCvv())
+                            .orElseThrow(() -> new RuntimeException("Card CVV is required")))
+                    .nameOfCard(Optional.ofNullable(cardDTO.getCardName())
+                            .orElseThrow(() -> new RuntimeException("Card name is required")))
                     .build();
+
+            log.info("Card object created: {}", card);
 
             Card savedCard = cardRepository.save(card);
             log.info("Card created successfully: {}", savedCard);
