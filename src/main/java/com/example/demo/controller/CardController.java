@@ -21,10 +21,11 @@ public class CardController {
     @PostMapping("/card/send")
     public ResponseEntity<?> sendCard(@RequestBody CardDTO cardDTO) {
         try {
+            log.info("Received request to create card: {}", cardDTO);
             return ResponseEntity.ok(cardService.createCard(cardDTO));
         } catch (Exception e) {
-            log.error("Error retrieving education: {}", e.getMessage());
-            return ResponseEntity.status(500).body("Error retrieving education: " + e.getMessage());
+            log.error("Error retrieving card {}", e.getMessage());
+            return ResponseEntity.status(500).body("Error retrieving card: " + e.getMessage());
         }
     }
 
