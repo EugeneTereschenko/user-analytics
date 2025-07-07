@@ -3,34 +3,65 @@
     <!-- Left vertical nav -->
     <div class="col-md-3 col-lg-2 p-0">
       <nav id="navbar-example3" class="navbar navbar-light bg-light flex-column vh-50 align-items-start">
-        <a class="navbar-brand ms-3 my-1" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+
+        <a
+          class="navbar-brand ms-3 my-1"
+          routerLink="/dashboard"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          Dashboard
+        </a>
+
         <nav class="nav nav-pills flex-column w-100">
-          <a class="nav-link" routerLink="/profile" routerLinkActive="active">Profile</a>
-          <nav class="nav nav-pills flex-column">
-            <a class="nav-link ms-3 my-1" routerLink="/editprofile" routerLinkActive="active">Edit-profile</a>
-            <a class="nav-link ms-3 my-1" routerLink="/editdetailsprofile" routerLinkActive="active">Edit-details-profile</a>
-            <a class="nav-link ms-3 my-1" routerLink="/editskillsprofile" routerLinkActive="active">Edit-skills-profile</a>
-            <a class="nav-link ms-3 my-1" routerLink="/editexperienceprofile" routerLinkActive="active">Edit-experience-profile</a>
-            <a class="nav-link ms-3 my-1" routerLink="/editeducationprofile" routerLinkActive="active">Edit-education-profile</a>
-            <a class="nav-link ms-3 my-1" routerLink="/editcertificatesprofile" routerLinkActive="active">Edit-certificates-profile</a>
-            <a class="nav-link ms-3 my-1" routerLink="/editprojectsprofile" routerLinkActive="active">Edit-projects-profile</a>
-            <a class="nav-link ms-3 my-1" routerLink="/addcardprofile" routerLinkActive="active">Add-card-profile</a>
-            <a class="nav-link ms-3 my-1" routerLink="/editcardprofile" routerLinkActive="active">Edit-card-profile</a>
-          </nav>
+          <!-- This replaces your old Profile link and sub-links -->
+          <a
+            class="nav-link d-flex justify-content-between align-items-center"
+            (click)="toggleProfileMenu()"
+            style="cursor: pointer;"
+          >
+            <span>
+              <i class="bi bi-person me-1"></i>
+              Profile
+            </span>
+            <i
+              class="bi"
+              [ngClass]="{
+                'bi-chevron-up': showProfileMenu,
+                'bi-chevron-down': !showProfileMenu
+              }"
+            ></i>
+          </a>
+
+          <div *ngIf="showProfileMenu" class="nav flex-column ms-3">
+            <a class="nav-link" routerLink="/profile" routerLinkActive="active">View Profile</a>
+            <a class="nav-link" routerLink="/editprofile" routerLinkActive="active">Edit Profile</a>
+            <a class="nav-link" routerLink="/editdetailsprofile" routerLinkActive="active">Edit Details</a>
+            <a class="nav-link" routerLink="/editskillsprofile" routerLinkActive="active">Edit Skills</a>
+            <a class="nav-link" routerLink="/editexperienceprofile" routerLinkActive="active">Edit Experience</a>
+            <a class="nav-link" routerLink="/editeducationprofile" routerLinkActive="active">Edit Education</a>
+            <a class="nav-link" routerLink="/editcertificatesprofile" routerLinkActive="active">Edit Certificates</a>
+            <a class="nav-link" routerLink="/editprojectsprofile" routerLinkActive="active">Edit Projects</a>
+            <a class="nav-link" routerLink="/addcardprofile" routerLinkActive="active">Add Card</a>
+            <a class="nav-link" routerLink="/editcardprofile" routerLinkActive="active">Edit Card</a>
+          </div>
+
+          <!-- Other main nav links -->
           <a class="nav-link" routerLink="/users" routerLinkActive="active">Users</a>
           <a class="nav-link" routerLink="/reports" routerLinkActive="active">Reports</a>
+
           <nav class="nav nav-pills flex-column">
-            <a class="nav-link ms-3 my-1" routerLink="/signin" routerLinkActive="active">Sign In</a>
-            <a class="nav-link ms-3 my-1" routerLink="/signup" routerLinkActive="active">Sign Up</a>
+          <!--  <a class="nav-link ms-3 my-1" routerLink="/signin" routerLinkActive="active">Sign In</a>
+            <a class="nav-link ms-3 my-1" routerLink="/signup" routerLinkActive="active">Sign Up</a> -->
+            <a class="nav-link ms-3 my-1" routerLink="/logout" routerLinkActive="active">Logout</a>
           </nav>
         </nav>
       </nav>
     </div>
-    <!-- Main content and router nav -->
+
+    <!-- Main content -->
     <div class="col-md-9 col-lg-10">
       <router-outlet></router-outlet>
     </div>
   </div>
 </div>
-
-

@@ -30,6 +30,12 @@ export const routes: Routes = [
     import('./pages/signup/signup.component').then(m => m.SignupComponent)
   },
   {
+    path: 'logout',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/logout/logout.component').then(m => m.LogoutComponent)
+  },
+  {
   path: 'profile',
   canActivate: [authGuard],
   loadComponent: () =>

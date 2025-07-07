@@ -183,7 +183,11 @@ export class SignupComponent {
     this.successMessage = 'Signup successful!';
 
     this.authService.signUp(this.username, this.email, this.password, this.confirmPassword, this.roles).subscribe({
-      next: () => this.successMessage = 'Signup successful!',
+      next: () => {
+      this.successMessage = 'Signup successful!';
+      // Navigate to signin page after successful signup
+      window.location.href = '/signin';
+      },
       error: err => this.errorMessage = err.error.message || 'Signup failed'
     });
   }
