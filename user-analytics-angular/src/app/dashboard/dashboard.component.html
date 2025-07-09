@@ -1,1 +1,10 @@
-<p>dashboard works!</p>
+<h2>Analytics Dashboard</h2>
+
+<app-summary-cards [summary]="summary"></app-summary-cards>
+
+<ng-container *ngIf="featureService.current.featureNewChart">
+  <app-line-chart [data]="signupData"></app-line-chart>
+</ng-container>
+
+<app-pie-chart [data]="deviceData" title="Device Usage"></app-pie-chart>
+

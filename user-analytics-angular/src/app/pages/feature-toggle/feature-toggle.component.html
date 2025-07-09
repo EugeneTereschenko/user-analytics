@@ -1,0 +1,15 @@
+<div class="container mt-3">
+      <h2>Feature Toggle Management</h2>
+      <ul class="list-group">
+        <li class="list-group-item" *ngFor="let key of featureKeys">
+          <label>
+            <input
+                type="checkbox"
+                [checked]="toggles[key]"
+                (change)="onToggle(key, $event)"
+                            />  
+            {{ key }}
+          </label>
+        </li>
+      </ul>
+    </div>

@@ -5,6 +5,7 @@ import { LineChartComponent } from '../line-chart/line-chart.component';
 import { PieChartComponent } from '../pie-chart/pie-chart.component';           // <-- adjust path as needed
 import { AnalyticsService } from '../analytics.service';
 import { NgChartsModule } from 'ng2-charts';
+import { FeatureToggleService } from '../feature-toggle.service';
 
 interface SummaryApiResponse {
   totalUsers: number;
@@ -35,7 +36,11 @@ export class DashboardComponent implements OnInit {
   signupData: number[] = [];
   deviceData: any = {};
 
-  constructor(private analyticsService: AnalyticsService) {}
+  constructor(
+    private analyticsService: AnalyticsService,
+    public featureService: FeatureToggleService
+  ) {}
+
 
   ngOnInit() {
     this.analyticsService.getSummary().subscribe((data: SummaryApiResponse) => {
