@@ -119,6 +119,7 @@ export class SigninComponent {
       next: (response) => {
         console.log('Sign in successful:', response);
         // Handle successful sign-in, e.g., redirect to dashboard
+         window.location.href = '/dashboard'; // Redirect to dashboard after successful sign-in
       },
       error: (error) => {
         console.error('Sign in failed:', error);
