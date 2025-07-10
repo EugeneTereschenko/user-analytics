@@ -110,9 +110,27 @@ export const routes: Routes = [
   path: 'feature-toggles',
   loadComponent: () =>
     import('./pages/feature-toggle/feature-toggle.component').then(m => m.FeatureToggleComponent)
+  },
+  {
+  path: 'support',
+  loadComponent: () =>
+    import('./pages/support/support.component').then(m => m.SupportComponent)
+  },
+  {
+  path: 'audit-logs',
+  loadComponent: () =>
+    import('./pages/audit-logs/audit-logs.component').then(m => m.AuditLogsComponent)
+  },
+  {
+  path: 'notifications',
+  loadComponent: () =>
+    import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent)
+  },
+  {
+  path: 'users/:id',
+  loadComponent: () =>
+    import('./pages/user-detail/user-detail.component').then(m => m.UserDetailComponent)
   }
-
-
 
 
 

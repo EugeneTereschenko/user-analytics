@@ -1,0 +1,11 @@
+<div class="container mt-3">
+  <h2>Notifications Center</h2>
+  <ul class="list-group">
+    <li class="list-group-item" *ngFor="let notification of notifications">
+      <strong>{{ notification.title }}</strong><br />
+      <small>{{ notification.timestamp | date:'short' }}</small>
+      <p>{{ notification.message }}</p>
+    </li>
+  </ul>
+</div>
+

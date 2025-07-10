@@ -1,0 +1,22 @@
+<div class="container mt-3">
+      <h2>Support & Feedback</h2>
+      <p>If you have questions, issues, or suggestions, please let us know below.</p>
+
+      <form (ngSubmit)="submitFeedback()">
+        <div class="mb-3">
+          <label for="subject" class="form-label">Subject</label>
+          <input id="subject" class="form-control" [(ngModel)]="subject" name="subject" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="message" class="form-label">Message</label>
+          <textarea id="message" class="form-control" [(ngModel)]="message" name="message" rows="4" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+      </form>
+
+      <div *ngIf="successMessage" class="alert alert-success mt-3">
+        {{ successMessage }}
+      </div>
+</div>

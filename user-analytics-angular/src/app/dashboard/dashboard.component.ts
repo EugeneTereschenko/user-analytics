@@ -36,6 +36,9 @@ export class DashboardComponent implements OnInit {
   signupData: number[] = [];
   deviceData: any = {};
 
+  startDate: string = '';
+endDate: string = '';
+
   constructor(
     private analyticsService: AnalyticsService,
     public featureService: FeatureToggleService
@@ -52,5 +55,10 @@ export class DashboardComponent implements OnInit {
     this.analyticsService.getSignups().subscribe(data => this.signupData = data);
     this.analyticsService.getDevices().subscribe(data => this.deviceData = data);
   }
+
+  loadAnalytics() {
+  this.analyticsService.getSummaryDate(this.startDate, this.endDate).subscribe(data => {
+    this.summary = { users: data.totalUsers, active: data.activeUsers };
+  });
 }
 //    //<app-summary-cards [summary]="{users: 10, active: 5}"></app-summary-cards>
