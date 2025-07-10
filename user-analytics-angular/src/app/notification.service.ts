@@ -9,3 +9,4 @@ export class NotificationService {
   getAll(): Observable<any[]> {
     return this.http.get<any[]>('/api/notifications');
   }
+}

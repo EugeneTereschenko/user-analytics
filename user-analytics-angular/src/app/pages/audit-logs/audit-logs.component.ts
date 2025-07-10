@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { AuditService } from '../../audit-service.service'; // Adjust the path as necessary
-
+import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-audit-logs',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, CommonModule],
   templateUrl: './audit-logs.component.html',
   styleUrl: './audit-logs.component.css'
 })
