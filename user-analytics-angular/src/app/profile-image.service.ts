@@ -8,43 +8,33 @@ export class ProfileImageService {
   private uploadUrl = 'http://localhost:8080/api/profile/upload-image';
   private getImageUrl = 'http://localhost:8080/api/profile/getImage';
   private getProfileInfoUrl = 'http://localhost:8080/api/profile/information';
+  private tokenKey = 'auth_token';
 
   constructor(private http: HttpClient) {}
+
+  private getAuthHeaders(): { [header: string]: string } {
+    const token = localStorage.getItem(this.tokenKey);
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
 
   uploadProfileImage(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
 
-    // Get token from localStorage (or wherever you store it)
-    const token = localStorage.getItem('auth_token');
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
+    const headers = new HttpHeaders(this.getAuthHeaders());
 
-    return this.http.post(this.uploadUrl, formData, { headers }).pipe(
-      response => {
-        console.log('Image uploaded successfully', response);
-        return response;
-      }
-
-    )
+    return this.http.post(this.uploadUrl, formData, { headers });
   }
 
   loadProfileImage(): Observable<Blob> {
-    const token = localStorage.getItem('auth_token');
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
+    const headers = new HttpHeaders(this.getAuthHeaders());
 
     return this.http.get(this.getImageUrl, { headers, responseType: 'blob' });
   }
 
   getProfileInformation(): Observable<any> {
-    const token = localStorage.getItem('auth_token');
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
+    const headers = new HttpHeaders(this.getAuthHeaders());
 
-    return this.http.get(this.getProfileInfoUrl, { headers});
-  }   
+    return this.http.get(this.getProfileInfoUrl, { headers });
+  }
 }

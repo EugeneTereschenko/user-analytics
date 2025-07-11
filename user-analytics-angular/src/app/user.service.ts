@@ -4,23 +4,31 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
+  private readonly tokenKey = 'auth_token';
+  private readonly apiUrl = 'http://localhost:8080/api/users/';
+
   constructor(private http: HttpClient) {}
 
+  private getAuthHeaders(): { [header: string]: string } {
+    const token = localStorage.getItem(this.tokenKey);
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
   getUserById(id: string | number): Observable<any> {
-    return this.http.get<any>(`/api/users/${id}`);
+    return this.http.get<any>(`${this.apiUrl}${id}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
   getAllUsers(): Observable<any[]> {
-    return this.http.get<any[]>('/api/users');
-  }
-
-  getUser(id: string | number): Observable<any> {
-    return this.http.get<any>(`/api/users/${id}`);
+    return this.http.get<any[]>(this.apiUrl, {
+      headers: this.getAuthHeaders()
+    });
   }
 
   deactivateUser(id: string | number): Observable<any> {
-    return this.http.post<any>(`/api/users/${id}/deactivate`, {});
+    return this.http.post<any>(`${this.apiUrl}${id}/deactivate`, {}, {
+      headers: this.getAuthHeaders()
+    });
   }
-
-  // Add more user-related methods as needed
 }
