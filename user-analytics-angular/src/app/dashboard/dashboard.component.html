@@ -1,1 +1,24 @@
-<p>dashboard works!</p>
+<h2>Analytics Dashboard</h2>
+
+<app-summary-cards [summary]="summary"></app-summary-cards>
+
+<ng-container *ngIf="featureService.current.featureNewChart">
+  <app-line-chart [data]="signupData"></app-line-chart>
+</ng-container>
+
+<app-pie-chart [data]="deviceData" title="Device Usage"></app-pie-chart>
+
+<!-- Above your charts -->
+<div class="row mb-3">
+  <div class="col">
+    <label>From:</label>
+    <input type="date" class="form-control" [(ngModel)]="startDate" />
+  </div>
+  <div class="col">
+    <label>To:</label>
+    <input type="date" class="form-control" [(ngModel)]="endDate" />
+  </div>
+  <div class="col align-self-end">
+    <button class="btn btn-primary" (click)="loadAnalytics()">Apply</button>
+  </div>
+</div>

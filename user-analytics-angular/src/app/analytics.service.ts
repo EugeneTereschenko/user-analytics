@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface SummaryApiResponse {
@@ -23,5 +23,13 @@ export class AnalyticsService {
 
   getDevices() {
     return this.http.get('http://localhost:8080/api/analytics/users/devices');
+  }
+
+  getSummaryDate(startDate?: string, endDate?: string): Observable<any> {
+    let params = new HttpParams();
+    if (startDate) params = params.set('startDate', startDate);
+    if (endDate) params = params.set('endDate', endDate);
+
+    return this.http.get('/api/analytics/summary', { params });
   }
 }

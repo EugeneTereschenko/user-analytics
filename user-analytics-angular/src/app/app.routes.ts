@@ -100,6 +100,36 @@ export const routes: Routes = [
   canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/settings/settings.component').then(m => m.SettingsComponent)
+  },
+  {
+  path: 'docs',
+  loadComponent: () =>
+    import('./pages/documentation/documentation.component').then(m => m.DocumentationComponent)
+  },
+  {
+  path: 'feature-toggles',
+  loadComponent: () =>
+    import('./pages/feature-toggle/feature-toggle.component').then(m => m.FeatureToggleComponent)
+  },
+  {
+  path: 'support',
+  loadComponent: () =>
+    import('./pages/support/support.component').then(m => m.SupportComponent)
+  },
+  {
+  path: 'audit-logs',
+  loadComponent: () =>
+    import('./pages/audit-logs/audit-logs.component').then(m => m.AuditLogsComponent)
+  },
+  {
+  path: 'notifications',
+  loadComponent: () =>
+    import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent)
+  },
+  {
+  path: 'users/:id',
+  loadComponent: () =>
+    import('./pages/user-detail/user-detail.component').then(m => m.UserDetailComponent)
   }
 
 
