@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private readonly tokenKey = 'auth_token';
-  private readonly apiUrl = 'http://localhost:8080/api/users/';
+  private readonly apiUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {}
 
@@ -15,13 +15,13 @@ export class UserService {
   }
 
   getUserById(id: string | number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}${id}`, {
+    return this.http.get<any>(`${this.apiUrl}/user/${id}`, {
       headers: this.getAuthHeaders()
     });
   }
 
   getAllUsers(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl, {
+    return this.http.get<any[]>(`${this.apiUrl}/users`, {
       headers: this.getAuthHeaders()
     });
   }

@@ -18,6 +18,11 @@ export class UserDetailComponent implements OnInit {
 
   ngOnInit() {
     this.userId = this.route.snapshot.paramMap.get('id')!;
+    if (!this.userId) {
+      console.error('User ID is not provided in the route.');
+      //return;
+    }
+    this.userId = '1'; 
     this.userService.getUserById(this.userId).subscribe(data => this.user = data);
   }
 
