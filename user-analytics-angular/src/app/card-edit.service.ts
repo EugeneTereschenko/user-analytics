@@ -6,22 +6,30 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CardEditService {
+  private readonly tokenKey = 'auth_token';
+  private readonly apiUrl = 'http://localhost:8080/api/card';
 
-    private tokenKey = 'auth_token';
-    private apiUrl = 'http://localhost:8080/api/card';
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
+  sendCardData(cardData: CardData): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/send`,
+      cardData,
+      { headers: this.createAuthHeaders() }
+    );
+  }
 
-  sendCardData(cardData: {
-    cardNumber: string,
-    expirationDate: string,
-    cvv: string,
-    cardName: string
-  }): Observable<any> {
-    const token = localStorage.getItem(this.tokenKey) || '';
-    const headers = new HttpHeaders({
+  private createAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem(this.tokenKey) ?? '';
+    return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.http.post(this.apiUrl + '/send', cardData, { headers });
   }
+}
+
+export interface CardData {
+  cardNumber: string;
+  expirationDate: string;
+  cvv: string;
+  cardName: string;
 }

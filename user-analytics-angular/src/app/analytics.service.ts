@@ -11,18 +11,39 @@ export interface SummaryApiResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService {
+  private readonly tokenKey = 'auth_token';
+  private readonly baseUrl = 'http://localhost:8080/api/analytics/';
+
   constructor(private http: HttpClient) {}
 
-  getSummary(): Observable<SummaryApiResponse>  {
-    return this.http.get<SummaryApiResponse>('http://localhost:8080/api/analytics/users/summary');
+  private getAuthHeaders(): { [header: string]: string } | undefined {
+    const token = localStorage.getItem(this.tokenKey);
+    return token ? { 'Authorization': `Bearer ${token}` } : undefined;
   }
 
-  getSignups() {
-    return this.http.get<number[]>('http://localhost:8080/api/analytics/users/signups?start=2025-06-01&end=2025-06-05');
+  getSummary(): Observable<SummaryApiResponse> {
+    return this.http.get<SummaryApiResponse>(
+      `${this.baseUrl}users/summary`,
+      { headers: this.getAuthHeaders() }
+    );
   }
 
-  getDevices() {
-    return this.http.get('http://localhost:8080/api/analytics/users/devices');
+  getSignups(start?: string, end?: string): Observable<number[]> {
+    let params = new HttpParams();
+    if (start) params = params.set('start', start);
+    if (end) params = params.set('end', end);
+
+    return this.http.get<number[]>(
+      `${this.baseUrl}users/signups`,
+      { headers: this.getAuthHeaders(), params }
+    );
+  }
+
+  getDevices(): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}users/devices`,
+      { headers: this.getAuthHeaders() }
+    );
   }
 
   getSummaryDate(startDate?: string, endDate?: string): Observable<any> {
@@ -30,6 +51,9 @@ export class AnalyticsService {
     if (startDate) params = params.set('startDate', startDate);
     if (endDate) params = params.set('endDate', endDate);
 
-    return this.http.get('/api/analytics/summary', { params });
+    return this.http.get(
+      `${this.baseUrl}summary`,
+      { headers: this.getAuthHeaders(), params }
+    );
   }
 }
