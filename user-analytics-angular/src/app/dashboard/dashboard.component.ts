@@ -65,8 +65,8 @@ export class DashboardComponent implements OnInit {
   signupData: number[] = [];
   deviceData: any = {};
 
-  startDate: string = '';
-  endDate: string = '';
+  startDate: string = '2025-07-15';
+  endDate: string = '2025-07-16';
 
   constructor(
     private analyticsService: AnalyticsService,
@@ -80,7 +80,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadSummary() {
-    this.analyticsService.getSummary().subscribe((data: SummaryApiResponse) => {
+    this.analyticsService.getSummaryDate(this.startDate, this.endDate).subscribe((data: SummaryApiResponse) => {
       this.summary = {
         users: data.totalUsers,
         active: data.activeUsers
@@ -89,7 +89,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadSignups() {
-    this.analyticsService.getSignups().subscribe(data => this.signupData = data);
+    this.analyticsService.getSignups(this.startDate, this.endDate).subscribe(data => this.signupData = data);
   }
 
   loadDevices() {
