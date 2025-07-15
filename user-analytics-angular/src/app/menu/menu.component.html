@@ -1,0 +1,135 @@
+<div class="container-fluid">
+<div class="row" style="background-color: #f8f9fa; width: 60%;">
+    <!-- Left vertical nav -->
+    <div class="col-md-3 col-lg-2 p-0">
+      <nav id="navbar-example3" class="navbar navbar-light bg-light flex-column vh-50 align-items-start">
+
+        <a
+          class="navbar-brand ms-3 my-1"
+          routerLink="/dashboard"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          Dashboard
+        </a>
+
+        <nav class="nav nav-pills flex-column w-100">
+          <!-- Edit menu -->
+          <a
+            class="nav-link d-flex justify-content-between align-items-center"
+            (click)="toggleEditMenu()"
+            style="cursor: pointer;"
+          >
+            <span>
+              <i class="bi bi-pencil me-1"></i>
+              Edit
+            </span>
+            <i
+              class="bi"
+              [ngClass]="{
+                'bi-chevron-up': showEditMenu,
+                'bi-chevron-down': !showEditMenu
+              }"
+            ></i>
+          </a>
+          <div *ngIf="showEditMenu" class="nav flex-column ms-3">
+            <a class="nav-link" routerLink="/settings" routerLinkActive="active">Settings</a>
+            <a class="nav-link" routerLink="/feature-toggles" routerLinkActive="active">Feature Toggles</a>
+            <a class="nav-link" routerLink="/notifications" routerLinkActive="active">Notifications</a>
+          </div>
+
+          <!-- Profile menu -->
+          <a
+            class="nav-link d-flex justify-content-between align-items-center"
+            (click)="toggleProfileMenu()"
+            style="cursor: pointer;"
+          >
+            <span>
+              <i class="bi bi-person me-1"></i>
+              Profile
+            </span>
+            <i
+              class="bi"
+              [ngClass]="{
+                'bi-chevron-up': showProfileMenu,
+                'bi-chevron-down': !showProfileMenu
+              }"
+            ></i>
+          </a>
+          <div *ngIf="showProfileMenu" class="nav flex-column ms-3">
+            <a class="nav-link" routerLink="/profile" routerLinkActive="active">View Profile</a>
+            
+            <!-- Edit Profile submenu -->
+            <a
+              class="nav-link d-flex justify-content-between align-items-center"
+              (click)="toggleEditProfileMenu(); $event.stopPropagation()"
+              style="cursor: pointer;"
+            >
+              <span>
+                <i class="bi bi-pencil me-1"></i>
+                Edit Profile
+              </span>
+              <i
+                class="bi"
+                [ngClass]="{
+                  'bi-chevron-up': showEditProfileMenu,
+                  'bi-chevron-down': !showEditProfileMenu
+                }"
+              ></i>
+            </a>
+            <div *ngIf="showEditProfileMenu" class="nav flex-column ms-3">
+              <a class="nav-link" routerLink="/editprofile" routerLinkActive="active">Edit Profile</a>
+              <a class="nav-link" routerLink="/editdetailsprofile" routerLinkActive="active">Edit Details</a>
+              <a class="nav-link" routerLink="/editskillsprofile" routerLinkActive="active">Edit Skills</a>
+              <a class="nav-link" routerLink="/editexperienceprofile" routerLinkActive="active">Edit Experience</a>
+              <a class="nav-link" routerLink="/editeducationprofile" routerLinkActive="active">Edit Education</a>
+              <a class="nav-link" routerLink="/editcertificatesprofile" routerLinkActive="active">Edit Certificates</a>
+              <a class="nav-link" routerLink="/editprojectsprofile" routerLinkActive="active">Edit Projects</a>
+            </div>
+            <!-- End Edit Profile submenu -->
+
+            <!-- Billing submenu -->
+            <a
+              class="nav-link d-flex justify-content-between align-items-center"
+              (click)="toggleBillingMenu(); $event.stopPropagation()"
+              style="cursor: pointer;"
+            >
+              <span>
+                <i class="bi bi-credit-card me-1"></i>
+                Billing
+              </span>
+              <i
+                class="bi"
+                [ngClass]="{
+                  'bi-chevron-up': showBillingMenu,
+                  'bi-chevron-down': !showBillingMenu
+                }"
+              ></i>
+            </a>
+            <div *ngIf="showBillingMenu" class="nav flex-column ms-3">
+              <a class="nav-link" routerLink="/addcardprofile" routerLinkActive="active">Add Card</a>
+              <a class="nav-link" routerLink="/editcardprofile" routerLinkActive="active">Edit Card</a>
+            </div>
+            <!-- End Billing submenu -->
+          </div>
+          <!-- End Profile menu -->
+
+          <!-- Other main nav links -->
+          <a class="nav-link" routerLink="/user-detail" routerLinkActive="active">User Detail</a>
+          <a class="nav-link" routerLink="/audit-logs" routerLinkActive="active">Audit Logs</a>
+          <a class="nav-link" routerLink="/users" routerLinkActive="active">Users</a>
+          <a class="nav-link" routerLink="/reports" routerLinkActive="active">Reports</a>
+
+          <nav class="nav nav-pills flex-column">
+            <a class="nav-link ms-3 my-1" routerLink="/docs" routerLinkActive="active">Documentation</a>
+            <a class="nav-link ms-3 my-1" routerLink="/support" routerLinkActive="active">Support / Feedback</a>
+            <a class="nav-link ms-3 my-1" routerLink="/logout" routerLinkActive="active">Logout</a>
+          </nav>
+        </nav>
+      </nav>
+    </div>
+
+    <!-- Main content -->
+  </div>
+</div>
+
