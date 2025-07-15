@@ -12,8 +12,10 @@ import java.util.Map;
 public class AnalyticsController {
 
     @GetMapping("/summary")
-    public ResponseEntity<UserSummaryDTO> getUserSummary() {
-        log.info("Fetching user summary");
+    public ResponseEntity<UserSummaryDTO> getUserSummary(
+            @RequestParam(name = "startDate") LocalDate start,
+            @RequestParam(name = "endDate") LocalDate end) {
+        log.info("Fetching user summary from {} to {}", start, end);
         UserSummaryDTO summary = new UserSummaryDTO(12345, 345, 56, 42.7);
         return ResponseEntity.ok(summary);
     }
