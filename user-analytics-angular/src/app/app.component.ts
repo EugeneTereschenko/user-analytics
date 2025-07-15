@@ -14,11 +14,29 @@ import { AuthService } from './auth.service';
 export class AppComponent {
   title = 'user-analytics-angular';
 
+  showEditMenu = false;
+
   showProfileMenu = false;
 
+  showBillingMenu = false;
+
+  showEditProfileMenu = false;
+
+  toggleEditMenu() {
+    this.showEditMenu = !this.showEditMenu;
+  }
 
   toggleProfileMenu() {
     this.showProfileMenu = !this.showProfileMenu;
   }
+
+  toggleBillingMenu() {
+    this.showBillingMenu = !this.showBillingMenu;
+  }
+
+  toggleEditProfileMenu() {
+    this.showEditProfileMenu = !this.showEditProfileMenu;
+  }
+
 
 }
