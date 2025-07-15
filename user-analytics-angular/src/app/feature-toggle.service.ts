@@ -9,7 +9,7 @@ export class FeatureToggleService {
   private toggles = new BehaviorSubject<{ [key: string]: boolean }>({
     featureNewChart: false,
     featureBetaProfile: false,
-    featureDocumentation: true
+    featureDocumentation: false
   });
 
   toggles$ = this.toggles.asObservable();

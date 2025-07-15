@@ -121,7 +121,14 @@
           <a class="nav-link" routerLink="/reports" routerLinkActive="active">Reports</a>
 
           <nav class="nav nav-pills flex-column">
-            <a class="nav-link ms-3 my-1" routerLink="/docs" routerLinkActive="active">Documentation</a>
+            <a
+                class="nav-link ms-3 my-1"
+                routerLink="/docs"
+                routerLinkActive="active"
+                *ngIf="featureToggleService.current['featureDocumentation']"
+                >
+                Documentation
+            </a>
             <a class="nav-link ms-3 my-1" routerLink="/support" routerLinkActive="active">Support / Feedback</a>
             <a class="nav-link ms-3 my-1" routerLink="/logout" routerLinkActive="active">Logout</a>
           </nav>
