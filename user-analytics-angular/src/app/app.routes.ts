@@ -3,21 +3,25 @@ import { authGuard } from './auth/auth.guard';
 
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  {
+  path: '',
+  canActivate: [authGuard],
+  loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
+  },
   {
   path: 'dashboard',
   canActivate: [authGuard],
   loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
-    path: 'users',
-    loadComponent: () =>
-      import('./pages/user-list/user-list.component').then(m => m.UserListComponent)
+  path: 'users',
+  canActivate: [authGuard],
+  loadComponent: () => import('./pages/user-list/user-list.component').then(m => m.UserListComponent)
   },
   {
-    path: 'reports',
-    loadComponent: () =>
-      import('./pages/reports/reports.component').then(m => m.ReportsComponent)
+  path: 'reports',
+  canActivate: [authGuard],
+  loadComponent: () => import('./pages/reports/reports.component').then(m => m.ReportsComponent)
   },
   {
   path: 'signin',
@@ -103,38 +107,44 @@ export const routes: Routes = [
   },
   {
   path: 'docs',
+  canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/documentation/documentation.component').then(m => m.DocumentationComponent)
   },
   {
   path: 'feature-toggles',
+  canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/feature-toggle/feature-toggle.component').then(m => m.FeatureToggleComponent)
   },
   {
   path: 'support',
+  canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/support/support.component').then(m => m.SupportComponent)
   },
   {
   path: 'audit-logs',
+  canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/audit-logs/audit-logs.component').then(m => m.AuditLogsComponent)
   },
   {
   path: 'notifications',
+  canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent)
   },
   {
   path: 'users/:id',
+  canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/user-detail/user-detail.component').then(m => m.UserDetailComponent)
   },
   {
-    path: 'user-detail',
-    canActivate: [authGuard],
-    loadComponent: () =>
+  path: 'user-detail',
+  canActivate: [authGuard],
+  loadComponent: () =>
       import('./pages/user-detail/user-detail.component').then(m => m.UserDetailComponent)
   }
 
