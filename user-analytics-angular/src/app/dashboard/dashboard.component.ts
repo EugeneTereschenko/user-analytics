@@ -26,34 +26,37 @@ interface SummaryApiResponse {
     FormsModule,
     CommonModule
   ],
-
   template: `
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
     <h2>Analytics Dashboard</h2>
 
-<app-summary-cards [summary]="summary"></app-summary-cards>
+    <div class="row mb-3">
+      <div class="col">
+        <label>From:</label>
+        <input type="date" class="form-control" [(ngModel)]="startDate" />
+      </div>
+      <div class="col">
+        <label>To:</label>
+        <input type="date" class="form-control" [(ngModel)]="endDate" />
+      </div>
+      <div class="col align-self-end">
+        <button class="btn btn-primary" (click)="loadAnalytics()">Apply</button>
+      </div>
+    </div>
 
-<ng-container *ngIf="featureService.current['featureNewChart']">
-  <app-line-chart [data]="signupData"></app-line-chart>
-</ng-container>
-
-<app-pie-chart [data]="deviceData" title="Device Usage"></app-pie-chart>
-
-<!-- Above your charts -->
-<div class="row mb-3">
-  <div class="col">
-    <label>From:</label>
-    <input type="date" class="form-control" [(ngModel)]="startDate" />
-  </div>
-  <div class="col">
-    <label>To:</label>
-    <input type="date" class="form-control" [(ngModel)]="endDate" />
-  </div>
-  <div class="col align-self-end">
-    <button class="btn btn-primary" (click)="loadAnalytics()">Apply</button>
-  </div>
-</div>
     <app-summary-cards [summary]="summary"></app-summary-cards>
-    <app-line-chart [data]="signupData"></app-line-chart>
+
+    <ng-container *ngIf="featureService.current['featureNewChart']">
+      <app-line-chart [data]="signupData"></app-line-chart>
+    </ng-container>
+
     <app-pie-chart [data]="deviceData" title="Device Usage"></app-pie-chart>
   `
 })
@@ -62,30 +65,41 @@ export class DashboardComponent implements OnInit {
   signupData: number[] = [];
   deviceData: any = {};
 
-  startDate: string = '';
-endDate: string = '';
+  startDate: string = '2025-07-15';
+  endDate: string = '2025-07-16';
 
   constructor(
     private analyticsService: AnalyticsService,
     public featureService: FeatureToggleService
   ) {}
 
-
   ngOnInit() {
-    this.analyticsService.getSummary().subscribe((data: SummaryApiResponse) => {
+    this.loadSummary();
+    this.loadSignups();
+    this.loadDevices();
+  }
+
+  loadSummary() {
+    this.analyticsService.getSummaryDate(this.startDate, this.endDate).subscribe((data: SummaryApiResponse) => {
       this.summary = {
         users: data.totalUsers,
         active: data.activeUsers
       };
     });
-    this.analyticsService.getSignups().subscribe(data => this.signupData = data);
+  }
+
+  loadSignups() {
+    this.analyticsService.getSignups(this.startDate, this.endDate).subscribe(data => this.signupData = data);
+  }
+
+  loadDevices() {
     this.analyticsService.getDevices().subscribe(data => this.deviceData = data);
   }
 
   loadAnalytics() {
-  this.analyticsService.getSummaryDate(this.startDate, this.endDate).subscribe(data => {
-    this.summary = { users: data.totalUsers, active: data.activeUsers };
-  });
-}
+    this.analyticsService.getSummaryDate(this.startDate, this.endDate).subscribe(data => {
+      this.summary = { users: data.totalUsers, active: data.activeUsers };
+    });
+  }
 }
 //    //<app-summary-cards [summary]="{users: 10, active: 5}"></app-summary-cards>

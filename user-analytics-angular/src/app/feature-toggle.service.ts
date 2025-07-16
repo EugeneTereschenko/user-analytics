@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class FeatureToggleService {
   // All toggles stored in a BehaviorSubject
   private toggles = new BehaviorSubject<{ [key: string]: boolean }>({
-    featureNewChart: false,
+    featureNewChart: true,
     featureBetaProfile: false,
     featureDocumentation: true
   });

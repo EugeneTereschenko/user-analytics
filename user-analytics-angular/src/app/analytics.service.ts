@@ -52,7 +52,7 @@ export class AnalyticsService {
     if (endDate) params = params.set('endDate', endDate);
 
     return this.http.get(
-      `${this.baseUrl}summary`,
+      `${this.baseUrl}users/summary`,
       { headers: this.getAuthHeaders(), params }
     );
   }
