@@ -158,6 +158,12 @@ export const routes: Routes = [
   canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/calendar/calendar.component').then(m => m.CalendarComponent)
+  },
+  {
+  path: 'reminders',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/reminders/reminders.component').then(m => m.RemindersComponent)
   }
 
 
