@@ -1,0 +1,50 @@
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+<div class="container mt-4">
+      <h2>📅 My Calendar</h2>
+      <!-- <full-calendar
+        [plugins]="calendarPlugins"
+        [initialView]="'dayGridMonth'"
+        [events]="calendarEvents"
+        (dateClick)="handleDateClick($event)">
+      </full-calendar>-->
+      <full-calendar 
+        [options]="calendarOptions"
+        [initialView]="'dayGridMonth'"
+        [events]="calendarEvents"
+        (dateClick)="handleDateClick($event)">
+      </full-calendar>
+</div>
+
+  <!-- Modal Dialog -->
+  <div class="modal-backdrop fade show" *ngIf="showModal" style="z-index: 1040;">
+  <div class="modal d-block" tabindex="-1" *ngIf="showModal" style="z-index: 1050;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Event for {{ newEventDate }}</h5>
+          <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Event Title"
+            [(ngModel)]="newEventTitle"
+            autofocus
+          />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="saveEvent()" [disabled]="!newEventTitle.trim()">Save Event</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
