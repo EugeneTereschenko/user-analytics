@@ -21,3 +21,30 @@
         (dateClick)="handleDateClick($event)">
       </full-calendar>
 </div>
+
+  <!-- Modal Dialog -->
+  <div class="modal-backdrop fade show" *ngIf="showModal" style="z-index: 1040;">
+  <div class="modal d-block" tabindex="-1" *ngIf="showModal" style="z-index: 1050;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Event for {{ newEventDate }}</h5>
+          <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Event Title"
+            [(ngModel)]="newEventTitle"
+            autofocus
+          />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="saveEvent()" [disabled]="!newEventTitle.trim()">Save Event</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
