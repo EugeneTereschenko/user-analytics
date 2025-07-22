@@ -8,6 +8,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { FeatureToggleService } from '../feature-toggle.service';
 import { FormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { OnboardingService } from '../services/onboarding.service';
 
 interface SummaryApiResponse {
   totalUsers: number;
@@ -39,6 +40,8 @@ interface SummaryApiResponse {
 
     <h2>{{ 'WELCOME' | translate }}</h2>
     <h2>Analytics Dashboard</h2>
+    <h2 class="dashboard-header">Dashboard</h2>
+    <button (click)="start()">Start Tour</button>
 
     <div class="row mb-3">
       <div class="col">
@@ -74,7 +77,8 @@ export class DashboardComponent implements OnInit {
   constructor(
     private analyticsService: AnalyticsService,
     public featureService: FeatureToggleService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private onboarding: OnboardingService
   ) {}
 
   ngOnInit() {
@@ -84,6 +88,10 @@ export class DashboardComponent implements OnInit {
     // Use the current language set in TranslateService
     const currentLang = this.translateService.currentLang || this.translateService.getDefaultLang();
     this.translateService.use(currentLang);
+  }
+
+  start() {
+    this.onboarding.startTour();
   }
 
   loadSummary() {
