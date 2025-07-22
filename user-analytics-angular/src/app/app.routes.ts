@@ -170,9 +170,11 @@ export const routes: Routes = [
   canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/user-activity-timeline/user-activity-timeline.component').then(m => m.UserActivityTimelineComponent)
+  },
+  {
+    path: 'language-switcher',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/language-switcher/language-switcher.component').then(m => m.LanguageSwitcherComponent)
   }
-
-
-
-
 ];

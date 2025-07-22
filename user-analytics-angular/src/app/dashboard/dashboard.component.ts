@@ -7,6 +7,7 @@ import { AnalyticsService } from '../analytics.service';
 import { NgChartsModule } from 'ng2-charts';
 import { FeatureToggleService } from '../feature-toggle.service';
 import { FormsModule } from '@angular/forms';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 interface SummaryApiResponse {
   totalUsers: number;
@@ -24,7 +25,8 @@ interface SummaryApiResponse {
     PieChartComponent,
     NgChartsModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    TranslateModule
   ],
   template: `
 
@@ -35,6 +37,7 @@ interface SummaryApiResponse {
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
+    <h2>{{ 'WELCOME' | translate }}</h2>
     <h2>Analytics Dashboard</h2>
 
     <div class="row mb-3">
@@ -70,13 +73,17 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private analyticsService: AnalyticsService,
-    public featureService: FeatureToggleService
+    public featureService: FeatureToggleService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit() {
     this.loadSummary();
     this.loadSignups();
     this.loadDevices();
+    // Use the current language set in TranslateService
+    const currentLang = this.translateService.currentLang || this.translateService.getDefaultLang();
+    this.translateService.use(currentLang);
   }
 
   loadSummary() {
