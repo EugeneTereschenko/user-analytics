@@ -164,7 +164,14 @@ export const routes: Routes = [
   canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/reminders/reminders.component').then(m => m.RemindersComponent)
+  },
+  {
+  path: 'activity',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/user-activity-timeline/user-activity-timeline.component').then(m => m.UserActivityTimelineComponent)
   }
+
 
 
 
