@@ -1,0 +1,12 @@
+.video-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+.video-card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      background: #f8f9fa;
+}

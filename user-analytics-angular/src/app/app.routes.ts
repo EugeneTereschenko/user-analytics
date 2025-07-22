@@ -176,5 +176,12 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/language-switcher/language-switcher.component').then(m => m.LanguageSwitcherComponent)
+  },
+  {
+  path: 'tutorials',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/tutorials/tutorials.component').then(m => m.TutorialsComponent)
   }
+
 ];
