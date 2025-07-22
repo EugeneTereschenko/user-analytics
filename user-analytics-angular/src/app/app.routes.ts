@@ -182,6 +182,19 @@ export const routes: Routes = [
   canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/tutorials/tutorials.component').then(m => m.TutorialsComponent)
+  },
+  {
+  path: 'file-manager',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/file-manager/file-manager.component').then(m => m.FileManagerComponent)
+  },
+  {
+    path: 'data-import-export',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/data-import-export/data-import-export.component').then(m => m.DataImportExportComponent)
   }
+
 
 ];
