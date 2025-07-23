@@ -194,6 +194,24 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/data-import-export/data-import-export.component').then(m => m.DataImportExportComponent)
+  },
+  {
+  path: 'roles',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/roles/roles.component').then(m => m.RolesComponent)
+  },
+  {
+  path: 'status',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/status/status.component').then(m => m.StatusComponent)
+  },
+  {
+    path: 'assistant',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/assistant/assistant.component').then(m => m.AssistantComponent)
   }
 
 
