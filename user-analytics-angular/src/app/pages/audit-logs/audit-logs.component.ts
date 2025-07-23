@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { AuditService } from '../../audit-service.service'; // Adjust the path as necessary
+import { AuditService } from '../../services/audit-service.service'; // Adjust the path as necessary
 import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
 

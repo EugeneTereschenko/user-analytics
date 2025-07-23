@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { NotificationService } from '../../notification.service'; // Adjust the path as necessary
+import { NotificationService } from '../../services/notification.service'; // Adjust the path as necessary
 import { CommonModule } from '@angular/common';
 
 @Component({

@@ -164,6 +164,66 @@ export const routes: Routes = [
   canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/reminders/reminders.component').then(m => m.RemindersComponent)
+  },
+  {
+  path: 'activity',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/user-activity-timeline/user-activity-timeline.component').then(m => m.UserActivityTimelineComponent)
+  },
+  {
+    path: 'language-switcher',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/language-switcher/language-switcher.component').then(m => m.LanguageSwitcherComponent)
+  },
+  {
+  path: 'tutorials',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/tutorials/tutorials.component').then(m => m.TutorialsComponent)
+  },
+  {
+  path: 'file-manager',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/file-manager/file-manager.component').then(m => m.FileManagerComponent)
+  },
+  {
+    path: 'data-import-export',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/data-import-export/data-import-export.component').then(m => m.DataImportExportComponent)
+  },
+  {
+  path: 'roles',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/roles/roles.component').then(m => m.RolesComponent)
+  },
+  {
+  path: 'status',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/status/status.component').then(m => m.StatusComponent)
+  },
+  {
+    path: 'assistant',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/assistant/assistant.component').then(m => m.AssistantComponent)
+  },
+  {
+  path: 'usage-insights',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/usage-insights/usage-insights.component').then(m => m.UsageInsightsComponent)
+  },
+  {
+  path: 'announcements',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/announcements/announcements.component').then(m => m.AnnouncementsComponent)
   }
 
 

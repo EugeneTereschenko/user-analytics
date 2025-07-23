@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { SummaryCardsComponent } from '../summary-cards/summary-cards.component';
 import { LineChartComponent } from '../line-chart/line-chart.component';
 import { PieChartComponent } from '../pie-chart/pie-chart.component';           // <-- adjust path as needed
-import { AnalyticsService } from '../analytics.service';
+import { AnalyticsService } from '../services/analytics.service';
 import { NgChartsModule } from 'ng2-charts';
-import { FeatureToggleService } from '../feature-toggle.service';
+import { FeatureToggleService } from '../services/feature-toggle.service';
 import { FormsModule } from '@angular/forms';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { OnboardingService } from '../services/onboarding.service';
 
 interface SummaryApiResponse {
   totalUsers: number;
@@ -24,7 +26,8 @@ interface SummaryApiResponse {
     PieChartComponent,
     NgChartsModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    TranslateModule
   ],
   template: `
 
@@ -35,7 +38,10 @@ interface SummaryApiResponse {
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
+    <h2>{{ 'WELCOME' | translate }}</h2>
     <h2>Analytics Dashboard</h2>
+    <h2 class="dashboard-header">Dashboard</h2>
+    <button (click)="start()">Start Tour</button>
 
     <div class="row mb-3">
       <div class="col">
@@ -70,13 +76,22 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private analyticsService: AnalyticsService,
-    public featureService: FeatureToggleService
+    public featureService: FeatureToggleService,
+    private translateService: TranslateService,
+    private onboarding: OnboardingService
   ) {}
 
   ngOnInit() {
     this.loadSummary();
     this.loadSignups();
     this.loadDevices();
+    // Use the current language set in TranslateService
+    const currentLang = this.translateService.currentLang || this.translateService.getDefaultLang();
+    this.translateService.use(currentLang);
+  }
+
+  start() {
+    this.onboarding.startTour();
   }
 
   loadSummary() {

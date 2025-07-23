@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { CardEditService } from '../../card-edit.service';
+import { CardEditService } from '../../services/card-edit.service';
 
 @Component({
   selector: 'app-card-profile',

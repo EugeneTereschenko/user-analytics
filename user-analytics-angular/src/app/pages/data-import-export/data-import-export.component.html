@@ -1,0 +1,28 @@
+<div class="container mt-4">
+  <h3>📥 Import / 📤 Export Data</h3>
+
+  <input type="file" (change)="onFileSelected($event)" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+  
+  <button (click)="exportCSV()" class="btn btn-primary mt-3 me-2">Export CSV</button>
+  <button (click)="exportExcel()" class="btn btn-secondary mt-3">Export Excel</button>
+
+  <hr />
+
+  <div *ngIf="importedData.length > 0">
+    <h5>Preview:</h5>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th *ngFor="let header of previewHeaders">{{ header }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of importedData; let i = index" [hidden]="i >= 10">
+          <td *ngFor="let header of previewHeaders">{{ row[header] }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <small>Showing first 10 rows</small>
+  </div>
+</div>
+

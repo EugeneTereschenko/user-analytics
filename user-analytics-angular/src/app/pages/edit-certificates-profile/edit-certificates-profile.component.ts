@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ProfileEditService } from '../../profile-edit.service';
+import { ProfileEditService } from '../../services/profile-edit.service';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
