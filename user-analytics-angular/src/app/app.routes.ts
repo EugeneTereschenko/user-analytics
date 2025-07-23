@@ -212,7 +212,20 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/assistant/assistant.component').then(m => m.AssistantComponent)
+  },
+  {
+  path: 'usage-insights',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/usage-insights/usage-insights.component').then(m => m.UsageInsightsComponent)
+  },
+  {
+  path: 'announcements',
+  canActivate: [authGuard],
+  loadComponent: () =>
+    import('./pages/announcements/announcements.component').then(m => m.AnnouncementsComponent)
   }
+
 
 
 ];
