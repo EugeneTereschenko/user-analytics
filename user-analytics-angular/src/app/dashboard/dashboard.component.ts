@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { SummaryCardsComponent } from '../summary-cards/summary-cards.component';
 import { LineChartComponent } from '../line-chart/line-chart.component';
 import { PieChartComponent } from '../pie-chart/pie-chart.component';           // <-- adjust path as needed
-import { AnalyticsService } from '../analytics.service';
+import { AnalyticsService } from '../services/analytics.service';
 import { NgChartsModule } from 'ng2-charts';
-import { FeatureToggleService } from '../feature-toggle.service';
+import { FeatureToggleService } from '../services/feature-toggle.service';
 import { FormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { OnboardingService } from '../services/onboarding.service';

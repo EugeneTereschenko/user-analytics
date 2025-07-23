@@ -4,7 +4,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { FormsModule } from '@angular/forms';
-import { CalendarService, CalendarEvent } from '../../service/calendar.service';
+import { CalendarService, CalendarEvent } from '../../services/calendar.service';
 
 @Component({
   selector: 'app-calendar',

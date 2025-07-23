@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { ProfileEditService } from '../../profile-edit.service';
+import { ProfileEditService } from '../../services/profile-edit.service';
 
 
 import { OnInit } from '@angular/core';

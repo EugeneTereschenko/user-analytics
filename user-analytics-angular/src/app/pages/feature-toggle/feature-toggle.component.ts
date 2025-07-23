@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FeatureToggleService } from '../../feature-toggle.service';
+import { FeatureToggleService } from '../../services/feature-toggle.service';
 import { AsyncPipe } from '@angular/common'
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SupportService } from '../../support-service.service'; // Adjust the path as necessary
+import { SupportService } from '../../services/support-service.service'; // Adjust the path as necessary
 
 @Component({
   selector: 'app-support',

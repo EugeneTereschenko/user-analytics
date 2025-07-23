@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FeatureToggleService } from '../feature-toggle.service'; // Import the feature toggle service
+import { FeatureToggleService } from '../services/feature-toggle.service'; // Import the feature toggle service
 import { RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
