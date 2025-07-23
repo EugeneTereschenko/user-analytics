@@ -6,158 +6,93 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
 <div class="container-fluid">
-<div class="row" style="background-color: #f8f9fa; width: 60%;">
-    <!-- Left vertical nav -->
+  <div class="row bg-light" style="width: 60%;">
     <div class="col-md-3 col-lg-2 p-0">
-      <nav id="navbar-example3" class="navbar navbar-light bg-light flex-column vh-50 align-items-start">
-
-        <a
-          class="navbar-brand ms-3 my-1"
-          routerLink="/dashboard"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
+      <nav class="navbar navbar-light flex-column vh-50 align-items-start">
+        <a class="navbar-brand ms-3 my-1"
+           routerLink="/dashboard"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }">
           Dashboard
         </a>
 
         <nav class="nav nav-pills flex-column w-100">
-          <!-- Edit menu -->
-          <a
-            class="nav-link d-flex justify-content-between align-items-center"
-            (click)="toggleEditMenu()"
-            style="cursor: pointer;"
-          >
-            <span>
-              <i class="bi bi-pencil me-1"></i>
-              Edit
-            </span>
-            <i
-              class="bi"
-              [ngClass]="{
-                'bi-chevron-up': showEditMenu,
-                'bi-chevron-down': !showEditMenu
-              }"
-            ></i>
+          <ng-container *ngFor="let section of menuSections">
+            <!-- Section with children -->
+            <a *ngIf="section.children"
+               class="nav-link d-flex justify-content-between align-items-center"
+               (click)="toggleSection(section.key)"
+               style="cursor: pointer;">
+              <span><i class="bi {{ section.icon }} me-1"></i>{{ section.title }}</span>
+              <i class="bi"
+                 [ngClass]="{
+                   'bi-chevron-up': isSectionOpen(section.key),
+                   'bi-chevron-down': !isSectionOpen(section.key)
+                 }">
+              </i>
+            </a>
+
+            <!-- Child items -->
+<div *ngIf="section.key && isSectionOpen(section.key)" class="nav flex-column ms-3">
+  <ng-container *ngFor="let child of section.children">
+    
+    <!-- For nested sub-sections like Billing -->
+    <div *ngIf="child.nested && child.children">
+      <a class="nav-link d-flex justify-content-between align-items-center"
+         (click)="toggleNestedSection(child.key)"
+         style="cursor: pointer;">
+        <span>{{ child.label }}</span>
+        <i
+          class="bi"
+          [ngClass]="{
+            'bi-chevron-up': isNestedSectionOpen(child.key),
+            'bi-chevron-down': !isNestedSectionOpen(child.key)
+          }"
+        ></i>
+      </a>
+
+      <div *ngIf="isNestedSectionOpen(child.key)" class="nav flex-column ms-3">
+        <a
+          *ngFor="let subchild of child.children"
+          class="nav-link"
+          [routerLink]="subchild.route"
+          routerLinkActive="active"
+        >{{ subchild.label }}</a>
+      </div>
+    </div>
+
+    <!-- Regular non-nested child -->
+    <a
+      *ngIf="!child.nested"
+      class="nav-link"
+      [routerLink]="child.route"
+      routerLinkActive="active"
+    >{{ child.label }}</a>
+
+  </ng-container>
+</div>
+
+
+            <!-- Single link (no children) -->
+            <a *ngIf="!section.children"
+               class="nav-link"
+               [routerLink]="section.route"
+               routerLinkActive="active">
+              {{ section.title }}
+            </a>
+          </ng-container>
+
+          <!-- Optional documentation link -->
+          <a *ngIf="featureToggleService.current['featureDocumentation']"
+             class="nav-link ms-3 my-1"
+             routerLink="/docs"
+             routerLinkActive="active">
+            Documentation
           </a>
-          <div *ngIf="showEditMenu" class="nav flex-column ms-3">
-            <a class="nav-link" routerLink="/settings" routerLinkActive="active">Settings</a>
-            <a class="nav-link" routerLink="/feature-toggles" routerLinkActive="active">Feature Toggles</a>
-            <a class="nav-link" routerLink="/notifications" routerLinkActive="active">Notifications</a>
-          </div>
-
-          <!-- Profile menu -->
-          <a
-            class="nav-link d-flex justify-content-between align-items-center"
-            (click)="toggleProfileMenu()"
-            style="cursor: pointer;"
-          >
-            <span>
-              <i class="bi bi-person me-1"></i>
-              Profile
-            </span>
-            <i
-              class="bi"
-              [ngClass]="{
-                'bi-chevron-up': showProfileMenu,
-                'bi-chevron-down': !showProfileMenu
-              }"
-            ></i>
-          </a>
-          <div *ngIf="showProfileMenu" class="nav flex-column ms-3">
-            <a class="nav-link" routerLink="/profile" routerLinkActive="active">View Profile</a>
-            
-            <!-- Edit Profile submenu -->
-            <a
-              class="nav-link d-flex justify-content-between align-items-center"
-              (click)="toggleEditProfileMenu(); $event.stopPropagation()"
-              style="cursor: pointer;"
-            >
-              <span>
-                <i class="bi bi-pencil me-1"></i>
-                Edit Profile
-              </span>
-              <i
-                class="bi"
-                [ngClass]="{
-                  'bi-chevron-up': showEditProfileMenu,
-                  'bi-chevron-down': !showEditProfileMenu
-                }"
-              ></i>
-            </a>
-            <div *ngIf="showEditProfileMenu" class="nav flex-column ms-3">
-              <a class="nav-link profile-link" routerLink="/editprofile" routerLinkActive="active">Edit Profile</a>
-              <a class="nav-link" routerLink="/editdetailsprofile" routerLinkActive="active">Edit Details</a>
-              <a class="nav-link" routerLink="/editskillsprofile" routerLinkActive="active">Edit Skills</a>
-              <a class="nav-link" routerLink="/editexperienceprofile" routerLinkActive="active">Edit Experience</a>
-              <a class="nav-link" routerLink="/editeducationprofile" routerLinkActive="active">Edit Education</a>
-              <a class="nav-link" routerLink="/editcertificatesprofile" routerLinkActive="active">Edit Certificates</a>
-              <a class="nav-link" routerLink="/editprojectsprofile" routerLinkActive="active">Edit Projects</a>
-            </div>
-            <!-- End Edit Profile submenu -->
-
-            <!-- Billing submenu -->
-            <a
-              class="nav-link d-flex justify-content-between align-items-center"
-              (click)="toggleBillingMenu(); $event.stopPropagation()"
-              style="cursor: pointer;"
-            >
-              <span>
-                <i class="bi bi-credit-card me-1"></i>
-                Billing
-              </span>
-              <i
-                class="bi"
-                [ngClass]="{
-                  'bi-chevron-up': showBillingMenu,
-                  'bi-chevron-down': !showBillingMenu
-                }"
-              ></i>
-            </a>
-            <div *ngIf="showBillingMenu" class="nav flex-column ms-3">
-              <a class="nav-link" routerLink="/addcardprofile" routerLinkActive="active">Add Card</a>
-              <a class="nav-link" routerLink="/editcardprofile" routerLinkActive="active">Edit Card</a>
-            </div>
-            <!-- End Billing submenu -->
-          </div>
-          <!-- End Profile menu -->
-
-          <!-- Other main nav links -->
-           
-          <a class="nav-link" routerLink="/user-detail" routerLinkActive="active">User Detail</a>
-          <a class="nav-link" routerLink="/audit-logs" routerLinkActive="active">Audit Logs</a>
-          <a class="nav-link" routerLink="/users" routerLinkActive="active">Users</a>
-          <a class="nav-link" routerLink="/reports" routerLinkActive="active">Reports</a>
-
-          <nav class="nav nav-pills flex-column">
-            <a
-                class="nav-link ms-3 my-1"
-                routerLink="/docs"
-                routerLinkActive="active"
-                *ngIf="featureToggleService.current['featureDocumentation']"
-                >
-                Documentation
-            </a>
-            <a class="nav-link ms-3 my-1" routerLink="/announcements" routerLinkActive="active">Announcements</a>
-            <a class="nav-link ms-3 my-1" routerLink="/usage-insights" routerLinkActive="active">Usage Insights</a>
-            <a class="nav-link ms-3 my-1" routerLink="/assistant" routerLinkActive="active">AI Assistant</a>
-            <a class="nav-link ms-3 my-1" routerLink="/status" routerLinkActive="active">System Status</a>
-            <a class="nav-link ms-3 my-1" routerLink="/roles" routerLinkActive="active">User Roles</a>
-            <a class="nav-link ms-3 my-1" routerLink="/data-import-export" routerLinkActive="active">Data Import/Export</a>
-            <a class="nav-link ms-3 my-1" routerLink="/file-manager" routerLinkActive="active">File Manager</a>
-            <a class="nav-link ms-3 my-1" routerLink="/tutorials" routerLinkActive="active">Tutorials</a>
-            <a class="nav-link ms-3 my-1" routerLink="/language-switcher" routerLinkActive="active">🌐 Language Switcher</a>
-            <a class="nav-link ms-3 my-1" routerLink="/activity" routerLinkActive="active">📊 Activity</a>
-            <a class="nav-link ms-3 my-1" routerLink="/reminders" routerLinkActive="active">🔔 Reminders</a>
-            <a class="nav-link ms-3 my-1" routerLink="/calendar" routerLinkActive="active">📅 Calendar</a>
-            <a class="nav-link ms-3 my-1" routerLink="/tasks" routerLinkActive="active">Tasks</a>
-            <a class="nav-link ms-3 my-1" routerLink="/support" routerLinkActive="active">Support / Feedback</a>
-            <a class="nav-link ms-3 my-1" routerLink="/logout" routerLinkActive="active">Logout</a>
-          </nav>
         </nav>
       </nav>
     </div>
-
-    <!-- Main content -->
   </div>
 </div>
+
 
