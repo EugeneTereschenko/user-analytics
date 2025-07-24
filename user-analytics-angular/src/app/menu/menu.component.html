@@ -10,12 +10,12 @@
       <nav class="navbar navbar-light flex-column vh-50 align-items-start">
         <a class="navbar-brand ms-3 my-1" routerLink="/dashboard" routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }">
-          <span style="color: #007bff; font-weight: bold;">Dashboard</span>
+          <span style="color: #007bff; font-weight: bold;"><i class="bi bi-house me-1"></i>Dashboard</span>
         </a>
                               <!-- Optional documentation link -->
         <a *ngIf="featureToggleService.current['featureDocumentation']" class="nav-link ms-3 my-1" routerLink="/docs"
           routerLinkActive="active">
-            <span style="color: #007bff; font-weight: bold;">Documentation</span>
+            <span style="color: #007bff; font-weight: bold;"><i class="bi bi-file-earmark-text me-1"></i>Documentation</span>
         </a>
 
         <nav class="nav nav-pills flex-column w-100">
@@ -39,7 +39,7 @@
                 <div *ngIf="child.nested && child.children">
                   <a class="nav-link d-flex justify-content-between align-items-center"
                     (click)="toggleNestedSection(child.key)" style="cursor: pointer;">
-                    <span>{{ child.label }}</span>
+                    <span><i class="bi {{ section.icon }} me-1"></i>{{ child.label }}</span>
                     <i class="bi" [ngClass]="{
                       'bi-chevron-up': isNestedSectionOpen(child.key),
                       'bi-chevron-down': !isNestedSectionOpen(child.key)
@@ -48,20 +48,21 @@
 
                   <div *ngIf="isNestedSectionOpen(child.key)" class="nav flex-column ms-3">
                     <a *ngFor="let subchild of child.children" class="nav-link" [routerLink]="subchild.route"
-                      routerLinkActive="active">{{ subchild.label }}</a>
+                      routerLinkActive="active"><i class="bi {{ subchild.icon }} me-1"></i>{{ subchild.label }}</a>
                   </div>
                 </div>
 
                 <!-- Regular non-nested child -->
-                <a *ngIf="!child.nested" class="nav-link" [routerLink]="child.route" routerLinkActive="active">{{
-                  child.label }}</a>
+                <a *ngIf="!child.nested" class="nav-link" [routerLink]="child.route" routerLinkActive="active">
+                  <i class="bi {{ child.icon }} me-1"></i>{{ child.label }}
+                </a>
 
               </ng-container>
             </div>
 
             <!-- Single link (no children) -->
             <a *ngIf="!section.children" class="nav-link" [routerLink]="section.route" routerLinkActive="active">
-              {{ section.title }}
+              <i class="bi {{ section.icon }} me-1"></i>{{ section.title }}
             </a>
           </ng-container>
 
