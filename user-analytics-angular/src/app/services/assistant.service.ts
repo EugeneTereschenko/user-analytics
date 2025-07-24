@@ -31,6 +31,6 @@ export class AssistantService {
     return this.http.get<any>(`${this.baseUrl}/assistant/status`, { headers: this.getAuthHeaders() });
   }
   sendMessage(message: string) {
-    return this.http.post(`${this.baseUrl}/assistant/message`, { message }, { headers: this.getAuthHeaders() });
+    return this.http.post(`${this.baseUrl}/assistant/message`, { text: message }, { headers: this.getAuthHeaders() });
   }
 }
