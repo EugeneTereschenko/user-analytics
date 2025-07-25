@@ -23,23 +23,7 @@ public class ReminderController {
     @GetMapping
     public ResponseEntity<?> getReminders() {
         log.info("Fetching reminders");
-        List<ReminderDTO> reminders = List.of(
-                new ReminderDTO.Builder()
-                        .id("1")
-                        .title("Reminder 1")
-                        .date("2023-10-01")
-                        .time("10:00")
-                        .notified("false")
-                        .build(),
-                new ReminderDTO.Builder()
-                        .id("2")
-                        .title("Reminder 2")
-                        .date("2023-10-02")
-                        .time("12:00")
-                        .notified("true")
-                        .build()
-        );
-        // Here you would typically fetch reminders from a service or database
+        List<ReminderDTO> reminders = reminderService.getReminders();
         return ResponseEntity.ok(reminders);
     }
 

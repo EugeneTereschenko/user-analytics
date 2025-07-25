@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 @AllArgsConstructor
 public class ReminderServiceImpl implements ReminderService {
@@ -38,6 +39,21 @@ public class ReminderServiceImpl implements ReminderService {
 
         saveProfileRemainder(reminder.getId());
         return new ResponseDTO("Reminder created successfully", "success", reminderDTO);
+    }
+
+    public List<ReminderDTO> getReminders() {
+        User user = userService.getAuthenticatedUser()
+                .orElseThrow(() -> new RuntimeException("User not authenticated"));
+
+        return reminderRepository.findRemindersByUserId(user.getUserId()).stream()
+                .map(reminder -> new ReminderDTO.Builder()
+                        .id(String.valueOf(reminder.getId()))
+                        .title(reminder.getTitle())
+                        .date(DateTimeConverter.convertDateToString(reminder.getDate()))
+                        .time(DateTimeConverter.convertTimeToString(reminder.getTime()))
+                        .notified(String.valueOf(reminder.getNotified()))
+                        .build())
+                .toList();
     }
 
     private Reminder buildReminder(ReminderDTO reminderDTO) {
