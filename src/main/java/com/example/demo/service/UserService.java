@@ -42,33 +42,33 @@ public class UserService {
         try {
             Optional<User> userOptional = userRepository.findByEmail(userDTO.getEmail());
             if (userOptional.isEmpty()) {
-                return createUserResponseDTO("", "Login failed: User not found", "false");
+                return createUserResponseDTO("", "", "Login failed: User not found", "false");
             }
 
             User user = userOptional.get();
             log.debug("User found: {}", user.getUsername());
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getUsername());
             if (userDetails == null) {
-                return createUserResponseDTO("", "Login failed: User details not found", "false");
+                return createUserResponseDTO("", "", "Login failed: User details not found", "false");
             }
             log.debug("User details loaded for: {}", userDetails.getUsername());
             String token = jwtUtil.generateToken(userDetails.getUsername());
-            return createUserResponseDTO(token, "Login successful", "true");
+            return createUserResponseDTO("", token, "Login successful", "true");
         } catch (Exception e) {
             log.error("Failed to login: {}", e.getMessage());
-            return createUserResponseDTO("", "Login failed: " + e.getMessage(), "false");
+            return createUserResponseDTO("", "", "Login failed: " + e.getMessage(), "false");
         }
     }
 
     public UserResponseDTO createUser(UserRequestDTO userDTO) {
         try {
             if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
-                return createUserResponseDTO("", "Signup failed: Email already exists", "false");
+                return createUserResponseDTO("", "", "Signup failed: Email already exists", "false");
             }
             log.debug("Creating user with email: {}", userDTO.getEmail());
             Collection<Role> roles = roleRepository.findByNameIn(userDTO.getRoles());
             if (roles.isEmpty()) {
-                return createUserResponseDTO("", "Signup failed: Invalid roles", "false");
+                return createUserResponseDTO("", "", "Signup failed: Invalid roles", "false");
             }
             log.debug("Roles found for user: {}", roles);
             User user = new User.Builder()
@@ -82,7 +82,7 @@ public class UserService {
                     .build();
 
             log.debug("User created: {}", user.getUsername());
-            userRepository.save(user);
+            User existingUser = userRepository.save(user);
             log.debug("User saved to repository: {}", user.getUsername());
             UserRoles userRoles = new UserRoles.Builder()
                     .userId(user.getUserId())
@@ -91,10 +91,10 @@ public class UserService {
 
             log.debug("UserRoles created for user: {}", userRoles.getRoleId(), "with userId: {}", userRoles.getUserId());
             userRolesRepository.save(userRoles);
-            return createUserResponseDTO("", "Signup successful", "true");
+            return createUserResponseDTO(String.valueOf(existingUser.getUserId()), "", "Signup successful", "true");
         } catch (Exception e) {
             log.error("Failed to create user: {}", e.getMessage());
-            return createUserResponseDTO("", "Signup failed: " + e.getMessage(), "false");
+            return createUserResponseDTO("", "", "Signup failed: " + e.getMessage(), "false");
         }
     }
 
@@ -107,8 +107,9 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    private UserResponseDTO createUserResponseDTO(String token, String message, String success) {
+    private UserResponseDTO createUserResponseDTO(String id, String token, String message, String success) {
         return new UserResponseDTO.Builder()
+                .id(id)
                 .token(token)
                 .message(message)
                 .success(success)

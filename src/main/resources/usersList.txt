@@ -1,3 +1,5 @@
+UserRequestDTO(username=admin, email=test@test.com, password=admin123, roles=[ROLE_ADMIN])
+UserRequestDTO(username=wer, email=wer@test.com, password=asdasd, roles=[ROLE_USER])
 UserRequestDTO(username=john_doe, email=john.doe@example.com, password=pass123, roles=[ROLE_USER])
 UserRequestDTO(username=admin_jane, email=jane.admin@example.com, password=adminpass, roles=[ROLE_ADMIN])
 UserRequestDTO(username=editor_bob, email=bob.editor@example.com, password=editme, roles=[ROLE_EDITOR])
