@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.UserDetailDTO;
 import com.example.demo.dto.UserRequestDTO;
 import com.example.demo.dto.UserResponseDTO;
 import com.example.demo.model.Role;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -111,5 +113,22 @@ public class UserService {
                 .message(message)
                 .success(success)
                 .build();
+    }
+
+    public List<UserDetailDTO> getRoles(){
+        log.debug("Fetching all roles");
+        List<Role> roles = roleRepository.findAll();
+        if (roles.isEmpty()) {
+            log.warn("No roles found");
+            return List.of();
+        }
+        log.debug("Roles found: {}", roles.size());
+        return roles.stream()
+                .map(role -> new UserDetailDTO.Builder()
+                        .name(role.getName())
+                        .role(role.getName())
+                        .email("") // Email is not applicable for roles
+                        .build())
+                .toList();
     }
 }
