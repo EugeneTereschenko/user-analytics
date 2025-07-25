@@ -18,7 +18,7 @@ public class ProfileReminder {
     @Column(name = "profile_id")
     private Long profileId;
 
-    @Column(name = "project_id")
+    @Column(name = "reminder_id")
     private Long reminderId;
 
 
