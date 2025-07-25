@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserResponseDTO {
+    private String id;
     private String twoFactor;
     private String message;
     private String success;
@@ -11,7 +12,8 @@ public class UserResponseDTO {
 
     public UserResponseDTO() {
     }
-    public UserResponseDTO(String twoFactor, String message, String success, String token) {
+    public UserResponseDTO(String id, String twoFactor, String message, String success, String token) {
+        this.id = id;
         this.twoFactor = twoFactor;
         this.message = message;
         this.success = success;
@@ -23,10 +25,16 @@ public class UserResponseDTO {
     }
 
     public static class Builder {
+        private String id;
         private String twoFactor;
         private String message;
         private String success;
         private String token;
+
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder twoFactor(String twoFactor) {
             this.twoFactor = twoFactor;
@@ -49,7 +57,7 @@ public class UserResponseDTO {
         }
 
         public UserResponseDTO build() {
-            return new UserResponseDTO(twoFactor, message, success, token);
+            return new UserResponseDTO(id, twoFactor, message, success, token);
         }
     }
 }
