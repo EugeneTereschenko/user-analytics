@@ -8,4 +8,5 @@ import java.util.List;
 public interface ReminderService {
     List<ReminderDTO> getReminders();
     ResponseDTO createReminder(ReminderDTO reminderDTO);
+    ResponseDTO deleteReminder(String id);
 }

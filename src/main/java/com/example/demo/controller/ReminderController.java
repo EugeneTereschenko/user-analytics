@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -38,6 +37,7 @@ public class ReminderController {
     public ResponseEntity<?> deleteReminder(@PathVariable String id) {
         log.info("Deleting reminder with ID: {}", id);
         // Here you would typically delete the reminder from a service or database
-        return ResponseEntity.ok(new HashMap<>().put("message", "Reminder deleted successfully"));
+        ResponseDTO responseDTO = reminderService.deleteReminder(id);
+        return ResponseEntity.ok(responseDTO);
     }
 }

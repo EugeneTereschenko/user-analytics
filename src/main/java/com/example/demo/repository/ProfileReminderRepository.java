@@ -4,8 +4,8 @@ import com.example.demo.model.ProfileReminder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 @Repository
 public interface ProfileReminderRepository extends JpaRepository<ProfileReminder, Long> {
+    public void deleteByReminderId(Long reminderId);
 }

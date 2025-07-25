@@ -13,6 +13,7 @@ import com.example.demo.service.impl.ReminderService;
 import com.example.demo.util.DateTimeConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,17 @@ public class ReminderServiceImpl implements ReminderService {
     private final ProfileReminderRepository profileReminderRepository;
     private final ProfileRepository profileRepository;
     private final ReminderRepository reminderRepository;
+
+    @Transactional
+    public ResponseDTO deleteReminder(String reminderId) {
+        Optional<Reminder> reminder = reminderRepository.findById(Long.valueOf(reminderId));
+        if (reminder.isPresent()) {
+            reminderRepository.delete(reminder.get());
+            profileReminderRepository.deleteByReminderId(Long.valueOf(reminderId));
+            return new ResponseDTO("Reminder deleted successfully", "success", null);
+        }
+        return new ResponseDTO("Reminder not found", "error", null);
+    }
 
     public ResponseDTO createReminder(ReminderDTO reminderDTO) {
         Optional<Reminder> existingReminder = reminderRepository.findByTitle(reminderDTO.getTitle());
