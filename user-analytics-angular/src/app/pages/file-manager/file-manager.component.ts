@@ -25,9 +25,6 @@ export class FileManagerComponent {
 
   uploadFile() {
     if (!this.selectedFile) return;
-    const formData = new FormData();
-    formData.append('file', this.selectedFile);
-
     this.fileService.uploadFile(this.selectedFile).subscribe({
       next: () => {
         this.fetchFiles();

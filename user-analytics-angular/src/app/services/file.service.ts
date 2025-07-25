@@ -19,9 +19,13 @@ export class FileService {
   uploadFile(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post(`${this.baseUrl}/upload`, formData, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.post<{ message: string; status: string }>(
+      `${this.baseUrl}/upload`,
+      formData,
+      {
+        headers: this.getAuthHeaders()
+      }
+    );
   }
 
   fetchFiles(): Observable<string[]> {
