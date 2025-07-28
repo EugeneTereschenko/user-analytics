@@ -3,8 +3,6 @@ package com.example.demo.service;
 import com.example.demo.dto.AnnouncementDTO;
 import com.example.demo.dto.UserRequestDTO;
 import com.example.demo.dto.UserResponseDTO;
-import com.example.demo.model.Announcement;
-import com.example.demo.repository.AnnouncementRepository;
 import com.example.demo.service.impl.AnnouncementService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
