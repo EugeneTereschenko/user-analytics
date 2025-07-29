@@ -1,9 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AnnouncementDTO;
+import com.example.demo.dto.NotificationsDTO;
 import com.example.demo.dto.UserRequestDTO;
 import com.example.demo.dto.UserResponseDTO;
+import com.example.demo.model.ProfileNotification;
+import com.example.demo.repository.ProfileNotificationRepository;
 import com.example.demo.service.impl.AnnouncementService;
+import com.example.demo.service.impl.NotificationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -26,6 +30,8 @@ import java.util.regex.Pattern;
 public class DatabaseInitializer {
 
     private final AnnouncementService announcementService;
+    private final NotificationService notificationService;
+    private final ProfileNotificationRepository profileNotificationRepository;
     private final RoleService roleService;
     private final UserService userService;
     private final ProfileService profileService;
@@ -93,6 +99,28 @@ public class DatabaseInitializer {
         return users;
     }
 
+    public static List<NotificationsDTO> readNotificationsFromFile(String filePath) throws IOException {
+        List<NotificationsDTO> notifications = new ArrayList<>();
+        List<String> lines = Files.readAllLines(Paths.get(filePath));
+
+        Pattern pattern = Pattern.compile(
+                "NotificationsDTO\\(title = \"(.*?)\", timestamp = \"(.*?)\", message = \"(.*?)\"\\)"
+        );
+
+        for (String line : lines) {
+            Matcher matcher = pattern.matcher(line);
+            if (matcher.matches()) {
+                String title = matcher.group(1);
+                String timestamp = matcher.group(2);
+                String message = matcher.group(3);
+
+                notifications.add(new NotificationsDTO(title, timestamp, message));
+            }
+        }
+
+        return notifications;
+    }
+
     @Bean
     public CommandLineRunner initDatabase(PasswordEncoder passwordEncoder) {
         return args -> {
@@ -100,6 +128,7 @@ public class DatabaseInitializer {
                 initializeRoles();
                 processUsers("/home/yevhen/IdeaProjects/demo/src/main/resources/usersList.txt", passwordEncoder);
                 processAnnouncements("/home/yevhen/IdeaProjects/demo/src/main/resources/announcementsList.txt");
+                processNotifications("/home/yevhen/IdeaProjects/demo/src/main/resources/notificationsList.txt", 2L);
             } catch (IOException e) {
                 log.error("Error initializing database: {}", e.getMessage(), e);
             }
@@ -144,6 +173,29 @@ public class DatabaseInitializer {
         for (AnnouncementDTO announcement : announcements) {
             announcementService.saveAnnouncement(announcement);
             log.info("Announcement saved successfully: {}", announcement);
+        }
+    }
+
+    private void processNotifications(String filePath, Long profileId) throws IOException {
+        if (!Files.exists(Paths.get(filePath))) {
+            log.error("File not found: {}", filePath);
+            return;
+        }
+        List<NotificationsDTO> notifications = readNotificationsFromFile(filePath);
+        if (notifications.isEmpty()) {
+            log.info("No notifications found in file: {}", filePath);
+            return;
+        }
+        for (NotificationsDTO notification : notifications) {
+            // Assuming a method exists to save notifications
+
+            notificationService.saveNotification(notification);
+
+            ProfileNotification profileNotification = new ProfileNotification();
+            profileNotification.setProfileId(profileId); // Set a valid profile ID
+            profileNotification.setNotificationId(notificationService.saveNotification(notification).getId());
+            profileNotificationRepository.save(profileNotification);
+            log.info("Notification saved successfully: {}", notification);
         }
     }
 

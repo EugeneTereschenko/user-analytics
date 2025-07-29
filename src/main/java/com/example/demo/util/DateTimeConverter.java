@@ -1,7 +1,10 @@
 package com.example.demo.util;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 public class DateTimeConverter {
@@ -47,5 +50,27 @@ public class DateTimeConverter {
         }
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         return sdf.format(time);
+    }
+
+
+    public static Timestamp convertStringToTimestamp(String dateString) {
+        try {
+            if (dateString == null || dateString.isEmpty()) {
+                return null; // Handle null or empty string
+            }
+            Instant instant = Instant.parse(dateString); // Parse ISO 8601 format
+            return Timestamp.from(instant);
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return null; // Handle the exception as needed
+        }
+    }
+
+    public static String convertTimestampToString(Timestamp timestamp) {
+        if (timestamp == null) {
+            return null; // Handle null timestamp
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(timestamp);
     }
 }

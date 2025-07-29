@@ -1,12 +1,20 @@
 package com.example.demo.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class NotificationsDTO {
     public String title;
     public String timestamp;
     public String message;
+
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static class Builder {
         private String title;
