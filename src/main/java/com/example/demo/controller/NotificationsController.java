@@ -23,18 +23,6 @@ public class NotificationsController {
     @GetMapping
     public ResponseEntity<?> getNotifications() {
         log.info("Fetching notifications");
-        // Mock data for demonstration purposes
-        List<NotificationsDTO> notificationsDTOList = new ArrayList<>();
-        notificationsDTOList.add(new NotificationsDTO.Builder()
-                .title("New Feature Release")
-                .timestamp("2023-10-01T10:00:00Z")
-                .message("We have released a new feature that enhances your experience.")
-                .build());
-        notificationsDTOList.add(new NotificationsDTO.Builder()
-                .title("Scheduled Maintenance")
-                .timestamp("2023-10-02T12:00:00Z")
-                .message("Our system will undergo maintenance on 2023-10-03 from 2 AM to 4 AM.")
-                .build());
         return ResponseEntity.ok(notificationService.getAllNotifications());
     }
 
