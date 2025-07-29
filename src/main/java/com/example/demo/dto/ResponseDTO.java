@@ -38,6 +38,10 @@ public class ResponseDTO {
         this.data = data;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private String message;
         private String status;
