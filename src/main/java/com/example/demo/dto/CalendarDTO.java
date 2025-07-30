@@ -11,6 +11,10 @@ public class CalendarDTO {
     private String title;
     private String date;
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private String title;
         private String date;
