@@ -1,12 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.AnnouncementDTO;
-import com.example.demo.dto.NotificationsDTO;
-import com.example.demo.dto.UserRequestDTO;
-import com.example.demo.dto.UserResponseDTO;
+import com.example.demo.dto.*;
+import com.example.demo.model.Calendar;
+import com.example.demo.model.ProfileCalendar;
 import com.example.demo.model.ProfileNotification;
+import com.example.demo.repository.ProfileCalendarRepository;
 import com.example.demo.repository.ProfileNotificationRepository;
 import com.example.demo.service.impl.AnnouncementService;
+import com.example.demo.service.impl.CalendarService;
 import com.example.demo.service.impl.NotificationService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +33,11 @@ public class DatabaseInitializer {
     private final AnnouncementService announcementService;
     private final NotificationService notificationService;
     private final ProfileNotificationRepository profileNotificationRepository;
+    private final ProfileCalendarRepository profileCalendarRepository;
     private final RoleService roleService;
     private final UserService userService;
     private final ProfileService profileService;
+    private final CalendarService calendarService;
 
     public static List<AnnouncementDTO> readAnnouncementsFromFile(String filePath) throws IOException {
         List<AnnouncementDTO> announcements = new ArrayList<>();
@@ -121,6 +124,30 @@ public class DatabaseInitializer {
         return notifications;
     }
 
+    public static List<CalendarDTO> readCalendarsFromFile(String filePath) throws IOException {
+        List<CalendarDTO> calendars = new ArrayList<>();
+        List<String> lines = Files.readAllLines(Paths.get(filePath));
+
+        Pattern pattern = Pattern.compile(
+                "CalendarDTO\\(title = \"(.*?)\", date = \"(.*?)\"\\)"
+        );
+
+        for (String line : lines) {
+            Matcher matcher = pattern.matcher(line);
+            if (matcher.matches()) {
+                String title = matcher.group(1);
+                String date = matcher.group(2);
+
+                calendars.add(CalendarDTO.builder()
+                        .title(title)
+                        .date(date)
+                        .build());
+            }
+        }
+
+        return calendars;
+    }
+
     @Bean
     public CommandLineRunner initDatabase(PasswordEncoder passwordEncoder) {
         return args -> {
@@ -129,6 +156,7 @@ public class DatabaseInitializer {
                 processUsers("/home/yevhen/IdeaProjects/demo/src/main/resources/usersList.txt", passwordEncoder);
                 processAnnouncements("/home/yevhen/IdeaProjects/demo/src/main/resources/announcementsList.txt");
                 processNotifications("/home/yevhen/IdeaProjects/demo/src/main/resources/notificationsList.txt", 2L);
+                processCalendar("/home/yevhen/IdeaProjects/demo/src/main/resources/calendarList.txt", 2L);
             } catch (IOException e) {
                 log.error("Error initializing database: {}", e.getMessage(), e);
             }
@@ -196,6 +224,32 @@ public class DatabaseInitializer {
             profileNotification.setNotificationId(notificationService.saveNotification(notification).getId());
             profileNotificationRepository.save(profileNotification);
             log.info("Notification saved successfully: {}", notification);
+        }
+    }
+
+    private void processCalendar(String filePath, Long profileId) {
+        try {
+            if (!Files.exists(Paths.get(filePath))) {
+                log.error("File not found: {}", filePath);
+                return;
+            }
+            List<CalendarDTO> calendars = readCalendarsFromFile(filePath);
+            if (calendars.isEmpty()) {
+                log.info("No calendars found in file: {}", filePath);
+                return;
+            }
+            for (CalendarDTO calendar : calendars) {
+                // Assuming a method exists to save calendars
+                Calendar existsCalendar = calendarService.saveCalendar(calendar);
+                ProfileCalendar profileCalendar = ProfileCalendar.builder()
+                        .profileId(profileId)
+                        .calendarId(existsCalendar.getId())
+                        .build();
+                profileCalendarRepository.save(profileCalendar);
+                log.info("Calendar saved successfully: {}", calendar);
+            }
+        } catch (IOException e) {
+            log.error("Error reading calendar file: {}", e.getMessage(), e);
         }
     }
 

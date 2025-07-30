@@ -1,0 +1,5 @@
+CalendarDTO(title = "Team Meeting", date = "2025-07-05")
+CalendarDTO(title = "Project Deadline", date = "2025-07-10")
+CalendarDTO(title = "Company Event", date = "2025-07-15")
+CalendarDTO(title = "Holiday", date = "2025-07-20")
+CalendarDTO(title = "Performance Review", date = "2025-07-25")
