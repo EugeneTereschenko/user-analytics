@@ -1,13 +1,28 @@
-package com.example.demo.dto;
+package com.example.demo.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Entity
+@Table(name = "\"status\"")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class StatusDTO {
+public class Status {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
+    @Column(name = "uptime", length = 255)
     private String uptime;
+    @Column(name = "cpu", length = 255)
     private String cpu;
+    @Column(name = "memory", length = 255)
     private String memory;
+    @Column(name = "apiLatency", length = 255)
     private String apiLatency;
+    @Column(name = "jobs", length = 255)
     private String jobs;
 
     public static Builder builder() {
@@ -46,14 +61,14 @@ public class StatusDTO {
             return this;
         }
 
-        public StatusDTO build() {
-            StatusDTO statusDTO = new StatusDTO();
-            statusDTO.uptime = this.uptime;
-            statusDTO.cpu = this.cpu;
-            statusDTO.memory = this.memory;
-            statusDTO.apiLatency = this.apiLatency;
-            statusDTO.jobs = this.jobs;
-            return statusDTO;
+        public Status build() {
+            Status status = new Status();
+            status.uptime = this.uptime;
+            status.cpu = this.cpu;
+            status.memory = this.memory;
+            status.apiLatency = this.apiLatency;
+            status.jobs = this.jobs;
+            return status;
         }
     }
 }
