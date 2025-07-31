@@ -17,7 +17,7 @@ public class Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "user", length = 255)
+    @Column(name = "username", length = 255)
     private String user;
     @Column(name = "action", length = 255)
     private String action;

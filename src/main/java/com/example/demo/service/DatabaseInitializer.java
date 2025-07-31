@@ -2,11 +2,14 @@ package com.example.demo.service;
 
 import com.example.demo.dto.*;
 import com.example.demo.model.Calendar;
+import com.example.demo.model.ProfileAudit;
 import com.example.demo.model.ProfileCalendar;
 import com.example.demo.model.ProfileNotification;
+import com.example.demo.repository.ProfileAuditRepository;
 import com.example.demo.repository.ProfileCalendarRepository;
 import com.example.demo.repository.ProfileNotificationRepository;
 import com.example.demo.service.impl.AnnouncementService;
+import com.example.demo.service.impl.AuditService;
 import com.example.demo.service.impl.CalendarService;
 import com.example.demo.service.impl.NotificationService;
 import lombok.AllArgsConstructor;
@@ -34,6 +37,8 @@ public class DatabaseInitializer {
     private final NotificationService notificationService;
     private final ProfileNotificationRepository profileNotificationRepository;
     private final ProfileCalendarRepository profileCalendarRepository;
+    private final AuditService auditService;
+    private final ProfileAuditRepository profileAuditRepository;
     private final RoleService roleService;
     private final UserService userService;
     private final ProfileService profileService;
@@ -148,6 +153,34 @@ public class DatabaseInitializer {
         return calendars;
     }
 
+    public static List<AuditDTO> readAuditFromFile(String filePath) throws IOException {
+        List<AuditDTO> audits = new ArrayList<>();
+        List<String> lines = Files.readAllLines(Paths.get(filePath));
+
+        Pattern pattern = Pattern.compile(
+                "AuditDTO\\(user = \"(.*?)\", action = \"(.*?)\", target = \"(.*?)\", timestamp = \"(.*?)\"\\)"
+        );
+
+        for (String line : lines) {
+            Matcher matcher = pattern.matcher(line);
+            if (matcher.matches()) {
+                String user = matcher.group(1);
+                String action = matcher.group(2);
+                String target = matcher.group(3);
+                String timestamp = matcher.group(4);
+
+                audits.add(new AuditDTO.Builder()
+                        .user(user)
+                        .action(action)
+                        .target(target)
+                        .timestamp(timestamp)
+                        .build());
+            }
+        }
+
+        return audits;
+    }
+
     @Bean
     public CommandLineRunner initDatabase(PasswordEncoder passwordEncoder) {
         return args -> {
@@ -157,6 +190,7 @@ public class DatabaseInitializer {
                 processAnnouncements("/home/yevhen/IdeaProjects/demo/src/main/resources/announcementsList.txt");
                 processNotifications("/home/yevhen/IdeaProjects/demo/src/main/resources/notificationsList.txt", 2L);
                 processCalendar("/home/yevhen/IdeaProjects/demo/src/main/resources/calendarList.txt", 2L);
+                processAudit("/home/yevhen/IdeaProjects/demo/src/main/resources/auditList.txt", 2L);
             } catch (IOException e) {
                 log.error("Error initializing database: {}", e.getMessage(), e);
             }
@@ -250,6 +284,32 @@ public class DatabaseInitializer {
             }
         } catch (IOException e) {
             log.error("Error reading calendar file: {}", e.getMessage(), e);
+        }
+    }
+
+    private void processAudit(String filePath, Long profileId) {
+        try {
+            if (!Files.exists(Paths.get(filePath))) {
+                log.error("File not found: {}", filePath);
+                return;
+            }
+            List<AuditDTO> audits = readAuditFromFile(filePath);
+            if (audits.isEmpty()) {
+                log.info("No audits found in file: {}", filePath);
+                return;
+            }
+            for (AuditDTO audit : audits) {
+                // Assuming a method exists to save audits
+                auditService.saveAudit(audit);
+                ProfileAudit profileAudit = ProfileAudit.builder()
+                        .profileId(profileId)
+                        .auditId(auditService.saveAudit(audit).getId())
+                        .build();
+                profileAuditRepository.save(profileAudit);
+                log.info("Audit saved successfully: {}", audit);
+            }
+        } catch (IOException e) {
+            log.error("Error reading audit file: {}", e.getMessage(), e);
         }
     }
 
