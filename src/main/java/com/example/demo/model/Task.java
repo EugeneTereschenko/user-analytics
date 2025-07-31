@@ -1,15 +1,22 @@
-package com.example.demo.dto;
+package com.example.demo.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
+@Entity
+@Table(name = "\"task\"")
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class TaskDTO {
-    private String id;
+public class Task {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
+    @Column(name = "title", length = 255)
     private String title;
+    @Column(name = "done", length = 255)
     private String done;
 
     public static Builder builder() {
@@ -17,14 +24,8 @@ public class TaskDTO {
     }
 
     public static class Builder {
-        private String id;
         private String title;
         private String done;
-
-        public Builder id(String id) {
-            this.id = id;
-            return this;
-        }
 
         public Builder title(String title) {
             this.title = title;
@@ -36,12 +37,11 @@ public class TaskDTO {
             return this;
         }
 
-        public TaskDTO build() {
-            TaskDTO taskDTO = new TaskDTO();
-            taskDTO.id = this.id;
-            taskDTO.title = this.title;
-            taskDTO.done = this.done;
-            return taskDTO;
+        public Task build() {
+            Task task = new Task();
+            task.title = this.title;
+            task.done = this.done;
+            return task;
         }
     }
 }
