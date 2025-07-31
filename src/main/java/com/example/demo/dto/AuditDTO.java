@@ -9,6 +9,10 @@ public class AuditDTO {
     private String target;
     private String timestamp;
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private String user;
         private String action;
