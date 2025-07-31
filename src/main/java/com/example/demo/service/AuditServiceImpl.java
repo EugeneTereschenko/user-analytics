@@ -11,6 +11,8 @@ import com.example.demo.util.DateTimeConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Service
 public class AuditServiceImpl implements AuditService {
@@ -79,5 +81,23 @@ public class AuditServiceImpl implements AuditService {
 
         profileAuditRepository.saveAndFlush(profileAudit);
         return true; // Assuming the save operation is successful
+    }
+
+
+    public List<AuditDTO> getAllAudits() {
+        return auditRepository.findAll()
+                .stream()
+                .map(audit -> AuditDTO.builder()
+                        .user(audit.getUser())
+                        .action(audit.getAction())
+                        .target(audit.getTarget())
+                        .timestamp(DateTimeConverter.convertTimestampToString(audit.getTimestamp()))
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public List<AuditDTO> getAuditsByUser(String username) {
+        return List.of();
     }
 }

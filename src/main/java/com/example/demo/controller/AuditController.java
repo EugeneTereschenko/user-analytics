@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.AuditDTO;
+import com.example.demo.service.impl.AuditService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +14,12 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/audit/logs")
 public class AuditController {
+
+    private final AuditService auditService;
+
 
     @GetMapping
     public ResponseEntity<List<AuditDTO>> getLogs() {
@@ -31,6 +37,7 @@ public class AuditController {
                 .target("User updated their profile information.")
                 .build());
 
-        return ResponseEntity.ok(auditLogs); // Placeholder implementation
+
+        return ResponseEntity.ok(auditService.getAllAudits()); // Placeholder implementation
     }
 }
