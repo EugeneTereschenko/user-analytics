@@ -36,6 +36,19 @@ public class DateTimeConverter {
         }
     }
 
+    public static Timestamp convertTimestampStringToTimestamp(String timeString) {
+        try {
+            if (timeString == null || timeString.isEmpty()) {
+                return null; // Handle null or empty string
+            }
+            Instant instant = Instant.parse(timeString); // Parse ISO 8601 format
+            return Timestamp.from(instant);
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return null; // Handle the exception as needed
+        }
+    }
+
     public static String convertDateToString(Date date) {
         if (date == null) {
             return null; // Handle null date
