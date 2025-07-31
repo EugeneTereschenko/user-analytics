@@ -8,10 +8,7 @@ import com.example.demo.model.ProfileNotification;
 import com.example.demo.repository.ProfileAuditRepository;
 import com.example.demo.repository.ProfileCalendarRepository;
 import com.example.demo.repository.ProfileNotificationRepository;
-import com.example.demo.service.impl.AnnouncementService;
-import com.example.demo.service.impl.AuditService;
-import com.example.demo.service.impl.CalendarService;
-import com.example.demo.service.impl.NotificationService;
+import com.example.demo.service.impl.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -43,6 +40,7 @@ public class DatabaseInitializer {
     private final UserService userService;
     private final ProfileService profileService;
     private final CalendarService calendarService;
+    private final StatusService statusService;
 
     public static List<AnnouncementDTO> readAnnouncementsFromFile(String filePath) throws IOException {
         List<AnnouncementDTO> announcements = new ArrayList<>();
@@ -186,6 +184,7 @@ public class DatabaseInitializer {
         return args -> {
             try {
                 initializeRoles();
+                initializeStatuses();
                 processUsers("/home/yevhen/IdeaProjects/demo/src/main/resources/usersList.txt", passwordEncoder);
                 processAnnouncements("/home/yevhen/IdeaProjects/demo/src/main/resources/announcementsList.txt");
                 processNotifications("/home/yevhen/IdeaProjects/demo/src/main/resources/notificationsList.txt", 2L);
@@ -202,6 +201,16 @@ public class DatabaseInitializer {
         roleService.createRole("ROLE_ADMIN");
         roleService.createRole("ROLE_EDITOR");
         roleService.createRole("ROLE_VIEWER");
+    }
+
+    private void initializeStatuses() {
+        statusService.saveStatus(new StatusDTO.Builder()
+                .cpu("2.5 GHz")
+                .memory("8 GB")
+                .apiLatency("100 ms")
+                .uptime("24 days, 5 hours")
+                .jobs("5 active jobs")
+                .build());
     }
 
     private void processUsers(String filePath, PasswordEncoder passwordEncoder) throws IOException {
