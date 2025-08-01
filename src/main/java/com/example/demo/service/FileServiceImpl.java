@@ -8,6 +8,7 @@ import com.example.demo.repository.ProfileRepository;
 import com.example.demo.service.impl.FileService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,17 +25,25 @@ public class FileServiceImpl implements FileService {
     private final UserService userService;
     private final ProfileRepository profileRepository;
 
+    @Transactional
     public List<FileEntity> getAllFilesByUser() {
         return fileRepository.findFileByUserId(userService.getAuthenticatedUser().get().getUserId());
     }
 
+    @Transactional
     public List<String> getAllFileNamesByUser() {
         return fileRepository.findFileNamesByUserId(userService.getAuthenticatedUser().get().getUserId())
                 .stream()
                 .map(FileEntity::getFileName).toList();
     }
 
+    @Transactional
+    public FileEntity getFileByFileName(String fileName) throws IOException {
+        return fileRepository.findByFileNameAndUserId(userService.getAuthenticatedUser().get().getUserId(), fileName);
 
+    }
+
+    @Transactional
     @Override
     public FileEntity saveFile(MultipartFile file) throws IOException {
         FileEntity fileEntity = new FileEntity();

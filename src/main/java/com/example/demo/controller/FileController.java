@@ -25,6 +25,23 @@ public class FileController {
         return ResponseEntity.ok(fileService.getAllFileNamesByUser());
     }
 
+    @GetMapping("/download/{fileName}")
+    public ResponseEntity<?> fetchFileByName(@PathVariable("fileName") String fileName ) {
+        try {
+            FileEntity fileEntity = fileService.getFileByFileName(fileName);
+            log.info("File fetched: {}", fileEntity.getFileName());
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=\"" + fileEntity.getFileName() + "\"")
+                    .body(fileEntity.getFileData());
+        } catch (IOException e) {
+            log.error("Error fetching file: {}", e.getMessage());
+            return ResponseEntity.status(500).body(new ResponseDTO.Builder()
+                    .message("File not found")
+                    .status("error")
+                    .build());
+        }
+    }
+
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         try {

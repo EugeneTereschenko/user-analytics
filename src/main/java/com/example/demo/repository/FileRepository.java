@@ -26,4 +26,12 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
             "JOIN UserProfile up ON pf.profileId = up.profileId " +
             "WHERE up.userId = :userId")
     List<FileEntity> findFileNamesByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT new com.example.demo.model.FileEntity(fe.id, fe.fileName, fe.fileData) " +
+            "FROM FileEntity fe " +
+            "JOIN ProfileFileEntity pf ON pf.fileId = fe.id " +
+            "JOIN UserProfile up ON pf.profileId = up.profileId " +
+            "WHERE up.userId = :userId AND fe.fileName = :fileName")
+    FileEntity findByFileNameAndUserId(@Param("userId") Long userId,
+                                            @Param("fileName") String fileName);
 }

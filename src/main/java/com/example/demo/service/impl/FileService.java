@@ -9,5 +9,6 @@ import java.util.List;
 public interface FileService {
     List<FileEntity> getAllFilesByUser();
     List<String> getAllFileNamesByUser();
+    FileEntity getFileByFileName(String fileName) throws IOException;
     FileEntity saveFile(MultipartFile file) throws IOException;
 }
