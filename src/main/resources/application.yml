@@ -6,6 +6,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+      lob.non_contextual_creation: true
+      batch_size: 50
 
   application:
     name=user-analytics-java:
