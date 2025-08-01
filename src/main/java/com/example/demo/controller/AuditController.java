@@ -23,21 +23,6 @@ public class AuditController {
 
     @GetMapping
     public ResponseEntity<List<AuditDTO>> getLogs() {
-        List<AuditDTO> auditLogs = new ArrayList<>();
-        auditLogs.add(new AuditDTO.Builder()
-                .timestamp("2023-10-01T10:00:00Z")
-                .user("12345")
-                .action("Login")
-                .target("User logged in successfully.")
-                .build());
-        auditLogs.add(new AuditDTO.Builder()
-                .timestamp("2023-10-01T10:05:00Z")
-                .user("12345")
-                .action("Update Profile")
-                .target("User updated their profile information.")
-                .build());
-
-
         return ResponseEntity.ok(auditService.getAllAudits()); // Placeholder implementation
     }
 }

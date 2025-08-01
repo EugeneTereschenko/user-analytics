@@ -52,13 +52,6 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     public List<NotificationsDTO> getAllNotifications() {
-/*        return notificationRepository.findAllByOrderByTimestampDesc().stream()
-                .map(notification -> NotificationsDTO.builder()
-                        .title(notification.getTitle())
-                        .message(notification.getMessage())
-                        .timestamp(DateTimeConverter.convertTimestampToString(notification.getTimestamp()))
-                        .build())
-                .toList();*/
 
         return notificationRepository.findNotificationsByUserId(userService.getAuthenticatedUser().get().getUserId())
                 .stream()

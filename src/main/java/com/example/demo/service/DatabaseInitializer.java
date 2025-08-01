@@ -259,9 +259,6 @@ public class DatabaseInitializer {
         }
         for (NotificationsDTO notification : notifications) {
             // Assuming a method exists to save notifications
-
-            notificationService.saveNotification(notification);
-
             ProfileNotification profileNotification = new ProfileNotification();
             profileNotification.setProfileId(profileId); // Set a valid profile ID
             profileNotification.setNotificationId(notificationService.saveNotification(notification).getId());

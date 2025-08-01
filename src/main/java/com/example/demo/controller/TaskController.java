@@ -28,10 +28,6 @@ public class TaskController {
     @GetMapping
     public ResponseEntity<?> getTasks() {
         log.info("Fetching all tasks");
-/*        List<TaskDTO> tasks = List.of(
-                new TaskDTO("1", "Task 1", "Description for task 1"),
-                new TaskDTO("2", "Task 2", "Description for task 2")
-        );*/
         return ResponseEntity.ok(taskService.getTaskByUser());
     }
 }
