@@ -20,14 +20,21 @@ public class SupportServiceImpl implements SupportService {
     private final UserService userService;
 
     public ResponseDTO createSupport(SupportDTO supportDTO) {
-        Support existingSupport = null;
-        if (supportRepository.findBySubject(supportDTO.getSubject()).isEmpty()) {
-            existingSupport = supportRepository.save(new Support.Builder()
-                    .subject(supportDTO.getSubject())
-                    .message(supportDTO.getMessage())
-                    .successMessage("Support created successfully")
-                    .build());
+        if (supportRepository.findBySubject(supportDTO.getSubject()).stream().findAny().isPresent()) {
+            // If a support request with the same subject already exists, return an error response
+            return ResponseDTO.builder()
+                    .status("error")
+                    .message("Support request with this subject already exists")
+                    .build();
+
         }
+
+        Support existingSupport = supportRepository.save(new Support.Builder()
+                .subject(supportDTO.getSubject())
+                .message(supportDTO.getMessage())
+                .successMessage("Support created successfully")
+                .build());
+
         saveProfileSupport(existingSupport.getId());
         return ResponseDTO.builder()
                 .message("Support request created successfully")

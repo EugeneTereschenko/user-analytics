@@ -40,7 +40,7 @@ public class AuditServiceImpl implements AuditService {
                 .orElseThrow(() -> new RuntimeException("User not authenticated"));
 
         // Check if the audit already exists
-        if (auditRepository.findByUser(auditDTO.getUser()).isEmpty()) {
+        if (auditRepository.findByUser(auditDTO.getUser()).isPresent()) {
             return ResponseDTO.builder()
                     .status("error")
                     .message("Audit with this title already exists")
