@@ -27,8 +27,8 @@ public class Notification {
     public Timestamp timestamp;
 
 
-    public static Details.Builder builder() {
-        return new Details.Builder();
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {
