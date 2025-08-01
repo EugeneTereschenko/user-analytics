@@ -20,7 +20,6 @@ public class StatusController {
     @GetMapping
     public ResponseEntity<?> getStatus() {
         log.info("Fetching system status");
-
          return ResponseEntity.ok(statusService.getLastStatus());
     }
 }
