@@ -7,21 +7,37 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "\"files\"")
 public class FileEntity {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        @Column(name = "file_name", nullable = false)
-        private String fileName;
+    @Column(name = "file_name", nullable = false)
+    private String fileName;
 
-        @Lob
-        @Column(name = "file_data", nullable = false)
-        private byte[] fileData;
+    @Lob
+    @Column(name = "file_data", nullable = false)
+    private byte[] fileData;
+
+
+
+    public FileEntity() {
+    }
+
+    public FileEntity(String fileName) {
+        this.fileName = fileName;
+        this.fileData = null;
+    }
+
+
+    public FileEntity(Long id, String fileName, byte[] fileData) {
+        this.id = id;
+        this.fileName = fileName;
+        this.fileData = fileData;
+    }
+
 
     public static Builder builder() {
         return new Builder();
@@ -47,6 +63,6 @@ public class FileEntity {
                 fileEntity.fileData = this.fileData;
                 return fileEntity;
             }
-        }
+    }
 
 }
