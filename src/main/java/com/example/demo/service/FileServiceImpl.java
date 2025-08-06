@@ -14,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 @AllArgsConstructor
 @Service
 public class FileServiceImpl implements FileService {
@@ -41,6 +39,18 @@ public class FileServiceImpl implements FileService {
     public FileEntity getFileByFileName(String fileName) throws IOException {
         return fileRepository.findByFileNameAndUserId(userService.getAuthenticatedUser().get().getUserId(), fileName);
 
+    }
+
+    @Transactional
+    @Override
+    public void deleteFileByFileName(String fileName) throws IOException {
+        FileEntity fileEntity = fileRepository.findByFileNameAndUserId(userService.getAuthenticatedUser().get().getUserId(), fileName);
+        if (fileEntity != null) {
+            fileRepository.delete(fileEntity);
+            profileFileEntityRepository.deleteByFileId(fileEntity.getId());
+        } else {
+            throw new IOException("File not found");
+        }
     }
 
     @Transactional

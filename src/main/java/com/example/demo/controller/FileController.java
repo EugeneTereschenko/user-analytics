@@ -60,4 +60,22 @@ public class FileController {
         }
     }
 
+    @DeleteMapping("/{fileName}")
+    public ResponseEntity<?> deleteFile(@PathVariable("fileName") String fileName) {
+        try {
+            log.info("File deleted: {}", fileName);
+            fileService.deleteFileByFileName(fileName);
+            return ResponseEntity.ok(new ResponseDTO.Builder()
+                    .message("File deleted successfully: " + fileName)
+                    .status("success")
+                    .build());
+        } catch (IOException e) {
+            log.error("Error deleting file: {}", e.getMessage());
+            return ResponseEntity.status(500).body(new ResponseDTO.Builder()
+                    .message("File deletion failed")
+                    .status("error")
+                    .build());
+        }
+    }
+
 }

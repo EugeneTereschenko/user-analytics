@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProfileFileEntityRepository extends JpaRepository<ProfileFileEntity, Long> {
 
+    void deleteByFileId(Long id);
 }

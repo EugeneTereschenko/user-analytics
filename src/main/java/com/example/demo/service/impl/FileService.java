@@ -11,4 +11,5 @@ public interface FileService {
     List<String> getAllFileNamesByUser();
     FileEntity getFileByFileName(String fileName) throws IOException;
     FileEntity saveFile(MultipartFile file) throws IOException;
+    void deleteFileByFileName(String fileName) throws IOException;
 }
