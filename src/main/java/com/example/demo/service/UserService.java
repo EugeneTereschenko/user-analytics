@@ -20,7 +20,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +55,8 @@ public class UserService {
             }
             log.debug("User details loaded for: {}", userDetails.getUsername());
             String token = jwtUtil.generateToken(userDetails.getUsername());
+            updateUserSignupDate(user);
+            log.debug("User signup date updated for: {}", user.getUsername());
             return createUserResponseDTO("", token, "Login successful", "true");
         } catch (Exception e) {
             log.error("Failed to login: {}", e.getMessage());
@@ -78,6 +82,10 @@ public class UserService {
                     .salt(userDTO.getPassword())// Assuming salt is the same as password for simplicity
                     .isActive(true)
                     .roles(roles)
+                    .loginCount(1)
+                    .signupDate(new Date().toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate())
                     .isTwoFactorEnabled(false)
                     .build();
 
@@ -131,5 +139,14 @@ public class UserService {
                         .email("") // Email is not applicable for roles
                         .build())
                 .toList();
+    }
+
+    private User updateUserSignupDate(User user) {
+        //user.setSignupDate(new java.util.Date());
+        user.setLoginCount(user.getLoginCount() + 1);
+        user.setLastLogin(new Date().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime());
+        return userRepository.save(user);
     }
 }
