@@ -19,6 +19,7 @@ public class FeatureUsageController {
 
     @GetMapping
     public ResponseEntity<?> getFeatureUsage() {
+        log.info("Fetching feature usage statistics");
         return ResponseEntity.ok(featureService.getFeatureUsage());
     }
 }
