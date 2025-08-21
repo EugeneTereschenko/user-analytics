@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.UserDetailDTO;
+import com.example.demo.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -14,39 +16,22 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/")
 public class UserDetailController {
 
+    private final UserService userService;
 
     @GetMapping("user/{id}")
     public ResponseEntity<?> getUserDetailsById(@PathVariable("id") String userId) {
         log.info("Fetching user details for id: {}", userId);
-        UserDetailDTO userDetailDTO = new UserDetailDTO.Builder()
-                .name("John Doe")
-                .role("Admin")
-                .email("test@com")
-                .build();
-        return ResponseEntity.ok(userDetailDTO);
+        return ResponseEntity.ok(userService.getUserDetailsById(userId));
     }
 
 
     @GetMapping("users")
     public ResponseEntity<?> getAllUserDetails() {
         log.info("Fetching user details");
-        List<UserDetailDTO> userDetails = new ArrayList<>();
-        UserDetailDTO userDetailDTO = new UserDetailDTO.Builder()
-                .name("John Doe")
-                .role("Admin")
-                .email("test@com")
-                .build();
-        userDetails.add(userDetailDTO);
-        userDetailDTO = new UserDetailDTO.Builder()
-                .name("Jane Smith")
-                .role("User")
-                .email("jane@com")
-                .build();
-        userDetails.add(userDetailDTO);
-
-        return ResponseEntity.ok(userDetails);
+        return ResponseEntity.ok(userService.getAllUserDetails());
     }
 }

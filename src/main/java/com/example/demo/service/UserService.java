@@ -55,7 +55,7 @@ public class UserService {
             }
             log.debug("User details loaded for: {}", userDetails.getUsername());
             String token = jwtUtil.generateToken(userDetails.getUsername());
-            updateUserSignupDate(user);
+            updateUserSignInDate(user);
             log.debug("User signup date updated for: {}", user.getUsername());
             return createUserResponseDTO("", token, "Login successful", "true");
         } catch (Exception e) {
@@ -141,11 +141,34 @@ public class UserService {
                 .toList();
     }
 
-    private User updateUserSignupDate(User user) {
+    private User updateUserSignInDate(User user) {
         user.setLoginCount(user.getLoginCount() + 1);
         user.setLastLogin(new Date().toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime());
         return userRepository.save(user);
+    }
+
+    public UserDetailDTO getUserDetailsById(String userId) {
+        log.debug("Fetching user details for id: {}", userId);
+        return userRepository.findById(Long.parseLong(userId))
+                .map(user -> new UserDetailDTO.Builder()
+                        .name(user.getUsername())
+                        .role(user.getRoles().stream().findFirst().map(Role::getName).orElse("No Role"))
+                        .email(user.getEmail())
+                        .build())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+    }
+
+    public List<UserDetailDTO> getAllUserDetails() {
+        log.debug("Fetching all user details");
+        return userRepository.findAll()
+                .stream()
+                .map(user -> new UserDetailDTO.Builder()
+                        .name(user.getUsername())
+                        .role(user.getRoles().stream().findFirst().map(Role::getName).orElse("No Role"))
+                        .email(user.getEmail())
+                        .build())
+                .toList();
     }
 }
