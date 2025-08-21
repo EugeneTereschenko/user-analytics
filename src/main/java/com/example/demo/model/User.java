@@ -6,8 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -30,7 +33,12 @@ public class User implements UserDetails {
     private String salt;
     @Column(name = "secret_key")
     private String SecretKey;
-
+    @Column(name = "login_count")
+    private int loginCount;
+    @Column(name = "signup_date", columnDefinition = "DATE")
+    private LocalDate signupDate;
+    @Column(name = "last_login", columnDefinition = "TIMESTAMP")
+    private LocalDateTime lastLogin;
     @Column(name = "is_active", length = 255)
     private boolean isActive;
     @Column(name = "is_two_factor", length = 255)
@@ -72,6 +80,9 @@ public class User implements UserDetails {
         private String password;
         private String salt;
         private String SecretKey;
+        private int loginCount;
+        private LocalDate signupDate;
+        private LocalDateTime lastLogin;
         private boolean isActive;
         private boolean isTwoFactorEnabled;
         private Collection<Role> roles = new ArrayList<>();
@@ -106,6 +117,21 @@ public class User implements UserDetails {
             return this;
         }
 
+        public Builder loginCount(int loginCount) {
+            this.loginCount = loginCount;
+            return this;
+        }
+
+        public Builder signupDate(LocalDate signupDate) {
+            this.signupDate = signupDate;
+            return this;
+        }
+
+        public Builder lastLogin(LocalDateTime lastLogin) {
+            this.lastLogin = lastLogin;
+            return this;
+        }
+
         public Builder isActive(boolean isActive) {
             this.isActive = isActive;
             return this;
@@ -129,6 +155,9 @@ public class User implements UserDetails {
             user.password = this.password;
             user.salt = this.salt;
             user.SecretKey = this.SecretKey;
+            user.loginCount = this.loginCount;
+            user.signupDate = this.signupDate;
+            user.lastLogin = this.lastLogin;
             user.isActive = this.isActive;
             user.isTwoFactorEnabled = this.isTwoFactorEnabled;
             user.roles = this.roles;
