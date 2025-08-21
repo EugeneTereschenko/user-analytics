@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.Calendar;
 import com.example.demo.model.FileEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
