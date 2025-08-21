@@ -27,9 +27,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT COUNT(u) FROM User u WHERE u.lastLogin >= :startDateTime")
     long countActiveUsersSince(@Param("startDateTime") LocalDateTime startDateTime);
-/*    @Query("SELECT COUNT(u) FROM User u WHERE u.signupDate >= CURRENT_DATE - :days")
-    long countSignupsInLastDays(@Param("days") int days);*/
 
-/*    @Query("SELECT COUNT(u) FROM User u WHERE u.lastLogin >= CURRENT_DATE - :days")
-    long countActiveUsersInLastDays(@Param("days") int days);*/
 }

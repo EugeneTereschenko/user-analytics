@@ -142,7 +142,6 @@ public class UserService {
     }
 
     private User updateUserSignupDate(User user) {
-        //user.setSignupDate(new java.util.Date());
         user.setLoginCount(user.getLoginCount() + 1);
         user.setLastLogin(new Date().toInstant()
                 .atZone(ZoneId.systemDefault())
