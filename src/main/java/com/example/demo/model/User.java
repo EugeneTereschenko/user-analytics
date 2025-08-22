@@ -44,6 +44,13 @@ public class User implements UserDetails {
     @Column(name = "is_two_factor", length = 255)
     private boolean isTwoFactorEnabled;
 
+    @Column(name = "location", length = 255)
+    private String location;
+    @Column(name = "device_type", length = 255)
+    private String deviceType;
+    @Column(name = "activity_score")
+    private double activityScore;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
@@ -85,6 +92,9 @@ public class User implements UserDetails {
         private LocalDateTime lastLogin;
         private boolean isActive;
         private boolean isTwoFactorEnabled;
+        private String location;
+        private String deviceType;
+        private double activityScore;
         private Collection<Role> roles = new ArrayList<>();
 
         public Builder userId(Long userId) {
@@ -142,6 +152,21 @@ public class User implements UserDetails {
             return this;
         }
 
+        public Builder location(String location) {
+            this.location = location;
+            return this;
+        }
+
+        public Builder deviceType(String deviceType) {
+            this.deviceType = deviceType;
+            return this;
+        }
+
+        public Builder activityScore(double activityScore) {
+            this.activityScore = activityScore;
+            return this;
+        }
+
         public Builder roles(Collection<Role> roles) {
             this.roles = roles;
             return this;
@@ -160,6 +185,9 @@ public class User implements UserDetails {
             user.lastLogin = this.lastLogin;
             user.isActive = this.isActive;
             user.isTwoFactorEnabled = this.isTwoFactorEnabled;
+            user.location = this.location;
+            user.deviceType = this.deviceType;
+            user.activityScore = this.activityScore;
             user.roles = this.roles;
             return user;
         }
