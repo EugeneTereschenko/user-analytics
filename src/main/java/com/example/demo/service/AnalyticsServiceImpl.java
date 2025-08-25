@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -61,8 +62,20 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     }
 
     public int[] getSignups(LocalDate start, LocalDate end) {
-        // Mock implementation
-        return new int[]{10, 20, 15, 30, 25};
+        List<Object[]> signups = userRepository.getSignups(start, end);
+        log.info("Signups log: " + signups.stream()
+                .map(arr -> java.util.Arrays.toString(arr))
+                .toList());
+
+        int[] array = new int[(int) (end.toEpochDay() - start.toEpochDay()) + 1];
+        for (Object[] record : signups) {
+            LocalDate date = (LocalDate) record[0];
+            Long count = (Long) record[1];
+            int index = (int) (date.toEpochDay() - start.toEpochDay());
+            array[index] = count.intValue();
+        }
+        return array;
+        //return new int[]{10, 20, 15, 30, 25};
     }
 
     public Map<String, Integer> getDeviceBreakdown() {
