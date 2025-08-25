@@ -7,11 +7,15 @@
 
 
 <div class="container mt-3">
-  <h2>User Details</h2>
-  <p><strong>Name:</strong> {{ user?.name }}</p>
-  <p><strong>Email:</strong> {{ user?.email }}</p>
-  <p><strong>Role:</strong> {{ user?.role }}</p>
-  <button class="btn btn-danger" (click)="deactivateUser()">Deactivate User</button>
+  <h2>User List</h2>
+<ul class="list-group">
+  <li class="list-group-item" *ngFor="let user of users">
+    <strong>{{ user?.name }}</strong> ({{ user?.role }})<br>
+    <span>{{ user?.email }}</span>
+    <span><p>Status</p></span>
+    <span><button class="btn btn-danger" (click)="deactivateUser()">Deactivate User</button></span>
+  </li>
+</ul>
 </div>
 <!--
 <a [routerLink]="['/users', user.id]">View</a>

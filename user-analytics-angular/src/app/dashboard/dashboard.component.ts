@@ -71,8 +71,8 @@ export class DashboardComponent implements OnInit {
   signupData: number[] = [];
   deviceData: any = {};
 
-  startDate: string = '2025-07-15';
-  endDate: string = '2025-07-16';
+  startDate: string = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  endDate: string = new Date().toISOString().slice(0, 10);
 
   constructor(
     private analyticsService: AnalyticsService,
