@@ -20,7 +20,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
     private final UserRepository userRepository;
 
-    // Example mock data (replace with repository queries later)
     private final Map<LocalDate, Long> userSignups = Map.of(
             LocalDate.now(), 15L,
             LocalDate.now().minusDays(1), 20L
@@ -75,17 +74,30 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             array[index] = count.intValue();
         }
         return array;
-        //return new int[]{10, 20, 15, 30, 25};
     }
 
     public Map<String, Integer> getDeviceBreakdown() {
-        // Mock implementation
-        return Map.of("Desktop", 5000, "Mobile", 7000, "Tablet", 1500);
+        List<Object[]> devices = userRepository.getDeviceBreakdown();
+        log.info("Device breakdown log: " + devices.stream()
+                .map(arr -> java.util.Arrays.toString(arr))
+                .toList());
+        return devices.stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        arr -> (String) arr[0],
+                        arr -> ((Long) arr[1]).intValue()
+                ));
     }
 
     public Map<String, Integer> getUserLocations() {
-        // Mock implementation
-        return Map.of("USA", 4000, "India", 3000, "Germany", 1000);
+        List<Object[]> locations = userRepository.getUserLocations();
+        log.info("User locations log: " + locations.stream()
+                .map(arr -> java.util.Arrays.toString(arr))
+                .toList());
+        return locations.stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        arr -> (String) arr[0],
+                        arr -> ((Long) arr[1]).intValue()
+                ));
     }
 
 

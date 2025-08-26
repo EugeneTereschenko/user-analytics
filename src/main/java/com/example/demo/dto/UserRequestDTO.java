@@ -10,16 +10,20 @@ public class UserRequestDTO {
     private String username;
     private String email;
     private String password;
+    private String deviceType;
+    private String location;
     private Collection<String> roles; // Add roles field
 
 
     public UserRequestDTO() {
     }
 
-    public UserRequestDTO(String username, String email, String password, Collection<String> roles) {
+    public UserRequestDTO(String username, String email, String password, String deviceType, String location, Collection<String> roles) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.deviceType = deviceType;
+        this.location = location;
         this.roles = roles; // Initialize roles
     }
 
@@ -47,6 +51,21 @@ public class UserRequestDTO {
         this.password = password;
     }
 
+    public String getDeviceType() {
+        return deviceType;
+    }
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public Collection<String> getRoles() {
         return roles;
     }
@@ -62,6 +81,8 @@ public class UserRequestDTO {
         private String username;
         private String email;
         private String password;
+        private String deviceType;
+        private String location;
         private Collection<String> roles;
 
         public Builder username(String username) {
@@ -79,13 +100,23 @@ public class UserRequestDTO {
             return this;
         }
 
+        public Builder deviceType(String deviceType) {
+            this.deviceType = deviceType;
+            return this;
+        }
+
         public Builder roles(Collection<String> roles) {
             this.roles = roles;
             return this;
         }
 
+        public Builder location(String location) {
+            this.location = location;
+            return this;
+        }
+
         public UserRequestDTO build() {
-            return new UserRequestDTO(username, email, password, roles);
+            return new UserRequestDTO(username, email, password, deviceType, location, roles);
         }
     }
 }

@@ -83,6 +83,8 @@ public class UserService {
                     .isActive(true)
                     .roles(roles)
                     .loginCount(1)
+                    .deviceType(userDTO.getDeviceType())
+                    .location(userDTO.getLocation())
                     .signupDate(new Date().toInstant()
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate())
