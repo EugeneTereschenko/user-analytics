@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -220,6 +221,8 @@ public class DatabaseInitializer {
         }
         List<UserRequestDTO> users = readUsersFromFile(filePath, passwordEncoder);
         for (UserRequestDTO user : users) {
+            user.setDeviceType(generateDeviceType());
+            user.setLocation(generateLocation());
             UserResponseDTO response = userService.createUser(user);
             profileService.createProfile(Long.valueOf(response.getId()));
             if (!response.getSuccess().equals("true")) {
@@ -319,4 +322,13 @@ public class DatabaseInitializer {
         }
     }
 
+    private String generateDeviceType() {
+        List<String> deviceTypes = List.of("Desktop", "Mobile", "Tablet", "Smartwatch", "SmartTV");
+        return deviceTypes.get(new Random().nextInt(deviceTypes.size()));
+    }
+
+    private String generateLocation() {
+        List<String> location = List.of("USA", "India", "Germany", "Ukraine", "Canada", "UK", "France", "Italy", "Spain", "Australia");
+        return location.get(new Random().nextInt(location.size()));
+    }
 }

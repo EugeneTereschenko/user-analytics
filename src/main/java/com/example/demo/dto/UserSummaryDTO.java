@@ -1,12 +1,15 @@
 package com.example.demo.dto;
 
-public class UserSummaryDTO {
-    public int totalUsers;
-    public int activeUsers;
-    public int newUsersToday;
-    public double bounceRate;
+import lombok.ToString;
 
-    public UserSummaryDTO(int totalUsers, int activeUsers, int newUsersToday, double bounceRate) {
+@ToString
+public class UserSummaryDTO {
+    public Long totalUsers;
+    public Long activeUsers;
+    public Long newUsersToday;
+    public Double bounceRate;
+
+    public UserSummaryDTO(Long totalUsers, Long activeUsers, Long newUsersToday, Double bounceRate) {
         this.totalUsers = totalUsers;
         this.activeUsers = activeUsers;
         this.newUsersToday = newUsersToday;
