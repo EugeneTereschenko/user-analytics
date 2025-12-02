@@ -56,4 +56,11 @@ export class AnalyticsService {
       { headers: this.getAuthHeaders(), params }
     );
   }
+
+  getLocations(): Observable<Map<string, number>> {
+    return this.http.get<Map<string, number>>(
+      `${this.baseUrl}users/locations`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
 }
