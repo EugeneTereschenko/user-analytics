@@ -224,6 +224,12 @@ export const routes: Routes = [
   canActivate: [authGuard],
   loadComponent: () =>
     import('./pages/announcements/announcements.component').then(m => m.AnnouncementsComponent)
+  },
+  {
+    path: 'sidebar',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/sidebar/sidebar.component').then(m => m.SidebarComponent)
   }
 
 

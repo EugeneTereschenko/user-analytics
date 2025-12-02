@@ -1,0 +1,61 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <h3 *ngIf="!isCollapsed">Menu</h3>
+    <button class="toggle-btn" (click)="toggleSidebar()">
+      <i [class]="isCollapsed ? 'bi bi-list' : 'bi bi-x-lg'"></i>
+    </button>
+  </div>
+  
+  <nav class="sidebar-nav">
+    <ul>
+      <ng-container *ngFor="let section of menuSections">
+        <!-- Section with children -->
+        <li *ngIf="section.children" class="has-children">
+          <a (click)="toggleSection(section.key!)" class="section-header">
+            <i [class]="'bi ' + section.icon"></i>
+            <span *ngIf="!isCollapsed">{{ section.title }}</span>
+            <i *ngIf="!isCollapsed" 
+               [class]="isSectionExpanded(section.key!) ? 'bi bi-chevron-down' : 'bi bi-chevron-right'"
+               class="expand-icon"></i>
+          </a>
+          
+          <ul *ngIf="isSectionExpanded(section.key!) && !isCollapsed" class="submenu">
+            <li *ngFor="let child of section.children">
+              <!-- Nested submenu (e.g., Billing) -->
+              <ng-container *ngIf="child.nested && child.children">
+                <a (click)="toggleSection(child.key!)" class="nested-header">
+                  <i [class]="'bi ' + child.icon"></i>
+                  <span>{{ child.label }}</span>
+                  <i [class]="isSectionExpanded(child.key!) ? 'bi bi-chevron-down' : 'bi bi-chevron-right'"
+                     class="expand-icon"></i>
+                </a>
+                <ul *ngIf="isSectionExpanded(child.key!)" class="nested-submenu">
+                  <li *ngFor="let nestedChild of child.children">
+                    <a [routerLink]="nestedChild.route" routerLinkActive="active">
+                      <i [class]="'bi ' + nestedChild.icon"></i>
+                      <span>{{ nestedChild.label }}</span>
+                    </a>
+                  </li>
+                </ul>
+              </ng-container>
+              
+              <!-- Regular submenu item -->
+              <a *ngIf="!child.nested" [routerLink]="child.route" routerLinkActive="active">
+                <i [class]="'bi ' + child.icon"></i>
+                <span>{{ child.label }}</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        
+        <!-- Section without children (direct link) -->
+        <li *ngIf="!section.children">
+          <a [routerLink]="section.route" routerLinkActive="active">
+            <i [class]="'bi ' + section.icon"></i>
+            <span *ngIf="!isCollapsed">{{ section.title }}</span>
+          </a>
+        </li>
+      </ng-container>
+    </ul>
+  </nav>
+</aside>
