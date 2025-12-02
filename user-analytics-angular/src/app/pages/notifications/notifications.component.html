@@ -8,12 +8,23 @@
 
 <div class="container mt-3">
   <h2>Notifications Center</h2>
-  <ul class="list-group">
-    <li class="list-group-item" *ngFor="let notification of notifications">
-      <strong>{{ notification.title }}</strong><br />
-      <small>{{ notification.timestamp | date:'short' }}</small>
-      <p>{{ notification.message }}</p>
-    </li>
-  </ul>
+  <div class="accordion" id="notificationsAccordion">
+    <div class="accordion-item" *ngFor="let notification of notifications; let i = index">
+      <h2 class="accordion-header" [id]="'heading' + i">
+        <button class="accordion-button" [class.collapsed]="expandedIndex !== i" type="button" 
+          (click)="toggleAccordion(notification, i)">
+          <strong>{{ notification.title }}</strong>
+          <small class="ms-auto me-3 text-muted">{{ notification.timestamp | date:'short' }}</small>
+        </button>
+      </h2>
+      <div [id]="'collapse' + i" 
+        class="accordion-collapse collapse" 
+        [class.show]="expandedIndex === i"
+        [attr.aria-labelledby]="'heading' + i">
+        <div class="accordion-body">
+          {{ notification.message }}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
