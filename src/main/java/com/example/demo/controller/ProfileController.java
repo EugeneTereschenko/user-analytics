@@ -25,14 +25,16 @@ public class ProfileController {
 
     @PostMapping("profile/upload-image")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
-        String result = profileService.uploadImageToDatabase(file);
-        if (!result.startsWith("Error")) {
-            log.debug("Image upload successful: " + result);
-            return ResponseEntity.ok(result);
+        try {
+            Long imageId = profileService.uploadImageToDatabase(file);
+            log.debug("Image upload successful: " + imageId);
+            return ResponseEntity.ok("Image uploaded successfully. ID: " + imageId);
+        } catch (Exception e) {
+            log.error("Image upload failed: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error uploading image: " + e.getMessage());
         }
-        log.error("Image upload failed: " + result);
-        return ResponseEntity.status(500).body(result);
     }
+
 
     @GetMapping("profile/getImage")
     public ResponseEntity<byte[]> getImage() {
