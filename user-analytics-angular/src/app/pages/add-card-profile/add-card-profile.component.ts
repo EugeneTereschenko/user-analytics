@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CardEditService } from '../../services/card-edit.service';
@@ -6,7 +7,7 @@ import { CardEditService } from '../../services/card-edit.service';
 @Component({
   selector: 'app-add-card-profile',
   standalone: true,
-  imports: [RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './add-card-profile.component.html',
   styleUrl: './add-card-profile.component.css'
 })
@@ -16,6 +17,7 @@ export class AddCardProfileComponent {
   cvv: string = '123';
   cardName: string = 'VALDIMIR BEREZOVKIY';
   Submit_Payment: string = 'Submit Payment';
+  currentDate: Date = new Date();
 
   constructor(private cardEditService: CardEditService) { }
 
