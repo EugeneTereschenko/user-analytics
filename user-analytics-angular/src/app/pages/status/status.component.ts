@@ -10,6 +10,7 @@ import { SystemstatusService } from '../../services/systemstatus.service';
 })
 export class StatusComponent implements OnInit {
   status: any;
+  Math = Math; // Add this line
 
   constructor(private systemstatusService: SystemstatusService) {}
 
