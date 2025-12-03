@@ -79,12 +79,12 @@ export class SidebarComponent {
         }
       ]
     },
-    { title: 'Tutorials', route: '/tutorials', icon: 'bi-journal-code' },
     { title: '🔔 Reminders', route: '/reminders', icon: 'bi-bell' },
     { title: '📅 Calendar', route: '/calendar', icon: 'bi-calendar-event' },
     { title: 'Tasks', route: '/tasks', icon: 'bi-list-check' },
     { title: 'AI Assistant', route: '/assistant', icon: 'bi-robot' },
     { title: 'Notifications', route: '/notifications', icon: 'bi-bell-fill' },
+    { title: 'Tutorials', route: '/tutorials', icon: 'bi-journal-code' },
     { title: 'Reports', route: '/reports', icon: 'bi-file-earmark-bar-graph' },
     { title: 'Announcements', route: '/announcements', icon: 'bi-megaphone' },
     { title: 'Support / Feedback', route: '/support', icon: 'bi-chat-dots' },
