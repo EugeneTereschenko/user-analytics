@@ -1,1 +1,184 @@
-<!-- -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<div class="container-fluid p-4">
+  <!-- Header Card -->
+  <div class="card shadow-sm mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="card-body text-white">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h2 class="mb-1">
+            <i class="bi bi-speedometer2 me-2"></i>{{ 'WELCOME' | translate }} - Analytics Dashboard
+          </h2>
+          <p class="mb-0 opacity-75">Monitor your key metrics and performance indicators</p>
+        </div>
+        <div>
+          <button class="btn btn-light btn-sm" (click)="start()">
+            <i class="bi bi-play-circle me-1"></i>Start Tour
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Date Range Filter Card -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-white py-3">
+      <h5 class="mb-0">
+        <i class="bi bi-calendar-range me-2"></i>Date Range Filter
+      </h5>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-5">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-calendar-event me-1"></i>From Date
+          </label>
+          <input type="date" class="form-control" [(ngModel)]="startDate" />
+        </div>
+        <div class="col-md-5">
+          <label class="form-label fw-semibold">
+            <i class="bi bi-calendar-event me-1"></i>To Date
+          </label>
+          <input type="date" class="form-control" [(ngModel)]="endDate" />
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button class="btn btn-primary w-100" (click)="loadAnalytics()">
+            <i class="bi bi-arrow-clockwise me-1"></i>Apply Filter
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Cards Section -->
+  <div class="mb-4">
+    <app-summary-cards [summary]="summary"></app-summary-cards>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="row">
+    <!-- Line Chart -->
+    <ng-container *ngIf="featureService.current['featureNewChart']">
+      <div class="col-lg-8 mb-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0">
+              <i class="bi bi-graph-up me-2"></i>Signup Trends
+            </h5>
+          </div>
+          <div class="card-body">
+            <app-line-chart [data]="signupData"></app-line-chart>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Pie Chart -->
+    <div class="col-lg-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-white py-3">
+          <h5 class="mb-0">
+            <i class="bi bi-pie-chart me-2"></i>Device Usage
+          </h5>
+        </div>
+        <div class="card-body">
+          <app-pie-chart [data]="deviceData" title="Device Usage"></app-pie-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions Card -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-white py-3">
+      <h5 class="mb-0">
+        <i class="bi bi-lightning-charge me-2"></i>Quick Actions
+      </h5>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <button class="btn btn-outline-primary w-100">
+            <i class="bi bi-file-earmark-text me-2"></i>Generate Report
+          </button>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-outline-success w-100">
+            <i class="bi bi-download me-2"></i>Export Data
+          </button>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-outline-info w-100">
+            <i class="bi bi-gear me-2"></i>Settings
+          </button>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-outline-secondary w-100">
+            <i class="bi bi-question-circle me-2"></i>Help
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity Card -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-white py-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          <i class="bi bi-clock-history me-2"></i>Recent Activity
+        </h5>
+        <a href="#" class="text-decoration-none small">View All</a>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="list-group list-group-flush">
+        <div class="list-group-item border-0 px-0">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <div class="rounded-circle bg-success bg-opacity-10 p-2">
+                <i class="bi bi-person-plus text-success"></i>
+              </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <p class="mb-0">New user registration</p>
+              <small class="text-muted">2 minutes ago</small>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item border-0 px-0">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <div class="rounded-circle bg-info bg-opacity-10 p-2">
+                <i class="bi bi-graph-up text-info"></i>
+              </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <p class="mb-0">Analytics data updated</p>
+              <small class="text-muted">15 minutes ago</small>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item border-0 px-0">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <div class="rounded-circle bg-warning bg-opacity-10 p-2">
+                <i class="bi bi-exclamation-triangle text-warning"></i>
+              </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <p class="mb-0">System maintenance scheduled</p>
+              <small class="text-muted">1 hour ago</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

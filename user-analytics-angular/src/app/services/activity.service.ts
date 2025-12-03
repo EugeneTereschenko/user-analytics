@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 
 export interface UserActivity {
   id: number;
-  type: 'login' | 'update' | 'delete' | 'create';
+  type: 'login' | 'logout' | 'create' | 'update' | 'delete';
   description: string;
   timestamp: Date;
   user?: string;

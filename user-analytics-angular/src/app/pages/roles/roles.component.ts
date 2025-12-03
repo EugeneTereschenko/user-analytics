@@ -11,7 +11,9 @@ import { RolesService } from '../../services/roles.service';
   styleUrl: './roles.component.css'
 })
 export class RolesComponent implements OnInit {
-  users: { id: string; name: string; role: string }[] = [];
+  users: { id: string; name: string; email?: string; role: string; }[] = [
+    // your users data
+  ];
   roles = ['admin', 'editor', 'viewer'];
 
   selectedUserId: string | null = null;
@@ -38,6 +40,10 @@ export class RolesComponent implements OnInit {
     this.rolesService.updateUserRole(user.id, user.role).subscribe(() => {
       alert('Role updated!');
     });
+  }
+
+  getRoleCount(role: string): number {
+    return this.users.filter(user => user.role === role).length;
   }
 
 

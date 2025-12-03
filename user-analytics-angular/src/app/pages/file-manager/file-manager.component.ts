@@ -14,6 +14,8 @@ import { FileService } from '../../services/file.service'; // Ensure this servic
 export class FileManagerComponent {
   files: string[] = [];
   selectedFile: File | null = null;
+  uploadProgress: number = 0;
+
 
   constructor(private http: HttpClient, private fileService: FileService) {
     this.fetchFiles();
@@ -58,5 +60,23 @@ export class FileManagerComponent {
         console.error('File deletion failed', err);
       }
     });
+  }
+
+  getFileType(filename: string): string {
+    const ext = filename.split('.').pop()?.toLowerCase();
+    if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(ext || '')) return 'image';
+    if (['mp4', 'avi', 'mov', 'mkv'].includes(ext || '')) return 'video';
+    if (['zip', 'rar', '7z', 'tar'].includes(ext || '')) return 'archive';
+    if (['pdf', 'doc', 'docx', 'txt'].includes(ext || '')) return 'document';
+    return 'other';
+  }
+
+  getCurrentDate(): Date {
+    return new Date();
+  }
+
+  getRandomSize(): string {
+    const sizes = ['1.2 MB', '3.5 MB', '512 KB', '8.1 MB', '2.3 MB'];
+    return sizes[Math.floor(Math.random() * sizes.length)];
   }
 }

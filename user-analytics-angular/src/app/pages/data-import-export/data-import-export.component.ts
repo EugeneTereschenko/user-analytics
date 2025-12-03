@@ -44,4 +44,9 @@ export class DataImportExportComponent {
       alert((err instanceof Error && err.message) ? err.message : 'An error occurred.');
     }
   }
+
+  clearImport(): void {
+    this.importedData = [];
+    this.previewHeaders = [];
+  }
 }
