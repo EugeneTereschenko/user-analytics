@@ -4,121 +4,263 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+<section class="min-vh-100" style="background-color: #f4f5f7;">
+  <div class="container py-5">
+    <!-- Page Header -->
+    <div class="row mb-4">
+      <div class="col">
+        <div class="card shadow-sm border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+          <div class="card-body text-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <h4 class="mb-0"><i class="bi bi-star me-2"></i>Edit Skills</h4>
+              <a [routerLink]="['/profile']" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Back to Profile
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<section class="vh-100" style="background-color: #f4f5f7;">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col col-lg-6 mb-4 mb-lg-0">
-        <div class="card mb-3" style="border-radius: .5rem;">
-          <div class="row g-0">
-            <div class="col-md-4 gradient-custom text-center text-white"
-              style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
-            <div class="card-body p-4">
-              <h5 class="large-title">Marie Horwitz</h5>
-              <p class="mb-2 text-center large-title">Web Designer</p>
-              <div class="col-md-8 mb-3 mx-auto d-flex flex-column align-items-center">
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-3 d-flex justify-content-center">
-                    <i class="far fa-edit mb-5"></i>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/profile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Back</a>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/editdetailsprofile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Details</a>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/editskillsprofile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Skills</a>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/editexperienceprofile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Experience</a>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/editeducationprofile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Education</a>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/editcertificatesprofile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Certificates</a>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/editprojectsprofile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Projects</a>
-                   </div>
-                 </div>
-                </div>
+    <div class="row">
+      <!-- Sidebar Navigation -->
+      <div class="col-lg-3 mb-4">
+        <div class="card shadow-sm border-0">
+          <div class="card-body p-0">
+            <div class="text-center p-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <div class="mb-3">
+                <i class="bi bi-person-circle text-white" style="font-size: 4rem;"></i>
+              </div>
+              <h5 class="text-white mb-1 fw-bold">Marie Horwitz</h5>
+              <p class="text-white opacity-75 mb-0 small">Web Designer</p>
             </div>
+            
+            <div class="list-group list-group-flush">
+              <a [routerLink]="['/editprofile']" class="list-group-item list-group-item-action">
+                <i class="bi bi-person me-2"></i>Basic Info
+              </a>
+              <a [routerLink]="['/editdetailsprofile']" class="list-group-item list-group-item-action">
+                <i class="bi bi-file-text me-2"></i>Details
+              </a>
+              <a [routerLink]="['/editskillsprofile']" class="list-group-item list-group-item-action active">
+                <i class="bi bi-star me-2"></i>Skills
+              </a>
+              <a [routerLink]="['/editexperienceprofile']" class="list-group-item list-group-item-action">
+                <i class="bi bi-briefcase me-2"></i>Experience
+              </a>
+              <a [routerLink]="['/editeducationprofile']" class="list-group-item list-group-item-action">
+                <i class="bi bi-mortarboard me-2"></i>Education
+              </a>
+              <a [routerLink]="['/editcertificatesprofile']" class="list-group-item list-group-item-action">
+                <i class="bi bi-award me-2"></i>Certificates
+              </a>
+              <a [routerLink]="['/editprojectsprofile']" class="list-group-item list-group-item-action">
+                <i class="bi bi-folder me-2"></i>Projects
+              </a>
             </div>
-            <div class="col-md-8">
-              <div class="card-body p-4">
-                <h6 class="large-title">Skills</h6>
-                <hr class="mt-0 mb-4">
-                <div class="row pt-1">
-                    <div class="col">
-                        <h6 class="large-title">Programming Languages:</h6>
-                        <input type="text" class="form-control" placeholder="Programming Languages:" [(ngModel)]="programmingLanguages">
-                    </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-lg-9">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="bi bi-code-slash me-2"></i>Technical Skills</h5>
+          </div>
+          <div class="card-body p-4">
+            <form>
+              <!-- Programming Languages -->
+              <h6 class="text-primary mb-3">
+                <i class="bi bi-terminal me-2"></i>Programming & Languages
+              </h6>
+              
+              <div class="mb-4">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-braces me-1 text-primary"></i>Programming Languages <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control" placeholder="e.g., JavaScript, Python, Java, C#" [(ngModel)]="programmingLanguages" name="programmingLanguages">
+                <div class="form-text">Separate multiple languages with commas</div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-layout-text-window me-1 text-primary"></i>Web Frameworks <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control" placeholder="e.g., React, Angular, Vue.js, Express" [(ngModel)]="webFrameworks" name="webFrameworks">
+                <div class="form-text">List frameworks you're proficient in</div>
+              </div>
+
+              <!-- DevOps & Tools -->
+              <hr class="my-4">
+              <h6 class="text-primary mb-3">
+                <i class="bi bi-gear me-2"></i>DevOps & Infrastructure
+              </h6>
+
+              <div class="mb-4">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-cloud me-1 text-primary"></i>DevOps Tools <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control" placeholder="e.g., Docker, Kubernetes, Jenkins, AWS" [(ngModel)]="devOps" name="devOps">
+                <div class="form-text">CI/CD, containerization, cloud platforms</div>
+              </div>
+
+              <!-- Database & Version Control -->
+              <hr class="my-4">
+              <h6 class="text-primary mb-3">
+                <i class="bi bi-database me-2"></i>Database & Version Control
+              </h6>
+
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-table me-1 text-primary"></i>SQL & Databases <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control" placeholder="e.g., PostgreSQL, MySQL, MongoDB" [(ngModel)]="sql" name="sql">
+                  <div class="form-text">SQL and NoSQL databases</div>
                 </div>
-                <div class="row pt-1">
-                    <div class="col">
-                        <h6 class="large-title">Web Frameworks:</h6>
-                        <input type="text" class="form-control" placeholder="Web Frameworks:" [(ngModel)]="webFrameworks">
-                    </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-git me-1 text-primary"></i>Version Control Systems <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control" placeholder="e.g., Git, GitHub, GitLab, SVN" [(ngModel)]="vcs" name="vcs">
+                  <div class="form-text">VCS tools and platforms</div>
                 </div>
-                <div class="row pt-1">
-                  <div class="col">
-                    <h6 class="large-title">DevOps:</h6>
-                    <input type="text" class="form-control" placeholder="DevOps:" [(ngModel)]="devOps">
-                  </div>
+              </div>
+
+              <!-- Development Tools -->
+              <hr class="my-4">
+              <h6 class="text-primary mb-3">
+                <i class="bi bi-tools me-2"></i>Development Tools
+              </h6>
+
+              <div class="mb-4">
+                <label class="form-label fw-semibold">
+                  <i class="bi bi-hammer me-1 text-primary"></i>Tools & IDEs <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control" placeholder="e.g., VS Code, IntelliJ, Postman, Jira" [(ngModel)]="tools" name="tools">
+                <div class="form-text">Development tools, IDEs, and productivity software</div>
+              </div>
+
+              <!-- Action Buttons -->
+              <hr class="my-4">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <button type="button" class="btn btn-outline-secondary w-100" (click)="readpayload()">
+                    <i class="bi bi-arrow-clockwise me-2"></i>Refresh Data
+                  </button>
                 </div>
-                <div class="row pt-1">
-                  <div class="col">
-                    <h6 class="large-title">SQL:</h6>
-                    <input type="text" class="form-control" placeholder="SQL:" [(ngModel)]="sql">
-                  </div>
-                </div>
-                <div class="row pt-1">
-                  <div class="col">
-                    <h6 class="large-title">VCS:</h6>
-                    <input type="text" class="form-control" placeholder="VCS:" [(ngModel)]="vcs">
-                  </div>
-                </div>
-                <div class="row pt-1">
-                  <div class="col">
-                    <h6 class="large-title">TOOLS:</h6>
-                    <input type="text" class="form-control" placeholder="TOOLS:" [(ngModel)]="tools">
-                  </div>
-                </div>
-                <div class="row pt-1">
-                  <div class="col-6 mb-3">
-                    <button type="button" class="btn btn-lg btn-primary"
-                    (click)="readpayload()">Refresh</button>
-                  </div>
-                  <div class="col-6 mb-3">
-                    <button type="button" class="btn btn-lg btn-primary"
+                <div class="col-md-6 mb-3">
+                  <button type="button" class="btn btn-primary w-100"
                     [disabled]="!programmingLanguages || !webFrameworks || !devOps || !sql || !vcs || !tools"
-                            (click)="saveSkills()">Update</button>
+                    (click)="saveSkills()">
+                    <i class="bi bi-check-circle me-2"></i>Update Skills
+                  </button>
+                </div>
+              </div>
+
+              <!-- Validation Message -->
+              @if (!programmingLanguages || !webFrameworks || !devOps || !sql || !vcs || !tools) {
+                <div class="alert alert-warning mt-3">
+                  <i class="bi bi-exclamation-triangle me-2"></i>
+                  Please fill in all required fields marked with <span class="text-danger">*</span>
+                </div>
+              }
+            </form>
+          </div>
+        </div>
+
+        <!-- Skills Overview Card -->
+        <div class="card shadow-sm border-0 mt-4">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="bi bi-list-check me-2"></i>Skills Overview</h5>
+          </div>
+          <div class="card-body">
+            <div id="profile-skills" class="mb-3">
+              <div class="alert alert-info">
+                <i class="bi bi-lightbulb me-2"></i>
+                <strong>Tip:</strong> Keep your skills updated to showcase your expertise. Add specific versions or proficiency levels for better visibility.
+              </div>
+            </div>
+            
+            <div>
+              <h6 class="mb-3">
+                <i class="bi bi-share me-2"></i>Share your profile:
+              </h6>
+              <div class="d-flex gap-2 flex-wrap">
+                <a href="#!" class="btn btn-outline-primary btn-sm">
+                  <i class="fab fa-facebook-f me-2"></i>Facebook
+                </a>
+                <a href="#!" class="btn btn-outline-info btn-sm">
+                  <i class="fab fa-twitter me-2"></i>Twitter
+                </a>
+                <a href="#!" class="btn btn-outline-danger btn-sm">
+                  <i class="fab fa-instagram me-2"></i>Instagram
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skill Categories Info -->
+        <div class="card shadow-sm border-0 mt-4">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Skill Categories</h5>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="d-flex align-items-start">
+                  <div class="flex-shrink-0">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-2">
+                      <i class="bi bi-braces text-primary"></i>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1 ms-3">
+                    <h6 class="mb-1">Programming Languages</h6>
+                    <small class="text-muted">Core languages you work with</small>
                   </div>
                 </div>
-                <h6 class="large-title">Skills</h6>
-                <hr class="mt-0 mb-4">
-                <div id="profile-skills"></div>
-                <div class="d-flex justify-content-start">
-                  <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
-                  <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
-                  <a href="#!"><i class="fab fa-instagram fa-lg"></i></a>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex align-items-start">
+                  <div class="flex-shrink-0">
+                    <div class="rounded-circle bg-success bg-opacity-10 p-2">
+                      <i class="bi bi-layout-text-window text-success"></i>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1 ms-3">
+                    <h6 class="mb-1">Web Frameworks</h6>
+                    <small class="text-muted">Frontend and backend frameworks</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex align-items-start">
+                  <div class="flex-shrink-0">
+                    <div class="rounded-circle bg-info bg-opacity-10 p-2">
+                      <i class="bi bi-cloud text-info"></i>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1 ms-3">
+                    <h6 class="mb-1">DevOps</h6>
+                    <small class="text-muted">CI/CD, containers, cloud services</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex align-items-start">
+                  <div class="flex-shrink-0">
+                    <div class="rounded-circle bg-warning bg-opacity-10 p-2">
+                      <i class="bi bi-database text-warning"></i>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1 ms-3">
+                    <h6 class="mb-1">Databases & VCS</h6>
+                    <small class="text-muted">Data storage and version control</small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -128,5 +270,3 @@
     </div>
   </div>
 </section>
-
-
