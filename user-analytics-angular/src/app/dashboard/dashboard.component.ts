@@ -29,42 +29,8 @@ interface SummaryApiResponse {
     CommonModule,
     TranslateModule
   ],
-  template: `
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
-    <h2>{{ 'WELCOME' | translate }}</h2>
-    <h2>Analytics Dashboard</h2>
-    <h2 class="dashboard-header">Dashboard</h2>
-    <button (click)="start()">Start Tour</button>
-
-    <div class="row mb-3">
-      <div class="col">
-        <label>From:</label>
-        <input type="date" class="form-control" [(ngModel)]="startDate" />
-      </div>
-      <div class="col">
-        <label>To:</label>
-        <input type="date" class="form-control" [(ngModel)]="endDate" />
-      </div>
-      <div class="col align-self-end">
-        <button class="btn btn-primary" (click)="loadAnalytics()">Apply</button>
-      </div>
-    </div>
-
-    <app-summary-cards [summary]="summary"></app-summary-cards>
-
-    <ng-container *ngIf="featureService.current['featureNewChart']">
-      <app-line-chart [data]="signupData"></app-line-chart>
-    </ng-container>
-
-    <app-pie-chart [data]="deviceData" title="Device Usage"></app-pie-chart>
-  `
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
   summary: { users: number; active: number } | null = null;
