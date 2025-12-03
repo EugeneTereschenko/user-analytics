@@ -4,83 +4,236 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+<section class="min-vh-100" style="background-color: #f4f5f7;">
+  <div class="container py-5">
+    <!-- Page Header -->
+    <div class="row mb-4">
+      <div class="col">
+        <div class="card shadow-sm border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+          <div class="card-body text-white py-3">
+            <h4 class="mb-0"><i class="bi bi-person-circle me-2"></i>My Profile</h4>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<section class="vh-100" style="background-color: #f4f5f7;">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col col-lg-6 mb-4 mb-lg-0">
-        <div class="card mb-3" style="border-radius: .5rem;">
+    <div class="row d-flex justify-content-center">
+      <div class="col-lg-10 mb-4">
+        <!-- Main Profile Card -->
+        <div class="card shadow-sm mb-4" style="border-radius: .75rem;">
           <div class="row g-0">
+            <!-- Left Sidebar -->
             <div class="col-md-4 gradient-custom text-center text-white"
-              style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
-              <div class="position-relative d-inline-block">
-              <img 
-                  [src]="profileImageUrl"
-                  alt="Avatar"
-                  class="img-fluid my-5 rounded-circle"
-                  style="width: 6rem;" />
-              <input
-                type="file"
-                accept="image/*"
-                #fileInput
-                style="display: none"
-                (change)="onFileSelected($event)"
-              />
-              <button
-                class="btn btn-primary btn-sm rounded-circle position-absolute"
-                id="change-pic"
-                style="left: 100%; top: 100%; transform: translate(-150%, -150%) rotate(15deg);"
-                (click)="fileInput.click()"
-                type="button">
-                <i class="fas fa-camera" style="transform: rotate(-15deg); display: inline-block;"></i>
-              </button>
-              </div>
-              <h5 class="large-title">Marie Horwitz</h5>
-              <p class="mb-2 text-center large-title">Web Designer</p>
-              <div class="col-md-8 mb-3 mx-auto d-flex flex-column align-items-center">
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-3 d-flex justify-content-center">
-                    <i class="far fa-edit mb-5" [routerLink]="['/editprofile']"></i>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-3 d-flex justify-content-center">
-                    <a [routerLink]="['/editprofile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Edit</a>
-                   </div>
-                 </div>
+              style="border-top-left-radius: .75rem; border-bottom-left-radius: .75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <div class="p-4">
+                <!-- Profile Image -->
+                <div class="position-relative d-inline-block mb-4 mt-3">
+                  <img 
+                    [src]="profileImageUrl"
+                    alt="Avatar"
+                    class="img-fluid rounded-circle shadow-lg"
+                    style="width: 120px; height: 120px; object-fit: cover; border: 4px solid rgba(255,255,255,0.3);" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    #fileInput
+                    style="display: none"
+                    (change)="onFileSelected($event)"
+                  />
+                  <button
+                    class="btn btn-light btn-sm rounded-circle position-absolute shadow"
+                    id="change-pic"
+                    style="bottom: 0; right: 0; width: 36px; height: 36px; padding: 0;"
+                    (click)="fileInput.click()"
+                    title="Change profile picture"
+                    type="button">
+                    <i class="fas fa-camera"></i>
+                  </button>
                 </div>
+
+                <!-- Profile Info -->
+                <h4 class="mb-1 fw-bold">Marie Horwitz</h4>
+                <p class="mb-3 opacity-75"><i class="bi bi-briefcase me-2"></i>Web Designer</p>
+                
+                <!-- Stats -->
+                <div class="row text-center mb-4">
+                  <div class="col-4">
+                    <h5 class="mb-0 fw-bold">128</h5>
+                    <small class="opacity-75">Projects</small>
+                  </div>
+                  <div class="col-4">
+                    <h5 class="mb-0 fw-bold">2.5k</h5>
+                    <small class="opacity-75">Followers</small>
+                  </div>
+                  <div class="col-4">
+                    <h5 class="mb-0 fw-bold">456</h5>
+                    <small class="opacity-75">Following</small>
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-grid gap-2 mb-3">
+                  <a [routerLink]="['/editprofile']" class="btn btn-light btn-sm">
+                    <i class="bi bi-pencil-square me-2"></i>Edit Profile
+                  </a>
+                  <button class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-share me-2"></i>Share Profile
+                  </button>
+                </div>
+              </div>
             </div>
+
+            <!-- Right Content -->
             <div class="col-md-8">
               <div class="card-body p-4">
-                <h6 class="large-title">Information</h6>
-                <hr class="mt-0 mb-4">
-                <div class="row pt-1">
-                  <div class="col-6 mb-3">
-                    <h6 class="large-title">Email</h6>
-                    <p class="text-muted">{{ email }}</p>
-                  </div>
-                  <div class="col-6 mb-3">
-                    <h6 class="large-title">Phone</h6>
-                    <p class="text-muted">{{ phone }}</p>
+                <!-- Personal Information -->
+                <div class="mb-4">
+                  <h5 class="text-primary mb-3">
+                    <i class="bi bi-person-badge me-2"></i>Personal Information
+                  </h5>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="border rounded p-3 h-100">
+                        <label class="text-muted small mb-1">
+                          <i class="bi bi-envelope me-1"></i>Email Address
+                        </label>
+                        <p class="mb-0 fw-semibold">{{ email }}</p>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="border rounded p-3 h-100">
+                        <label class="text-muted small mb-1">
+                          <i class="bi bi-telephone me-1"></i>Phone Number
+                        </label>
+                        <p class="mb-0 fw-semibold">{{ phone }}</p>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="border rounded p-3 h-100">
+                        <label class="text-muted small mb-1">
+                          <i class="bi bi-geo-alt me-1"></i>Location
+                        </label>
+                        <p class="mb-0 fw-semibold">San Francisco, CA</p>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="border rounded p-3 h-100">
+                        <label class="text-muted small mb-1">
+                          <i class="bi bi-calendar-event me-1"></i>Member Since
+                        </label>
+                        <p class="mb-0 fw-semibold">January 2023</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <h6 class="large-title">Projects</h6>
-                <hr class="mt-0 mb-4">
-                <div class="row pt-1">
-                  <div class="col-6 mb-3">
-                    <h6 class="large-title">Recent</h6>
-                    <p class="text-muted">{{ recentProject }}</p>
-                  </div>
-                  <div class="col-6 mb-3">
-                    <h6 class="large-title">Most Viewed</h6>
-                    <p class="text-muted">{{ mostViewedProject }}</p>
+
+                <hr class="my-4">
+
+                <!-- Projects Section -->
+                <div class="mb-4">
+                  <h5 class="text-primary mb-3">
+                    <i class="bi bi-folder2-open me-2"></i>Projects
+                  </h5>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="card border-0 bg-light h-100">
+                        <div class="card-body">
+                          <label class="text-muted small mb-1">
+                            <i class="bi bi-clock-history me-1"></i>Recent Project
+                          </label>
+                          <p class="mb-0 fw-semibold">{{ recentProject }}</p>
+                          <span class="badge bg-success mt-2">Active</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="card border-0 bg-light h-100">
+                        <div class="card-body">
+                          <label class="text-muted small mb-1">
+                            <i class="bi bi-eye me-1"></i>Most Viewed
+                          </label>
+                          <p class="mb-0 fw-semibold">{{ mostViewedProject }}</p>
+                          <span class="badge bg-primary mt-2">Popular</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="d-flex justify-content-start">
-                  <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
-                  <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
-                  <a href="#!"><i class="fab fa-instagram fa-lg"></i></a>
+
+                <hr class="my-4">
+
+                <!-- Social Media Links -->
+                <div>
+                  <h5 class="text-primary mb-3">
+                    <i class="bi bi-share me-2"></i>Connect With Me
+                  </h5>
+                  <div class="d-flex gap-2 flex-wrap">
+                    <a href="#!" class="btn btn-outline-primary btn-sm" title="Facebook">
+                      <i class="fab fa-facebook-f me-2"></i>Facebook
+                    </a>
+                    <a href="#!" class="btn btn-outline-info btn-sm" title="Twitter">
+                      <i class="fab fa-twitter me-2"></i>Twitter
+                    </a>
+                    <a href="#!" class="btn btn-outline-danger btn-sm" title="Instagram">
+                      <i class="fab fa-instagram me-2"></i>Instagram
+                    </a>
+                    <a href="#!" class="btn btn-outline-primary btn-sm" title="LinkedIn">
+                      <i class="fab fa-linkedin-in me-2"></i>LinkedIn
+                    </a>
+                    <a href="#!" class="btn btn-outline-dark btn-sm" title="GitHub">
+                      <i class="fab fa-github me-2"></i>GitHub
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Cards Row -->
+        <div class="row g-4">
+          <!-- Skills Card -->
+          <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+              <div class="card-header bg-white py-3">
+                <h6 class="mb-0"><i class="bi bi-award me-2"></i>Skills & Expertise</h6>
+              </div>
+              <div class="card-body">
+                <div class="d-flex flex-wrap gap-2">
+                  <span class="badge bg-primary">UI/UX Design</span>
+                  <span class="badge bg-success">HTML/CSS</span>
+                  <span class="badge bg-info">JavaScript</span>
+                  <span class="badge bg-warning text-dark">React</span>
+                  <span class="badge bg-danger">Angular</span>
+                  <span class="badge bg-secondary">Figma</span>
+                  <span class="badge bg-dark">Photoshop</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Card -->
+          <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+              <div class="card-header bg-white py-3">
+                <h6 class="mb-0"><i class="bi bi-activity me-2"></i>Recent Activity</h6>
+              </div>
+              <div class="card-body">
+                <div class="list-group list-group-flush">
+                  <div class="list-group-item border-0 px-0 py-2">
+                    <small class="text-muted">2 hours ago</small>
+                    <p class="mb-0 small">Completed project milestone</p>
+                  </div>
+                  <div class="list-group-item border-0 px-0 py-2">
+                    <small class="text-muted">1 day ago</small>
+                    <p class="mb-0 small">Updated profile information</p>
+                  </div>
+                  <div class="list-group-item border-0 px-0 py-2">
+                    <small class="text-muted">3 days ago</small>
+                    <p class="mb-0 small">Added new certification</p>
+                  </div>
                 </div>
               </div>
             </div>
