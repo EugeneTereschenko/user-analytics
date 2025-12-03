@@ -2,13 +2,14 @@ import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ProfileEditService } from '../../services/profile-edit.service';
+import { CommonModule } from '@angular/common';
 
 import { OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports: [FormsModule, RouterModule],
+  imports: [FormsModule, RouterModule, CommonModule],
   templateUrl: './edit-profile.component.html',
   styleUrl: './edit-profile.component.css'
 })
