@@ -14,8 +14,6 @@ export class UserActivityTimelineComponent implements OnInit {
 
   constructor(private activityService: ActivityService) {}
 
-  
-
   ngOnInit() {
     this.activityService.getActivities().subscribe(data => this.activities = data);
     this.logActivity('login', 'User logged in');
@@ -26,6 +24,7 @@ export class UserActivityTimelineComponent implements OnInit {
   iconClass(type: string): string {
     switch (type) {
       case 'login': return 'bi bi-box-arrow-in-right text-primary';
+      case 'logout': return 'bi bi-box-arrow-right text-secondary';
       case 'update': return 'bi bi-pencil-square text-warning';
       case 'delete': return 'bi bi-trash text-danger';
       case 'create': return 'bi bi-plus-circle text-success';
@@ -43,13 +42,18 @@ export class UserActivityTimelineComponent implements OnInit {
       second: '2-digit'
     }).format(new Date(date));
   }
-  logActivity(type: 'login' | 'update' | 'delete' | 'create', description: string) {
+
+  logActivity(type: 'login' | 'logout' | 'update' | 'delete' | 'create', description: string) {
     this.activityService.logActivity({
       id: Date.now(),
-      type: 'login',
-      description: 'User logged in',
+      type: type,
+      description: description,
       timestamp: new Date(),
       user: 'admin@example.com'
     });
+  }
+
+  getCountByType(type: string): number {
+    return this.activities?.filter(a => a.type === type).length || 0;
   }
 }
