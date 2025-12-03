@@ -1,137 +1,231 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+<section class="min-vh-100" style="background-color: #f4f5f7;">
+  <div class="container py-5">
+    <!-- Page Header -->
+    <div class="row mb-4">
+      <div class="col">
+        <div class="card shadow-sm border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+          <div class="card-body text-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Edit Profile</h4>
+              <a [routerLink]="['/profile']" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Back to Profile
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<section class="vh-100" style="background-color: #f4f5f7;">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col col-lg-6 mb-4 mb-lg-0">
-        <div class="card mb-3" style="border-radius: .5rem;">
-          <div class="row g-0">
-            <div class="col-md-4 gradient-custom text-center text-white"
-              style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
-            <div class="card-body p-4">
-              <h5 class="large-title">Marie Horwitz</h5>
-              <p class="mb-2 text-center large-title">Web Designer</p>
-              <div class="col-md-8 mb-3 mx-auto d-flex flex-column align-items-center">
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-3 d-flex justify-content-center">
-                    <i class="far fa-edit mb-5"></i>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/profile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Back</a>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/editdetailsprofile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Details</a>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/editskillsprofile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Skills</a>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/editexperienceprofile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Experience</a>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/editeducationprofile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Education</a>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/editcertificatesprofile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Certificates</a>
-                   </div>
-                 </div>
-                 <div class="row pt-1 w-100 justify-content-center">
-                   <div class="col-6 mb-4 d-flex justify-content-center">
-                    <a [routerLink]="['/editprojectsprofile']" class="btn btn-info px-2 py-1" style="font-size: 0.85rem; min-width: 7.0rem;">Projects</a>
-                   </div>
-                 </div>
-                </div>
+    <div class="row">
+      <!-- Sidebar Navigation -->
+      <div class="col-lg-3 mb-4">
+        <div class="card shadow-sm border-0">
+          <div class="card-body p-0">
+            <div class="text-center p-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <div class="mb-3">
+                <i class="bi bi-person-circle text-white" style="font-size: 4rem;"></i>
+              </div>
+              <h5 class="text-white mb-1 fw-bold">Marie Horwitz</h5>
+              <p class="text-white opacity-75 mb-0 small">Web Designer</p>
             </div>
+
+            <div class="list-group list-group-flush">
+              <a [routerLink]="['/editprofile']" class="list-group-item list-group-item-action active">
+                <i class="bi bi-person me-2"></i>Basic Info
+              </a>
+              <a [routerLink]="['/editdetailsprofile']" class="list-group-item list-group-item-action">
+                <i class="bi bi-file-text me-2"></i>Details
+              </a>
+              <a [routerLink]="['/editskillsprofile']" class="list-group-item list-group-item-action">
+                <i class="bi bi-star me-2"></i>Skills
+              </a>
+              <a [routerLink]="['/editexperienceprofile']" class="list-group-item list-group-item-action">
+                <i class="bi bi-briefcase me-2"></i>Experience
+              </a>
+              <a [routerLink]="['/editeducationprofile']" class="list-group-item list-group-item-action">
+                <i class="bi bi-mortarboard me-2"></i>Education
+              </a>
+              <a [routerLink]="['/editcertificatesprofile']" class="list-group-item list-group-item-action">
+                <i class="bi bi-award me-2"></i>Certificates
+              </a>
+              <a [routerLink]="['/editprojectsprofile']" class="list-group-item list-group-item-action">
+                <i class="bi bi-folder me-2"></i>Projects
+              </a>
             </div>
-            <div class="col-md-8">
-              <div class="card-body p-4">
-                <h6 class="large-title">Information</h6>
-                <hr class="mt-0 mb-4">
-                <div class="row pt-1">
-                  <div class="col-6 mb-3">
-                    <h6 class="large-title">First Name</h6>
-                    <input type="text" class="form-control" placeholder="first name" [(ngModel)]="firstName" >
-                  </div>
-                  <div class="col-6 mb-3">
-                    <h6 class="large-title">Last Name</h6>
-                    <input type="text" class="form-control" placeholder="last name" [(ngModel)]="lastName">
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-lg-9">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Personal Information</h5>
+          </div>
+          <div class="card-body p-4">
+            <form>
+              <!-- Name Section -->
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-person me-1 text-primary"></i>First Name <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control" placeholder="Enter first name" [(ngModel)]="firstName"
+                    name="firstName">
+                  <div class="form-text">Your given name</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-person me-1 text-primary"></i>Last Name <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control" placeholder="Enter last name" [(ngModel)]="lastName"
+                    name="lastName">
+                  <div class="form-text">Your family name</div>
+                </div>
+              </div>
+
+              <!-- Contact Section -->
+              <h6 class="text-primary mb-3 mt-4">
+                <i class="bi bi-telephone me-2"></i>Contact Information
+              </h6>
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-envelope me-1 text-primary"></i>Email Address <span class="text-danger">*</span>
+                  </label>
+                  <input type="email" class="form-control" placeholder="your.email&#64;example.com" [(ngModel)]="email"
+                    name="email">
+                  <div class="form-text">We'll never share your email</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-phone me-1 text-primary"></i>Phone Number <span class="text-danger">*</span>
+                  </label>
+                  <input type="tel" class="form-control" placeholder="+1 (555) 000-0000" [(ngModel)]="phone"
+                    name="phone">
+                  <div class="form-text">Your contact number</div>
+                </div>
+              </div>
+
+              <!-- Address Section -->
+              <h6 class="text-primary mb-3 mt-4">
+                <i class="bi bi-geo-alt me-2"></i>Address Information
+              </h6>
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-house me-1 text-primary"></i>Address <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control" placeholder="Street address" [(ngModel)]="address"
+                    name="address">
+                  <div class="form-text">Your primary address</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-box-seam me-1 text-primary"></i>Shipping Address <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control" placeholder="Delivery address" [(ngModel)]="shippingAddress"
+                    name="shippingAddress">
+                  <div class="form-text">Where to send packages</div>
+                </div>
+              </div>
+
+              <!-- Social Media Section -->
+              <h6 class="text-primary mb-3 mt-4">
+                <i class="bi bi-share me-2"></i>Social Media & Professional Links
+              </h6>
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    <i class="fab fa-linkedin me-1 text-primary"></i>LinkedIn Profile
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fab fa-linkedin"></i></span>
+                    <input type="text" class="form-control" placeholder="linkedin.com/in/username"
+                      [(ngModel)]="linkedin" name="linkedin">
                   </div>
                 </div>
-                <div class="row pt-1">
-                  <div class="col-6 mb-3">
-                    <h6 class="large-title">Email</h6>
-                    <input type="text" class="form-control" placeholder="Email" [(ngModel)]="email">
-                  </div>
-                  <div class="col-6 mb-3">
-                    <h6 class="large-title">linkedin</h6>
-                    <input type="text" class="form-control" placeholder="linkedin" [(ngModel)]="linkedin">
-                  </div>
-                </div>
-                <div class="row pt-1">
-                  <div class="col-6 mb-3">
-                    <h6 class="large-title">Skype *</h6>
-                    <input type="text" class="form-control" placeholder="Skype *" [(ngModel)]="skype">
-                  </div>
-                  <div class="col-6 mb-3">
-                    <h6 class="large-title">github</h6>
-                    <input type="text" class="form-control" placeholder="github" [(ngModel)]="github">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    <i class="fab fa-github me-1 text-primary"></i>GitHub Username
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fab fa-github"></i></span>
+                    <input type="text" class="form-control" placeholder="github.com/username" [(ngModel)]="github"
+                      name="github">
                   </div>
                 </div>
-                <div class="row pt-1">
-                  <div class="col-6 mb-3">
-                    <h6 class="large-title">Address</h6>
-                    <input type="text" class="form-control" placeholder="Address" [(ngModel)]="address">
-                  </div>
-                  <div class="col-6 mb-3">
-                    <h6 class="large-title">Shipping Address</h6>
-                    <input type="text" class="form-control" placeholder="Shipping Address" [(ngModel)]="shippingAddress">
-                  </div>
-                </div>
-                <div class="row pt-1">
-                  <div class="col-6 mb-3">
-                    <h6 class="large-title">Phone</h6>
-                    <input type="text" class="form-control" placeholder="Phone" [(ngModel)]="phone">
-                  </div>
-                  <div class="col-6 mb-3">
+              </div>
+
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">
+                    <i class="fab fa-skype me-1 text-primary"></i>Skype ID <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fab fa-skype"></i></span>
+                    <input type="text" class="form-control" placeholder="Your Skype username" [(ngModel)]="skype"
+                      name="skype">
                   </div>
                 </div>
-                <div class="row pt-1">
-                  <div class="col-6 mb-3">
-                    <button type="button" class="btn btn-lg btn-primary" 
-                    (click)="readpayload()">Refresh</button>
-                  </div>
-                  <div class="col-6 mb-3">
-                    <button type="button" class="btn btn-lg btn-primary"
+              </div>
+
+              <!-- Action Buttons -->
+              <hr class="my-4">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <button type="button" class="btn btn-outline-secondary w-100" (click)="readpayload()">
+                    <i class="bi bi-arrow-clockwise me-2"></i>Refresh Data
+                  </button>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <button type="button" class="btn btn-primary w-100"
                     [disabled]="!firstName || !lastName || !email || !skype || !address || !shippingAddress || !phone"
-                    (click)="updateProfile()">Update</button>
-                  </div>
+                    (click)="updateProfile()">
+                    <i class="bi bi-check-circle me-2"></i>Update Profile
+                  </button>
                 </div>
-                <h6 class="large-title">Projects</h6>
-                <hr class="mt-0 mb-4">
-                <div id="profile-information"></div>
-                <div class="d-flex justify-content-start">
-                  <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
-                  <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
-                  <a href="#!"><i class="fab fa-instagram fa-lg"></i></a>
-                </div>
+              </div>
+
+              <!-- Validation Message -->
+              <!-- Validation Message -->
+              @if (!firstName || !lastName || !email || !skype || !address || !shippingAddress || !phone) {
+              <div class="alert alert-warning mt-3">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Please fill in all required fields marked with <span class="text-danger">*</span>
+              </div>
+              }
+            </form>
+          </div>
+        </div>
+
+        <!-- Additional Info Card -->
+        <div class="card shadow-sm border-0 mt-4">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="bi bi-folder2-open me-2"></i>Projects & Social</h5>
+          </div>
+          <div class="card-body">
+            <div id="profile-information" class="mb-3"></div>
+
+            <div>
+              <h6 class="mb-3">Connect with me:</h6>
+              <div class="d-flex gap-2 flex-wrap">
+                <a href="#!" class="btn btn-outline-primary btn-sm">
+                  <i class="fab fa-facebook-f me-2"></i>Facebook
+                </a>
+                <a href="#!" class="btn btn-outline-info btn-sm">
+                  <i class="fab fa-twitter me-2"></i>Twitter
+                </a>
+                <a href="#!" class="btn btn-outline-danger btn-sm">
+                  <i class="fab fa-instagram me-2"></i>Instagram
+                </a>
               </div>
             </div>
           </div>
