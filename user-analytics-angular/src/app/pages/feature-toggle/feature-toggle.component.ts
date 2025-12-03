@@ -31,5 +31,25 @@ export class FeatureToggleComponent {
     }
   }
 
+  getEnabledCount(): number {
+    return this.featureKeys.filter(key => this.toggles[key]).length;
+  }
+
+  getDisabledCount(): number {
+    return this.featureKeys.filter(key => !this.toggles[key]).length;
+  }
+
+  enableAll(): void {
+    this.featureKeys.forEach(key => {
+      this.toggles[key] = true;
+    });
+  }
+
+  disableAll(): void {
+    this.featureKeys.forEach(key => {
+      this.toggles[key] = false;
+    });
+  }
+
 
 }
