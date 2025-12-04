@@ -1,0 +1,286 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-announcement-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: announcement
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: body
+                  type: VARCHAR(1000)
+              - column:
+                  name: date
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: 001-create-audit-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: audit
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+              - column:
+                  name: action
+                  type: VARCHAR(255)
+              - column:
+                  name: target
+                  type: VARCHAR(255)
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: 001-create-calendar-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: calendar
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: date
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: 001-create-card-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: card
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: card_type
+                  type: VARCHAR(255)
+              - column:
+                  name: name_of_card
+                  type: VARCHAR(255)
+              - column:
+                  name: card_number
+                  type: VARCHAR(255)
+              - column:
+                  name: expiration_date
+                  type: VARCHAR(255)
+              - column:
+                  name: cvv
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+  - changeSet:
+      id: 001-create-file-entity-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: file_entity
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: file_name
+                  type: VARCHAR(255)
+              - column:
+                  name: file_type
+                  type: VARCHAR(100)
+              - column:
+                  name: file_data
+                  type: BYTEA
+              - column:
+                  name: uploaded_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+  - changeSet:
+      id: 001-create-notification-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: notification
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: message
+                  type: VARCHAR(1000)
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: 001-create-reminder-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: reminder
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: date
+                  type: TIMESTAMP
+              - column:
+                  name: time
+                  type: TIME
+              - column:
+                  name: notified
+                  type: BOOLEAN
+
+
+  - changeSet:
+      id: 001-create-status-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: status
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: uptime
+                  type: VARCHAR(255)
+              - column:
+                  name: cpu
+                  type: VARCHAR(255)
+              - column:
+                  name: memory
+                  type: VARCHAR(255)
+              - column:
+                  name: api_latency
+                  type: VARCHAR(255)
+              - column:
+                  name: jobs
+                  type: VARCHAR(255)
+
+
+  - changeSet:
+      id: 001-create-support-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: support
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: subject
+                  type: VARCHAR(255)
+              - column:
+                  name: message
+                  type: TEXT
+              - column:
+                  name: success_message
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+  - changeSet:
+      id: 001-create-task-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: task
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: due_date
+                  type: TIMESTAMP
+              - column:
+                  name: done
+                  type: VARCHAR(100)
+
+  - changeSet:
+      id: 001-create-files-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: files
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: file_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_data
+                  type: BLOB
+                  constraints:
+                    nullable: false

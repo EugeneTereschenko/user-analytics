@@ -1,0 +1,21 @@
+# db/changelog/changes/v1.1.0/008-create-profile-card-table.yaml
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-profile-card-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: profile_card
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: profile_id
+                  type: BIGINT
+              - column:
+                  name: card_id
+                  type: BIGINT

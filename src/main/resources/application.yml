@@ -1,13 +1,51 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/parcel
+    url: jdbc:postgresql://localhost:5432/analytics_db
     username: postgres
     password: postgres
+
   jpa:
     hibernate:
-      ddl-auto: create
-      lob.non_contextual_creation: true
-      batch_size: 50
+      ddl-auto: validate  # ✅ Already set correctly
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+    show-sql: false
+    open-in-view: false  # ← Add this to fix the warning
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+    default-schema: public
+    liquibase-schema: public
 
   application:
-    name=user-analytics-java:
+    name: user-analytics-java
+
+  # Enable JPA Auditing
+  data:
+    jpa:
+      repositories:
+        enabled: true
+
+# Application-specific configuration
+app:
+  init:
+    users-file: ${user.home}/IdeaProjects/demo/src/main/resources/usersList.txt
+    announcements-file: ${user.home}/IdeaProjects/demo/src/main/resources/announcementsList.txt
+    notifications-file: ${user.home}/IdeaProjects/demo/src/main/resources/notificationsList.txt
+    calendar-file: ${user.home}/IdeaProjects/demo/src/main/resources/calendarList.txt
+    audit-file: ${user.home}/IdeaProjects/demo/src/main/resources/auditList.txt
+
+# Logging
+logging:
+  level:
+    liquibase: INFO
+    com.example.demo: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

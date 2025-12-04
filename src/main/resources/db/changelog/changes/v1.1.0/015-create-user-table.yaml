@@ -1,0 +1,61 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-create-user-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password_generate
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: secret_key
+                  type: VARCHAR(255)
+              - column:
+                  name: login_count
+                  type: INTEGER
+              - column:
+                  name: signup_date
+                  type: DATE
+              - column:
+                  name: last_login
+                  type: TIMESTAMP
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+              - column:
+                  name: is_two_factor
+                  type: BOOLEAN
+              - column:
+                  name: location
+                  type: VARCHAR(255)
+              - column:
+                  name: device_type
+                  type: VARCHAR(255)
+              - column:
+                  name: activity_score
+                  type: DOUBLE PRECISION

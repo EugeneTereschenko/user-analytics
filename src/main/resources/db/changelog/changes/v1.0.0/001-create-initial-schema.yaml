@@ -1,0 +1,324 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-profile-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: profile
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: version
+                  type: BIGINT
+                  defaultValue: 0
+              - column:
+                  name: first_name
+                  type: VARCHAR(100)
+              - column:
+                  name: last_name
+                  type: VARCHAR(100)
+              - column:
+                  name: phone_number
+                  type: VARCHAR(20)
+              - column:
+                  name: address
+                  type: VARCHAR(500)
+              - column:
+                  name: shipping_address
+                  type: VARCHAR(500)
+              - column:
+                  name: linkedin
+                  type: VARCHAR(255)
+              - column:
+                  name: skype
+                  type: VARCHAR(100)
+              - column:
+                  name: github
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+        - createIndex:
+            indexName: idx_profile_id
+            tableName: profile
+            columns:
+              - column:
+                  name: id
+
+  - changeSet:
+      id: 001-create-user-profile-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: user_profile
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: profile_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: user_profile
+            baseColumnNames: profile_id
+            referencedTableName: profile
+            referencedColumnNames: id
+            constraintName: fk_user_profile_profile
+
+        - createIndex:
+            indexName: idx_user_profile_user_id
+            tableName: user_profile
+            columns:
+              - column:
+                  name: user_id
+
+        - createIndex:
+            indexName: idx_user_profile_profile_id
+            tableName: user_profile
+            columns:
+              - column:
+                  name: profile_id
+
+  - changeSet:
+      id: 001-create-education-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: education
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: university_name
+                  type: VARCHAR(255)
+              - column:
+                  name: date_from
+                  type: VARCHAR(50)
+              - column:
+                  name: date_to
+                  type: VARCHAR(50)
+              - column:
+                  name: country_city
+                  type: VARCHAR(255)
+              - column:
+                  name: degree
+                  type: VARCHAR(255)
+
+        - createIndex:
+            indexName: idx_education_id_desc
+            tableName: education
+            columns:
+              - column:
+                  name: id
+                  descending: true
+
+  - changeSet:
+      id: 001-create-experience-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: experience
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: role_name
+                  type: VARCHAR(255)
+              - column:
+                  name: date_from
+                  type: VARCHAR(50)
+              - column:
+                  name: date_to
+                  type: VARCHAR(50)
+              - column:
+                  name: company_name
+                  type: VARCHAR(255)
+              - column:
+                  name: country_city
+                  type: VARCHAR(255)
+              - column:
+                  name: service
+                  type: TEXT
+
+        - createIndex:
+            indexName: idx_experience_id_desc
+            tableName: experience
+            columns:
+              - column:
+                  name: id
+                  descending: true
+
+  - changeSet:
+      id: 001-create-skills-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: skills
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: programming_languages
+                  type: TEXT
+              - column:
+                  name: web_frameworks
+                  type: TEXT
+              - column:
+                  name: dev_ops
+                  type: TEXT
+              - column:
+                  name: sql
+                  type: TEXT
+              - column:
+                  name: vcs
+                  type: TEXT
+              - column:
+                  name: tools
+                  type: TEXT
+
+  - changeSet:
+      id: 001-create-project-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: project
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: project_name
+                  type: VARCHAR(255)
+              - column:
+                  name: date_from
+                  type: VARCHAR(50)
+              - column:
+                  name: date_to
+                  type: VARCHAR(50)
+              - column:
+                  name: structure
+                  type: TEXT
+
+        - createIndex:
+            indexName: idx_project_id_desc
+            tableName: project
+            columns:
+              - column:
+                  name: id
+                  descending: true
+
+  - changeSet:
+      id: 001-create-certificate-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: certificate
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: certificate_name
+                  type: VARCHAR(255)
+              - column:
+                  name: date_from
+                  type: VARCHAR(50)
+              - column:
+                  name: date_to
+                  type: VARCHAR(50)
+              - column:
+                  name: country_city
+                  type: VARCHAR(255)
+              - column:
+                  name: institution_name
+                  type: VARCHAR(255)
+              - column:
+                  name: certificate_url
+                  type: VARCHAR(500)
+
+  - changeSet:
+      id: 001-create-details-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: details
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: notification
+                  type: BOOLEAN
+                  defaultValue: false
+              - column:
+                  name: staff
+                  type: VARCHAR(255)
+              - column:
+                  name: bio
+                  type: TEXT
+              - column:
+                  name: message
+                  type: TEXT
+
+  - changeSet:
+      id: 001-create-image-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: image
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: data
+                  type: BYTEA

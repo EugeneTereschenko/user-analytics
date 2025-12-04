@@ -1,0 +1,21 @@
+# db/changelog/changes/v1.1.0/009-create-profile-file-entity-table.yaml
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-profile-file-entity-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: profile_file_entity
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: profile_id
+                  type: BIGINT
+              - column:
+                  name: file_id
+                  type: BIGINT

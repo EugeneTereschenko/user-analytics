@@ -8,11 +8,13 @@ import com.example.demo.model.ProfileNotification;
 import com.example.demo.repository.ProfileAuditRepository;
 import com.example.demo.repository.ProfileCalendarRepository;
 import com.example.demo.repository.ProfileNotificationRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.impl.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -39,9 +41,11 @@ public class DatabaseInitializer {
     private final ProfileAuditRepository profileAuditRepository;
     private final RoleService roleService;
     private final UserService userService;
+    private final UserRepository userRepository; // Add this
     private final ProfileService profileService;
     private final CalendarService calendarService;
     private final StatusService statusService;
+    private final Environment environment; // Add this
 
     public static List<AnnouncementDTO> readAnnouncementsFromFile(String filePath) throws IOException {
         List<AnnouncementDTO> announcements = new ArrayList<>();
@@ -66,13 +70,12 @@ public class DatabaseInitializer {
                         .date(date)
                         .build());
             } else {
-                System.out.println("No match for line: " + line);  // Debugging
+                log.debug("No match for line: {}", line);
             }
         }
 
         return announcements;
     }
-
 
     public static List<UserRequestDTO> readUsersFromFile(String filePath, PasswordEncoder passwordEncoder) throws IOException {
         List<UserRequestDTO> users = new ArrayList<>();
@@ -88,7 +91,7 @@ public class DatabaseInitializer {
                 String username = matcher.group(1);
                 String email = matcher.group(2);
                 String password = matcher.group(3);
-                String rolesString = matcher.group(4); // comma-separated roles
+                String rolesString = matcher.group(4);
 
                 List<String> roles = Arrays.stream(rolesString.split(","))
                         .map(String::trim)
@@ -182,35 +185,80 @@ public class DatabaseInitializer {
 
     @Bean
     public CommandLineRunner initDatabase(PasswordEncoder passwordEncoder) {
-
-        if (userService.countUsers() > 0) {
-            log.info("Database already initialized, skipping...");
-            return null;
-        }
-
         return args -> {
+
+            long userCount = userRepository.count();
+
+            if (userCount > 0) {
+                log.info("=================================================");
+                log.info("Database already contains {} users - skipping initialization", userCount);
+                log.info("=================================================");
+                return;
+            }
+
+            log.info("=================================================");
+            log.info("Database is empty - running initialization...");
+            log.info("=================================================");
+
             try {
                 initializeRoles();
                 initializeStatuses();
-                processUsers("/home/yevhen/IdeaProjects/demo/src/main/resources/usersList.txt", passwordEncoder);
-                processAnnouncements("/home/yevhen/IdeaProjects/demo/src/main/resources/announcementsList.txt");
-                processNotifications("/home/yevhen/IdeaProjects/demo/src/main/resources/notificationsList.txt", 2L);
-                processCalendar("/home/yevhen/IdeaProjects/demo/src/main/resources/calendarList.txt", 2L);
-                processAudit("/home/yevhen/IdeaProjects/demo/src/main/resources/auditList.txt", 2L);
+
+                // Use configurable file paths (from application.yml)
+                String usersFile = environment.getProperty(
+                        "app.init.users-file",
+                        "/home/yevhen/IdeaProjects/demo/src/main/resources/usersList.txt"
+                );
+                String announcementsFile = environment.getProperty(
+                        "app.init.announcements-file",
+                        "/home/yevhen/IdeaProjects/demo/src/main/resources/announcementsList.txt"
+                );
+                String notificationsFile = environment.getProperty(
+                        "app.init.notifications-file",
+                        "/home/yevhen/IdeaProjects/demo/src/main/resources/notificationsList.txt"
+                );
+                String calendarFile = environment.getProperty(
+                        "app.init.calendar-file",
+                        "/home/yevhen/IdeaProjects/demo/src/main/resources/calendarList.txt"
+                );
+                String auditFile = environment.getProperty(
+                        "app.init.audit-file",
+                        "/home/yevhen/IdeaProjects/demo/src/main/resources/auditList.txt"
+                );
+
+                processUsers(usersFile, passwordEncoder);
+                processAnnouncements(announcementsFile);
+
+                if (userRepository.count() > 0) {
+                    Long defaultProfileId = 2L; // Or get dynamically
+                    processNotifications(notificationsFile, defaultProfileId);
+                    processCalendar(calendarFile, defaultProfileId);
+                    processAudit(auditFile, defaultProfileId);
+                }
+
+                log.info("=================================================");
+                log.info("Database initialization completed successfully!");
+                log.info("=================================================");
+
             } catch (IOException e) {
+                log.error("=================================================");
                 log.error("Error initializing database: {}", e.getMessage(), e);
+                log.error("=================================================");
             }
         };
     }
 
     private void initializeRoles() {
+        log.info("Initializing roles...");
         roleService.createRole("ROLE_USER");
         roleService.createRole("ROLE_ADMIN");
         roleService.createRole("ROLE_EDITOR");
         roleService.createRole("ROLE_VIEWER");
+        log.info("Roles initialized successfully");
     }
 
     private void initializeStatuses() {
+        log.info("Initializing system status...");
         statusService.saveStatus(new StatusDTO.Builder()
                 .cpu("2.5 GHz")
                 .memory("8 GB")
@@ -218,113 +266,172 @@ public class DatabaseInitializer {
                 .uptime("24 days, 5 hours")
                 .jobs("5 active jobs")
                 .build());
+        log.info("System status initialized successfully");
     }
 
     private void processUsers(String filePath, PasswordEncoder passwordEncoder) throws IOException {
         if (!Files.exists(Paths.get(filePath))) {
-            log.error("File not found: {}", filePath);
+            log.warn("Users file not found: {} - skipping user creation", filePath);
             return;
         }
+
+        log.info("Processing users from file: {}", filePath);
         List<UserRequestDTO> users = readUsersFromFile(filePath, passwordEncoder);
+
+        int successCount = 0;
+        int failCount = 0;
+
         for (UserRequestDTO user : users) {
-            user.setDeviceType(generateDeviceType());
-            user.setLocation(generateLocation());
-            UserResponseDTO response = userService.createUser(user);
-            profileService.createProfile(Long.valueOf(response.getId()));
-            if (!response.getSuccess().equals("true")) {
-                log.error("User not created: {}", response.getMessage());
-            } else {
-                log.info("User created successfully: {}", response.getToken());
+            try {
+                user.setDeviceType(generateDeviceType());
+                user.setLocation(generateLocation());
+                UserResponseDTO response = userService.createUser(user);
+
+                if ("true".equals(response.getSuccess())) {
+                    profileService.createProfile(Long.valueOf(response.getId()));
+                    successCount++;
+                    log.debug("User created successfully: {}", user.getUsername());
+                } else {
+                    failCount++;
+                    log.error("User creation failed: {} - {}", user.getUsername(), response.getMessage());
+                }
+            } catch (Exception e) {
+                failCount++;
+                log.error("Error creating user: {} - {}", user.getUsername(), e.getMessage());
             }
         }
-        log.info("Users initialized from file: {}", filePath);
+
+        log.info("Users processed: {} successful, {} failed", successCount, failCount);
     }
 
     private void processAnnouncements(String filePath) throws IOException {
         if (!Files.exists(Paths.get(filePath))) {
-            log.error("File not found: {}", filePath);
+            log.warn("Announcements file not found: {} - skipping", filePath);
             return;
         }
+
+        log.info("Processing announcements from file: {}", filePath);
         List<AnnouncementDTO> announcements = readAnnouncementsFromFile(filePath);
+
         if (announcements.isEmpty()) {
-            log.info("No announcements found in file: {}", filePath);
+            log.info("No announcements found in file");
             return;
         }
+
+        int count = 0;
         for (AnnouncementDTO announcement : announcements) {
-            announcementService.saveAnnouncement(announcement);
-            log.info("Announcement saved successfully: {}", announcement);
+            try {
+                announcementService.saveAnnouncement(announcement);
+                count++;
+            } catch (Exception e) {
+                log.error("Error saving announcement: {} - {}", announcement.getTitle(), e.getMessage());
+            }
         }
+
+        log.info("Announcements processed: {} saved successfully", count);
     }
 
     private void processNotifications(String filePath, Long profileId) throws IOException {
         if (!Files.exists(Paths.get(filePath))) {
-            log.error("File not found: {}", filePath);
+            log.warn("Notifications file not found: {} - skipping", filePath);
             return;
         }
+
+        log.info("Processing notifications from file: {}", filePath);
         List<NotificationsDTO> notifications = readNotificationsFromFile(filePath);
+
         if (notifications.isEmpty()) {
-            log.info("No notifications found in file: {}", filePath);
+            log.info("No notifications found in file");
             return;
         }
+
+        int count = 0;
         for (NotificationsDTO notification : notifications) {
-            // Assuming a method exists to save notifications
-            ProfileNotification profileNotification = new ProfileNotification();
-            profileNotification.setProfileId(profileId); // Set a valid profile ID
-            profileNotification.setNotificationId(notificationService.saveNotification(notification).getId());
-            profileNotificationRepository.save(profileNotification);
-            log.info("Notification saved successfully: {}", notification);
+            try {
+                ProfileNotification profileNotification = new ProfileNotification();
+                profileNotification.setProfileId(profileId);
+                profileNotification.setNotificationId(notificationService.saveNotification(notification).getId());
+                profileNotificationRepository.save(profileNotification);
+                count++;
+            } catch (Exception e) {
+                log.error("Error saving notification: {} - {}", notification.getTitle(), e.getMessage());
+            }
         }
+
+        log.info("Notifications processed: {} saved successfully", count);
     }
 
     private void processCalendar(String filePath, Long profileId) {
         try {
             if (!Files.exists(Paths.get(filePath))) {
-                log.error("File not found: {}", filePath);
+                log.warn("Calendar file not found: {} - skipping", filePath);
                 return;
             }
+
+            log.info("Processing calendar entries from file: {}", filePath);
             List<CalendarDTO> calendars = readCalendarsFromFile(filePath);
+
             if (calendars.isEmpty()) {
-                log.info("No calendars found in file: {}", filePath);
+                log.info("No calendar entries found in file");
                 return;
             }
+
+            int count = 0;
             for (CalendarDTO calendar : calendars) {
-                // Assuming a method exists to save calendars
-                Calendar existsCalendar = calendarService.saveCalendar(calendar);
-                ProfileCalendar profileCalendar = ProfileCalendar.builder()
-                        .profileId(profileId)
-                        .calendarId(existsCalendar.getId())
-                        .build();
-                profileCalendarRepository.save(profileCalendar);
-                log.info("Calendar saved successfully: {}", calendar);
+                try {
+                    Calendar existsCalendar = calendarService.saveCalendar(calendar);
+                    ProfileCalendar profileCalendar = ProfileCalendar.builder()
+                            .profileId(profileId)
+                            .calendarId(existsCalendar.getId())
+                            .build();
+                    profileCalendarRepository.save(profileCalendar);
+                    count++;
+                } catch (Exception e) {
+                    log.error("Error saving calendar entry: {} - {}", calendar.getTitle(), e.getMessage());
+                }
             }
+
+            log.info("Calendar entries processed: {} saved successfully", count);
+
         } catch (IOException e) {
-            log.error("Error reading calendar file: {}", e.getMessage(), e);
+            log.error("Error reading calendar file: {}", e.getMessage());
         }
     }
 
     private void processAudit(String filePath, Long profileId) {
         try {
             if (!Files.exists(Paths.get(filePath))) {
-                log.error("File not found: {}", filePath);
+                log.warn("Audit file not found: {} - skipping", filePath);
                 return;
             }
+
+            log.info("Processing audit entries from file: {}", filePath);
             List<AuditDTO> audits = readAuditFromFile(filePath);
+
             if (audits.isEmpty()) {
-                log.info("No audits found in file: {}", filePath);
+                log.info("No audit entries found in file");
                 return;
             }
+
+            int count = 0;
             for (AuditDTO audit : audits) {
-                // Assuming a method exists to save audits
-                auditService.saveAudit(audit);
-                ProfileAudit profileAudit = ProfileAudit.builder()
-                        .profileId(profileId)
-                        .auditId(auditService.saveAudit(audit).getId())
-                        .build();
-                profileAuditRepository.save(profileAudit);
-                log.info("Audit saved successfully: {}", audit);
+                try {
+                    auditService.saveAudit(audit);
+                    ProfileAudit profileAudit = ProfileAudit.builder()
+                            .profileId(profileId)
+                            .auditId(auditService.saveAudit(audit).getId())
+                            .build();
+                    profileAuditRepository.save(profileAudit);
+                    count++;
+                } catch (Exception e) {
+                    log.error("Error saving audit entry: {} - {}", audit.getUser(), e.getMessage());
+                }
             }
+
+            log.info("Audit entries processed: {} saved successfully", count);
+
         } catch (IOException e) {
-            log.error("Error reading audit file: {}", e.getMessage(), e);
+            log.error("Error reading audit file: {}", e.getMessage());
         }
     }
 

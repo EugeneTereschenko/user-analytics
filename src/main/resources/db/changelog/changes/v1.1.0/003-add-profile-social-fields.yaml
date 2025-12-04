@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-add-social-fields-to-profile
+      author: developer
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: profile
+                columnName: linkedin
+      changes:
+        - addColumn:
+            tableName: profile
+            columns:
+              - column:
+                  name: linkedin
+                  type: VARCHAR(255)
+              - column:
+                  name: skype
+                  type: VARCHAR(100)
+              - column:
+                  name: github
+                  type: VARCHAR(255)
