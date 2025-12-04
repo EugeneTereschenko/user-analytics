@@ -6,9 +6,7 @@ spring:
 
   jpa:
     hibernate:
-      # CRITICAL: Change from 'create' to 'validate'
-      # This prevents Hibernate from managing schema
-      ddl-auto: validate
+      ddl-auto: validate  # ✅ Already set correctly
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -18,8 +16,8 @@ spring:
         order_inserts: true
         order_updates: true
     show-sql: false
+    open-in-view: false  # ← Add this to fix the warning
 
-  # Liquibase Configuration
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
@@ -35,9 +33,19 @@ spring:
       repositories:
         enabled: true
 
-# Logging (optional, for debugging)
+# Application-specific configuration
+app:
+  init:
+    users-file: ${user.home}/IdeaProjects/demo/src/main/resources/usersList.txt
+    announcements-file: ${user.home}/IdeaProjects/demo/src/main/resources/announcementsList.txt
+    notifications-file: ${user.home}/IdeaProjects/demo/src/main/resources/notificationsList.txt
+    calendar-file: ${user.home}/IdeaProjects/demo/src/main/resources/calendarList.txt
+    audit-file: ${user.home}/IdeaProjects/demo/src/main/resources/auditList.txt
+
+# Logging
 logging:
   level:
     liquibase: INFO
+    com.example.demo: INFO
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
