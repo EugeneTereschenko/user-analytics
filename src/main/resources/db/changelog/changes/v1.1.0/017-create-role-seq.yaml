@@ -1,0 +1,10 @@
+# src/main/resources/db/changelog/changes/v1.1.0/017-create-role-seq.yaml
+databaseChangeLog:
+  - changeSet:
+      id: 008-create-role-seq
+      author: developer
+      changes:
+        - createSequence:
+            sequenceName: role_seq
+            startValue: 1
+            incrementBy: 50

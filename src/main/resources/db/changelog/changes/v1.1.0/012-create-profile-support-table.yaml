@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-profile-support-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: profile_support
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: profile_id
+                  type: BIGINT
+              - column:
+                  name: support_id
+                  type: BIGINT

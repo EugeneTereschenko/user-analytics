@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-images-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: images
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: data
+                  type: BLOB
+                  constraints:
+                    nullable: false

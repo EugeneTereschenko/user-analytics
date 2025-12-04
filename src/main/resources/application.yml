@@ -1,13 +1,43 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/parcel
+    url: jdbc:postgresql://localhost:5432/analytics_db
     username: postgres
     password: postgres
+
   jpa:
     hibernate:
-      ddl-auto: create
-      lob.non_contextual_creation: true
-      batch_size: 50
+      # CRITICAL: Change from 'create' to 'validate'
+      # This prevents Hibernate from managing schema
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+    show-sql: false
+
+  # Liquibase Configuration
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+    default-schema: public
+    liquibase-schema: public
 
   application:
-    name=user-analytics-java:
+    name: user-analytics-java
+
+  # Enable JPA Auditing
+  data:
+    jpa:
+      repositories:
+        enabled: true
+
+# Logging (optional, for debugging)
+logging:
+  level:
+    liquibase: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

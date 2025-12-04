@@ -1,0 +1,21 @@
+# db/changelog/changes/v1.1.0/010-create-profile-notification-table.yaml
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-profile-notification-table
+      author: developer
+      changes:
+        - createTable:
+            tableName: profile_notification
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: profile_id
+                  type: BIGINT
+              - column:
+                  name: notification_id
+                  type: BIGINT
