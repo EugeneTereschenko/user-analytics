@@ -7,14 +7,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProfileMapper {
 
+    // Profile mappings
     public ProfileDTO toProfileDTO(Profile profile, User user) {
         return new ProfileDTO.Builder()
                 .email(user.getEmail())
                 .firstName(profile.getFirstName())
                 .lastName(profile.getLastName())
-                .linkedin("https://www.linkedin.com/in/johndoe")
-                .skype("johndoe.skype")
-                .github("www.github.com/johndoe")
+                .linkedin(profile.getLinkedin())
+                .skype(profile.getSkype())
+                .github(profile.getGithub())
                 .address(profile.getAddress())
                 .shippingAddress(profile.getShippingAddress())
                 .phone(profile.getPhoneNumber())
@@ -27,6 +28,9 @@ public class ProfileMapper {
                 .firstName(profile.getFirstName())
                 .lastName(profile.getLastName())
                 .phone(profile.getPhoneNumber())
+                .linkedin(profile.getLinkedin())
+                .skype(profile.getSkype())
+                .github(profile.getGithub())
                 .build();
     }
 
@@ -37,6 +41,9 @@ public class ProfileMapper {
                 .lastName(profile.getLastName())
                 .email(user.getEmail())
                 .phone(profile.getPhoneNumber())
+                .linkedin(profile.getLinkedin())
+                .skype(profile.getSkype())
+                .github(profile.getGithub())
                 .recentProject(recentProject != null ? recentProject.getProjectName() : null)
                 .mostViewedProject(mostViewedProject != null ? mostViewedProject.getProjectName() : null)
                 .build();
@@ -58,8 +65,18 @@ public class ProfileMapper {
         if (dto.getPhone() != null) {
             profile.setPhoneNumber(dto.getPhone());
         }
+        if (dto.getLinkedin() != null) {
+            profile.setLinkedin(dto.getLinkedin());
+        }
+        if (dto.getSkype() != null) {
+            profile.setSkype(dto.getSkype());
+        }
+        if (dto.getGithub() != null) {
+            profile.setGithub(dto.getGithub());
+        }
     }
 
+    // Education mappings
     public EducationDTO toEducationDTO(Education education) {
         return new EducationDTO.Builder()
                 .universityName(education.getUniversityName())
@@ -88,6 +105,7 @@ public class ProfileMapper {
         }
     }
 
+    // Details mappings
     public DetailsDTO toDetailsDTO(Details details) {
         return new DetailsDTO.Builder()
                 .notification(String.valueOf(details.getNotification()))
@@ -112,6 +130,7 @@ public class ProfileMapper {
         }
     }
 
+    // Experience mappings
     public ExperienceDTO toExperienceDTO(Experience experience) {
         return new ExperienceDTO.Builder()
                 .roleName(experience.getRoleName())
@@ -144,6 +163,7 @@ public class ProfileMapper {
         }
     }
 
+    // Skills mappings
     public SkillsDTO toSkillsDTO(Skills skills) {
         return new SkillsDTO.Builder()
                 .programmingLanguages(skills.getProgrammingLanguages())
@@ -176,6 +196,7 @@ public class ProfileMapper {
         }
     }
 
+    // Project mappings
     public ProjectDTO toProjectDTO(Project project) {
         return new ProjectDTO.Builder()
                 .projectName(project.getProjectName())
@@ -200,6 +221,7 @@ public class ProfileMapper {
         }
     }
 
+    // Certificate mappings
     public CertificateDTO toCertificateDTO(Certificate certificate) {
         return new CertificateDTO.Builder()
                 .certificateName(certificate.getCertificateName())
