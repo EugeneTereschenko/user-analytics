@@ -4,14 +4,22 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "profile")
+@Table(name = "profile", indexes = {
+        @Index(name = "idx_profile_id", columnList = "id")
+})
+@EntityListeners(AuditingEntityListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Profile {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,21 +27,38 @@ public class Profile {
     @Version
     private Long version;
 
-    @Column(name = "firstname", length = 255)
+    @Column(name = "first_name", length = 100)
     private String firstName;
 
-    @Column(name = "lastname", length = 255)
+    @Column(name = "last_name", length = 100)
     private String lastName;
 
-    @Column(name = "phone", length = 255)
+    @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
-    @Column(name = "address", length = 255)
+    @Column(name = "address", length = 500)
     private String address;
 
-    @Column(name = "shippingAddress", length = 255)
+    @Column(name = "shipping_address", length = 500)
     private String shippingAddress;
 
+    @Column(name = "linkedin", length = 255)
+    private String linkedin;
+
+    @Column(name = "skype", length = 100)
+    private String skype;
+
+    @Column(name = "github", length = 255)
+    private String github;
+
+    // Audit fields (optional, but recommended)
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)  // ← Remove nullable = false
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     private Profile(Builder builder) {
         this.id = builder.id;
@@ -42,6 +67,9 @@ public class Profile {
         this.phoneNumber = builder.phoneNumber;
         this.address = builder.address;
         this.shippingAddress = builder.shippingAddress;
+        this.linkedin = builder.linkedin;
+        this.skype = builder.skype;
+        this.github = builder.github;
     }
 
     public static class Builder {
@@ -51,6 +79,9 @@ public class Profile {
         private String phoneNumber;
         private String address;
         private String shippingAddress;
+        private String linkedin;
+        private String skype;
+        private String github;
 
         public Builder id(Long id) {
             this.id = id;
@@ -82,6 +113,20 @@ public class Profile {
             return this;
         }
 
+        public Builder linkedin(String linkedin) {
+            this.linkedin = linkedin;
+            return this;
+        }
+
+        public Builder skype(String skype) {
+            this.skype = skype;
+            return this;
+        }
+
+        public Builder github(String github) {
+            this.github = github;
+            return this;
+        }
 
         public Profile build() {
             return new Profile(this);

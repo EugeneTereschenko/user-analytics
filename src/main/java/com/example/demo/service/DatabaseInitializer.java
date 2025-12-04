@@ -182,6 +182,12 @@ public class DatabaseInitializer {
 
     @Bean
     public CommandLineRunner initDatabase(PasswordEncoder passwordEncoder) {
+
+        if (userService.countUsers() > 0) {
+            log.info("Database already initialized, skipping...");
+            return null;
+        }
+
         return args -> {
             try {
                 initializeRoles();

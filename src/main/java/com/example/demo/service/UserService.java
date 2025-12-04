@@ -173,4 +173,8 @@ public class UserService {
                         .build())
                 .toList();
     }
+
+    public long countUsers() {
+        return userRepository.count();
+    }
 }
