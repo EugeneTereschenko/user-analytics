@@ -47,7 +47,7 @@ public class ProfileService {
     @Transactional
     public Long uploadImageToDatabase(MultipartFile file) {
         User user = getAuthenticatedUserOrThrow();
-        Profile profile = getOrCreateUserProfile(user.getUserId());
+        Profile profile = getOrCreateUserProfile(user.getId());
 
         try {
             Image savedImage = saveImage(file, profile.getId());
@@ -63,7 +63,7 @@ public class ProfileService {
     public byte[] getImageForUser() {
         User user = getAuthenticatedUserOrThrow();
 
-        Optional<Image> latestImage = profileRepository.findLatestImageByUserId(user.getUserId());
+        Optional<Image> latestImage = profileRepository.findLatestImageByUserId(user.getId());
 
         if (latestImage.isEmpty() || latestImage.get().getData() == null) {
             log.warn("No valid image data found for user: {}", user.getUsername());
@@ -108,7 +108,7 @@ public class ProfileService {
     @Transactional(readOnly = true)
     public ProfileDTO getProfile() {
         User user = getAuthenticatedUserOrThrow();
-        Profile profile = getProfileByUserId(user.getUserId());
+        Profile profile = getProfileByUserId(user.getId());
 
         return profileMapper.toProfileDTO(profile, user);
     }
@@ -116,10 +116,10 @@ public class ProfileService {
     @Transactional(readOnly = true)
     public ProfileDTO getProfileInformation() {
         User user = getAuthenticatedUserOrThrow();
-        Profile profile = getProfileByUserId(user.getUserId());
+        Profile profile = getProfileByUserId(user.getId());
 
-        Optional<Project> recentProject = profileRepository.findMostRecentProjectByUserId(user.getUserId());
-        Optional<Project> mostViewedProject = profileRepository.findLatestProjectByUserId(user.getUserId());
+        Optional<Project> recentProject = profileRepository.findMostRecentProjectByUserId(user.getId());
+        Optional<Project> mostViewedProject = profileRepository.findLatestProjectByUserId(user.getId());
 
         if (recentProject.isEmpty()) {
             log.warn("No projects found for user: {}", user.getUsername());
@@ -137,7 +137,7 @@ public class ProfileService {
     @Transactional
     public ResponseDTO updateProfile(ProfileDTO profileDTO) {
         User user = getAuthenticatedUserOrThrow();
-        Profile profile = getProfileByUserId(user.getUserId());
+        Profile profile = getProfileByUserId(user.getId());
 
         profileMapper.updateProfileFromDTO(profile, profileDTO);
         profileRepository.saveAndFlush(profile);
@@ -150,7 +150,7 @@ public class ProfileService {
     public EducationDTO getEducation() {
         User user = getAuthenticatedUserOrThrow();
 
-        Optional<Education> education = profileRepository.findLatestEducationByUserId(user.getUserId());
+        Optional<Education> education = profileRepository.findLatestEducationByUserId(user.getId());
 
         if (education.isEmpty()) {
             log.info("No education found for user: {}, returning default", user.getUsername());
@@ -163,9 +163,9 @@ public class ProfileService {
     @Transactional
     public ResponseDTO updateEducation(EducationDTO educationDTO) {
         User user = getAuthenticatedUserOrThrow();
-        Profile profile = getProfileByUserId(user.getUserId());
+        Profile profile = getProfileByUserId(user.getId());
 
-        Education education = getOrCreateEducation(user.getUserId(), profile.getId());
+        Education education = getOrCreateEducation(user.getId(), profile.getId());
         profileMapper.updateEducationFromDTO(education, educationDTO);
 
         Education savedEducation = educationRepository.saveAndFlush(education);
@@ -213,7 +213,7 @@ public class ProfileService {
     public DetailsDTO getDetails() {
         User user = getAuthenticatedUserOrThrow();
 
-        Optional<Details> details = profileRepository.findLatestDetailsByUserId(user.getUserId());
+        Optional<Details> details = profileRepository.findLatestDetailsByUserId(user.getId());
 
         if (details.isEmpty()) {
             log.info("No details found for user: {}, returning default", user.getUsername());
@@ -226,9 +226,9 @@ public class ProfileService {
     @Transactional
     public ResponseDTO updateDetails(DetailsDTO detailsDTO) {
         User user = getAuthenticatedUserOrThrow();
-        Profile profile = getProfileByUserId(user.getUserId());
+        Profile profile = getProfileByUserId(user.getId());
 
-        Details details = getOrCreateDetails(user.getUserId(), profile.getId());
+        Details details = getOrCreateDetails(user.getId(), profile.getId());
         profileMapper.updateDetailsFromDTO(details, detailsDTO);
 
         detailsRepository.saveAndFlush(details);
@@ -259,7 +259,7 @@ public class ProfileService {
     public ExperienceDTO getExperience() {
         User user = getAuthenticatedUserOrThrow();
 
-        Optional<Experience> experience = profileRepository.findLatestExperienceByUserId(user.getUserId());
+        Optional<Experience> experience = profileRepository.findLatestExperienceByUserId(user.getId());
 
         if (experience.isEmpty()) {
             log.info("No experience found for user: {}, returning default", user.getUsername());
@@ -272,9 +272,9 @@ public class ProfileService {
     @Transactional
     public ResponseDTO updateExperience(ExperienceDTO experienceDTO) {
         User user = getAuthenticatedUserOrThrow();
-        Profile profile = getProfileByUserId(user.getUserId());
+        Profile profile = getProfileByUserId(user.getId());
 
-        Experience experience = getOrCreateExperience(user.getUserId(), profile.getId());
+        Experience experience = getOrCreateExperience(user.getId(), profile.getId());
         profileMapper.updateExperienceFromDTO(experience, experienceDTO);
 
         experienceRepository.saveAndFlush(experience);
@@ -304,7 +304,7 @@ public class ProfileService {
     public SkillsDTO getSkills() {
         User user = getAuthenticatedUserOrThrow();
 
-        Optional<Skills> skills = profileRepository.findLatestSkillsByUserId(user.getUserId());
+        Optional<Skills> skills = profileRepository.findLatestSkillsByUserId(user.getId());
 
         if (skills.isEmpty()) {
             log.info("No skills found for user: {}, returning default", user.getUsername());
@@ -317,9 +317,9 @@ public class ProfileService {
     @Transactional
     public ResponseDTO saveSkills(SkillsDTO skillsDTO) {
         User user = getAuthenticatedUserOrThrow();
-        Profile profile = getProfileByUserId(user.getUserId());
+        Profile profile = getProfileByUserId(user.getId());
 
-        Skills skills = getOrCreateSkills(user.getUserId(), profile.getId());
+        Skills skills = getOrCreateSkills(user.getId(), profile.getId());
         profileMapper.updateSkillsFromDTO(skills, skillsDTO);
 
         skillsRepository.saveAndFlush(skills);
@@ -350,7 +350,7 @@ public class ProfileService {
     public ProjectDTO getProjects() {
         User user = getAuthenticatedUserOrThrow();
 
-        Optional<Project> project = profileRepository.findLatestProjectByUserId(user.getUserId());
+        Optional<Project> project = profileRepository.findLatestProjectByUserId(user.getId());
 
         if (project.isEmpty()) {
             log.info("No projects found for user: {}, returning default", user.getUsername());
@@ -363,9 +363,9 @@ public class ProfileService {
     @Transactional
     public ResponseDTO updateProjects(ProjectDTO projectDTO) {
         User user = getAuthenticatedUserOrThrow();
-        Profile profile = getProfileByUserId(user.getUserId());
+        Profile profile = getProfileByUserId(user.getId());
 
-        Project project = getOrCreateProject(user.getUserId(), profile.getId());
+        Project project = getOrCreateProject(user.getId(), profile.getId());
         profileMapper.updateProjectFromDTO(project, projectDTO);
 
         projectRepository.saveAndFlush(project);
@@ -395,7 +395,7 @@ public class ProfileService {
     public CertificateDTO getCertificates() {
         User user = getAuthenticatedUserOrThrow();
 
-        Optional<Certificate> certificate = profileRepository.findLatestCertificateByUserId(user.getUserId());
+        Optional<Certificate> certificate = profileRepository.findLatestCertificateByUserId(user.getId());
 
         if (certificate.isEmpty()) {
             log.info("No certificates found for user: {}, returning default", user.getUsername());
@@ -408,9 +408,9 @@ public class ProfileService {
     @Transactional
     public ResponseDTO updateCertificateDates(CertificateDTO certificateDTO) {
         User user = getAuthenticatedUserOrThrow();
-        Profile profile = getProfileByUserId(user.getUserId());
+        Profile profile = getProfileByUserId(user.getId());
 
-        Certificate certificate = getOrCreateCertificate(user.getUserId(), profile.getId());
+        Certificate certificate = getOrCreateCertificate(user.getId(), profile.getId());
         profileMapper.updateCertificateFromDTO(certificate, certificateDTO);
 
         certificateRepository.saveAndFlush(certificate);

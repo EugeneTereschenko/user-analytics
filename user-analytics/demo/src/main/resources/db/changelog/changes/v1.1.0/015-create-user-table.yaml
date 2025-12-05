@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: user
             columns:
               - column:
-                  name: user_id
+                  name: id
                   type: BIGSERIAL
                   constraints:
                     primaryKey: true

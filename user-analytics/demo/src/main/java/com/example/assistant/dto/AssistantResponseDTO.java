@@ -1,0 +1,41 @@
+package com.example.assistant.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class AssistantResponseDTO {
+    private String text;
+    private String type; // "success", "error", "info"
+    private Object data; // Additional data if needed
+    private Long timestamp;
+
+    public static AssistantResponseDTO success(String message) {
+        return AssistantResponseDTO.builder()
+                .text(message)
+                .type("success")
+                .timestamp(System.currentTimeMillis())
+                .build();
+    }
+
+    public static AssistantResponseDTO error(String message) {
+        return AssistantResponseDTO.builder()
+                .text(message)
+                .type("error")
+                .timestamp(System.currentTimeMillis())
+                .build();
+    }
+
+    public static AssistantResponseDTO info(String message) {
+        return AssistantResponseDTO.builder()
+                .text(message)
+                .type("info")
+                .timestamp(System.currentTimeMillis())
+                .build();
+    }
+}

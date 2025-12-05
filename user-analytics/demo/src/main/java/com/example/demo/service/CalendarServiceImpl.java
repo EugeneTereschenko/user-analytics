@@ -60,7 +60,7 @@ public class CalendarServiceImpl implements CalendarService {
 
 
     public List<CalendarDTO> getAllCalendars() {
-        return calendarRepository.findCalendarsByUserId(userService.getAuthenticatedUser().get().getUserId())
+        return calendarRepository.findCalendarsByUserId(userService.getAuthenticatedUser().get().getId())
                 .stream()
                 .map(calendar -> CalendarDTO.builder()
                         .title(calendar.getTitle())
@@ -74,7 +74,7 @@ public class CalendarServiceImpl implements CalendarService {
         User user = userService.getAuthenticatedUser()
                 .orElseThrow(() -> new RuntimeException("User not authenticated"));
 
-        Profile profile = profileRepository.findProfilesByUserId(user.getUserId())
+        Profile profile = profileRepository.findProfilesByUserId(user.getId())
                 .stream()
                 .reduce((first, second) -> second)
                 .orElseGet(() -> profileRepository.saveAndFlush(new Profile()));

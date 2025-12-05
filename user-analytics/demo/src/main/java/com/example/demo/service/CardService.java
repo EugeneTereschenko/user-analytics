@@ -39,13 +39,13 @@ public class CardService {
 
             Optional<User> user = userService.getAuthenticatedUser();
 
-            List<Profile> profiles = profileRepository.findProfilesByUserId(user.get().getUserId());
+            List<Profile> profiles = profileRepository.findProfilesByUserId(user.get().getId());
             Profile profileExisting = profiles.isEmpty()
                     ? null
                     : profiles.get(profiles.size() - 1);
             if (profileExisting == null) {
                 try {
-                    profileExisting = profileService.createProfile(user.get().getUserId());
+                    profileExisting = profileService.createProfile(user.get().getId());
                 } catch (Exception e) {
                     log.error("Failed to create profile for user: {}", e.getMessage());
                     throw new RuntimeException("Failed to create profile for user: " + e.getMessage());
