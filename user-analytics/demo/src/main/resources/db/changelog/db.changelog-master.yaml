@@ -33,3 +33,7 @@ databaseChangeLog:
       file: db/changelog/changes/v1.1.0/016-create-user-roles-table.yaml
   - include:
       file: db/changelog/changes/v1.1.0/017-create-role-seq.yaml
+  - include:
+      file: db/changelog/changes/v1.2.0/001-add-user-activity-tracking.yaml
+  - include:
+      file: db/changelog/changes/v1.2.0/002-add-user-account-field.yaml

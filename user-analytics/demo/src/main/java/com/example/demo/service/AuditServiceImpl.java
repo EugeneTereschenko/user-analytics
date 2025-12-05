@@ -69,7 +69,7 @@ public class AuditServiceImpl implements AuditService {
         User user = userService.getAuthenticatedUser()
                 .orElseThrow(() -> new RuntimeException("User not authenticated"));
 
-        Profile profile = profileRepository.findProfilesByUserId(user.getUserId())
+        Profile profile = profileRepository.findProfilesByUserId(user.getId())
                 .stream()
                 .reduce((first, second) -> second)
                 .orElseGet(() -> profileRepository.saveAndFlush(new Profile()));

@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
@@ -89,19 +90,20 @@ public class UserService {
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate())
                     .isTwoFactorEnabled(false)
+                    .createdAt(LocalDateTime.now())
                     .build();
 
             log.debug("User created: {}", user.getUsername());
             User existingUser = userRepository.save(user);
             log.debug("User saved to repository: {}", user.getUsername());
             UserRoles userRoles = new UserRoles.Builder()
-                    .userId(user.getUserId())
+                    .userId(user.getId())
                     .roleId(roles.stream().findFirst().get().getId()) // Assuming one role for simplicity
                     .build();
 
             log.debug("UserRoles created for user: {}", userRoles.getRoleId(), "with userId: {}", userRoles.getUserId());
             userRolesRepository.save(userRoles);
-            return createUserResponseDTO(String.valueOf(existingUser.getUserId()), "", "Signup successful", "true");
+            return createUserResponseDTO(String.valueOf(existingUser.getId()), "", "Signup successful", "true");
         } catch (Exception e) {
             log.error("Failed to create user: {}", e.getMessage());
             return createUserResponseDTO("", "", "Signup failed: " + e.getMessage(), "false");

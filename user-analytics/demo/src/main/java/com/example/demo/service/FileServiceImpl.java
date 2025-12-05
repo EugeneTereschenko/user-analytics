@@ -25,26 +25,26 @@ public class FileServiceImpl implements FileService {
 
     @Transactional
     public List<FileEntity> getAllFilesByUser() {
-        return fileRepository.findFileByUserId(userService.getAuthenticatedUser().get().getUserId());
+        return fileRepository.findFileByUserId(userService.getAuthenticatedUser().get().getId());
     }
 
     @Transactional
     public List<String> getAllFileNamesByUser() {
-        return fileRepository.findFileNamesByUserId(userService.getAuthenticatedUser().get().getUserId())
+        return fileRepository.findFileNamesByUserId(userService.getAuthenticatedUser().get().getId())
                 .stream()
                 .map(FileEntity::getFileName).toList();
     }
 
     @Transactional
     public FileEntity getFileByFileName(String fileName) throws IOException {
-        return fileRepository.findByFileNameAndUserId(userService.getAuthenticatedUser().get().getUserId(), fileName);
+        return fileRepository.findByFileNameAndUserId(userService.getAuthenticatedUser().get().getId(), fileName);
 
     }
 
     @Transactional
     @Override
     public void deleteFileByFileName(String fileName) throws IOException {
-        FileEntity fileEntity = fileRepository.findByFileNameAndUserId(userService.getAuthenticatedUser().get().getUserId(), fileName);
+        FileEntity fileEntity = fileRepository.findByFileNameAndUserId(userService.getAuthenticatedUser().get().getId(), fileName);
         if (fileEntity != null) {
             fileRepository.delete(fileEntity);
             profileFileEntityRepository.deleteByFileId(fileEntity.getId());
@@ -68,7 +68,7 @@ public class FileServiceImpl implements FileService {
         User user = userService.getAuthenticatedUser()
                 .orElseThrow(() -> new RuntimeException("User not authenticated"));
 
-        Profile profile = profileRepository.findProfilesByUserId(user.getUserId())
+        Profile profile = profileRepository.findProfilesByUserId(user.getId())
                 .stream()
                 .reduce((first, second) -> second)
                 .orElseGet(() -> profileRepository.saveAndFlush(new Profile()));

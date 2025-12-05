@@ -1,0 +1,84 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-add-user-activity-columns
+      author: developer
+      comment: Add activity tracking columns to user table
+      changes:
+        # Add created_at if it doesn't exist
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        # Add updated_at if it doesn't exist
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+        # Add last_login_at for activity tracking
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: last_login_at
+                  type: TIMESTAMP
+
+        # Add activity_count for tracking user activity
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: activity_count
+                  type: INTEGER
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
+
+        # Create index for created_at (for date range queries)
+        - createIndex:
+            indexName: idx_user_created_at
+            tableName: user
+            columns:
+              - column:
+                  name: created_at
+
+        # Create index for last_login_at (for activity queries)
+        - createIndex:
+            indexName: idx_user_last_login_at
+            tableName: user
+            columns:
+              - column:
+                  name: last_login_at
+
+        # Create index for activity_count (for sorting by activity)
+        - createIndex:
+            indexName: idx_user_activity_count
+            tableName: user
+            columns:
+              - column:
+                  name: activity_count
+                  descending: true
+
+  - changeSet:
+      id: 001-update-existing-users-timestamps
+      author: developer
+      comment: Set created_at for existing users without timestamps
+      changes:
+        - sql:
+            sql: |
+              UPDATE "user" 
+              SET created_at = CURRENT_TIMESTAMP 
+              WHERE created_at IS NULL;
+              
+              UPDATE "user" 
+              SET updated_at = CURRENT_TIMESTAMP 
+              WHERE updated_at IS NULL;

@@ -3,15 +3,14 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Table(name = "\"user\"")
@@ -19,15 +18,13 @@ import java.util.List;
 @Data
 public class User implements UserDetails {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
 
-    @Column(name = "email", nullable = false, length = 255)
-    private String email;
-    @Column(name = "username", nullable = false, length = 255)
     private String username;
-    @Column(name = "password", nullable = false, length = 255)
+    private String email;
     private String password;
     @Column(name = "password_generate", nullable = false, length = 255)
     private String salt;
@@ -44,12 +41,39 @@ public class User implements UserDetails {
     @Column(name = "is_two_factor", length = 255)
     private boolean isTwoFactorEnabled;
 
-    @Column(name = "location", length = 255)
+    // Location and device info (you already have these)
     private String location;
-    @Column(name = "device_type", length = 255)
     private String deviceType;
     @Column(name = "activity_score")
     private double activityScore;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    // Activity tracking fields
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
+
+    @Column(name = "activity_count", nullable = false)
+    private Integer activityCount = 0;
+
+    // User status
+    @Column(name = "enabled")
+    private Boolean enabled = true;
+
+    @Column(name = "account_non_expired")
+    private Boolean accountNonExpired = true;
+
+    @Column(name = "account_non_locked")
+    private Boolean accountNonLocked = true;
+
+    @Column(name = "credentials_non_expired")
+    private Boolean credentialsNonExpired = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -57,7 +81,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Collection<Role> roles = new ArrayList<>();
+    private Collection<Role> roles;
 
 
 
@@ -101,6 +125,7 @@ public class User implements UserDetails {
         private String location;
         private String deviceType;
         private double activityScore;
+        private LocalDateTime createdAt;
         private Collection<Role> roles = new ArrayList<>();
 
         public Builder userId(Long userId) {
@@ -173,6 +198,11 @@ public class User implements UserDetails {
             return this;
         }
 
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
         public Builder roles(Collection<Role> roles) {
             this.roles = roles;
             return this;
@@ -180,7 +210,7 @@ public class User implements UserDetails {
 
         public User build() {
             User user = new User();
-            user.userId = this.userId;
+            user.id = this.userId;
             user.email = this.email;
             user.username = this.username;
             user.password = this.password;
@@ -194,6 +224,7 @@ public class User implements UserDetails {
             user.location = this.location;
             user.deviceType = this.deviceType;
             user.activityScore = this.activityScore;
+            user.createdAt = this.createdAt;
             user.roles = this.roles;
             return user;
         }

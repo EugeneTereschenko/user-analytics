@@ -36,11 +36,11 @@ spring:
 # Application-specific configuration
 app:
   init:
-    users-file: ${user.home}/IdeaProjects/demo/src/main/resources/usersList.txt
-    announcements-file: ${user.home}/IdeaProjects/demo/src/main/resources/announcementsList.txt
-    notifications-file: ${user.home}/IdeaProjects/demo/src/main/resources/notificationsList.txt
-    calendar-file: ${user.home}/IdeaProjects/demo/src/main/resources/calendarList.txt
-    audit-file: ${user.home}/IdeaProjects/demo/src/main/resources/auditList.txt
+    users-file: ${user.home}/IdeaProjects/demo/user-analytics/demo/src/main/resources/usersList.txt
+    announcements-file: ${user.home}/IdeaProjects/demo/user-analytics/demo/src/main/resources/announcementsList.txt
+    notifications-file: ${user.home}/IdeaProjects/demo/user-analytics/demo/src/main/resources/notificationsList.txt
+    calendar-file: ${user.home}/IdeaProjects/demo/user-analytics/demo/src/main/resources/calendarList.txt
+    audit-file: ${user.home}/IdeaProjects/demo/user-analytics/demo/src/main/resources/auditList.txt
 
 # Logging
 logging:

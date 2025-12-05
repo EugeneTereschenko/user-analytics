@@ -207,23 +207,23 @@ public class DatabaseInitializer {
                 // Use configurable file paths (from application.yml)
                 String usersFile = environment.getProperty(
                         "app.init.users-file",
-                        "/home/yevhen/IdeaProjects/demo/src/main/resources/usersList.txt"
+                        "/home/yevhen/IdeaProjects/demo/user-analytics/demo/src/main/resources/usersList.txt"
                 );
                 String announcementsFile = environment.getProperty(
                         "app.init.announcements-file",
-                        "/home/yevhen/IdeaProjects/demo/src/main/resources/announcementsList.txt"
+                        "/home/yevhen/IdeaProjects/demo/src/user-analytics/demo/main/resources/announcementsList.txt"
                 );
                 String notificationsFile = environment.getProperty(
                         "app.init.notifications-file",
-                        "/home/yevhen/IdeaProjects/demo/src/main/resources/notificationsList.txt"
+                        "/home/yevhen/IdeaProjects/demo/user-analytics/demo/src/main/resources/notificationsList.txt"
                 );
                 String calendarFile = environment.getProperty(
                         "app.init.calendar-file",
-                        "/home/yevhen/IdeaProjects/demo/src/main/resources/calendarList.txt"
+                        "/home/yevhen/IdeaProjects/demo/user-analytics/demo/src/main/resources/calendarList.txt"
                 );
                 String auditFile = environment.getProperty(
                         "app.init.audit-file",
-                        "/home/yevhen/IdeaProjects/demo/src/main/resources/auditList.txt"
+                        "/home/yevhen/IdeaProjects/demo/user-analytics/demo/src/main/resources/auditList.txt"
                 );
 
                 processUsers(usersFile, passwordEncoder);

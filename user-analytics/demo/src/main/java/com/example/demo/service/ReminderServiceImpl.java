@@ -57,7 +57,7 @@ public class ReminderServiceImpl implements ReminderService {
         User user = userService.getAuthenticatedUser()
                 .orElseThrow(() -> new RuntimeException("User not authenticated"));
 
-        return reminderRepository.findRemindersByUserId(user.getUserId()).stream()
+        return reminderRepository.findRemindersByUserId(user.getId()).stream()
                 .map(reminder -> new ReminderDTO.Builder()
                         .id(String.valueOf(reminder.getId()))
                         .title(reminder.getTitle())
@@ -83,7 +83,7 @@ public class ReminderServiceImpl implements ReminderService {
         User user = userService.getAuthenticatedUser()
                 .orElseThrow(() -> new RuntimeException("User not authenticated"));
 
-        Profile profile = profileRepository.findProfilesByUserId(user.getUserId())
+        Profile profile = profileRepository.findProfilesByUserId(user.getId())
                 .stream()
                 .reduce((first, second) -> second)
                 .orElseGet(() -> profileRepository.saveAndFlush(new Profile()));
