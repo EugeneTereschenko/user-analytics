@@ -48,7 +48,7 @@ public class TaskServiceImpl implements TaskService {
         User user = userService.getAuthenticatedUser()
                 .orElseThrow(() -> new RuntimeException("User not authenticated"));
 
-        return taskRepository.findTasksByUserId(user.getUserId())
+        return taskRepository.findTasksByUserId(user.getId())
                 .stream()
                 .map(task -> TaskDTO.builder()
                         .id(String.valueOf(task.getId()))
@@ -62,7 +62,7 @@ public class TaskServiceImpl implements TaskService {
         User user = userService.getAuthenticatedUser()
                 .orElseThrow(() -> new RuntimeException("User not authenticated"));
 
-        Profile profile = profileRepository.findProfilesByUserId(user.getUserId())
+        Profile profile = profileRepository.findProfilesByUserId(user.getId())
                 .stream()
                 .reduce((first, second) -> second)
                 .orElseGet(() -> profileRepository.saveAndFlush(new Profile()));

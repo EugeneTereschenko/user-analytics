@@ -1,58 +1,76 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.UserSummaryDTO;
-import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.impl.AnalyticsService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
-@AllArgsConstructor
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class AnalyticsServiceImpl implements AnalyticsService {
 
     private final UserRepository userRepository;
 
-    private final Map<LocalDate, Long> userSignups = Map.of(
-            LocalDate.now(), 15L,
-            LocalDate.now().minusDays(1), 20L
-    );
+    @Override
+    public int countNewUsersToday() {
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+        return userRepository.countByCreatedAtBetween(startOfDay, endOfDay);
+    }
 
     @Override
-    public long countNewUsersToday() {
-        return userRepository.countBySignupDate(LocalDate.now());
+    public String getWeeklyStats() {
+        LocalDateTime weekAgo = LocalDateTime.now().minusWeeks(1);
+        int weeklySignups = userRepository.countByCreatedAtAfter(weekAgo);
+        int activeUsers = userRepository.countActiveUsersLastWeek(LocalDateTime.now());
+
+        return String.format(
+                "This week: %d signups, %d active users",
+                weeklySignups,
+                activeUsers
+        );
     }
 
     @Override
     public String getMostActiveUser() {
         return userRepository.findMostActiveUser()
-                .map(User::getUsername)
+                .map(user -> user.getUsername() + " (" + user.getEmail() + ")")
                 .orElse("No active users found");
     }
 
-    public long countSignupsInLastDays(int days) {
-        LocalDate startDate = LocalDate.now().minusDays(days);
-        return userRepository.countSignupsSince(startDate);
-    }
-
-    public long countActiveUsersInLastDays(int days) {
-        LocalDateTime startDateTime = LocalDate.now().minusDays(days).atStartOfDay();
-        return userRepository.countActiveUsersSince(startDateTime);
+    @Override
+    public int getTotalUsers() {
+        return (int) userRepository.count();
     }
 
     @Override
-    public String getWeeklyStats() {
-        long weeklySignups = countSignupsInLastDays(7);
-        long weeklyActive = countActiveUsersInLastDays(7);
-        return "This week: " + weeklySignups + " signups, " + weeklyActive + " active users.";
+    public Map<String, Object> getUserGrowthData() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", getTotalUsers());
+        data.put("today", countNewUsersToday());
+        data.put("thisWeek", userRepository.countByCreatedAtAfter(
+                LocalDateTime.now().minusWeeks(1)
+        ));
+        data.put("thisMonth", userRepository.countByCreatedAtAfter(
+                LocalDateTime.now().minusMonths(1)
+        ));
+        return data;
     }
+
+    @Override
+    public List<String> getTopActiveUsers(int limit) {
+        return userRepository.findTopActiveUsers(limit);
+    }
+
 
     public UserSummaryDTO getUserSummary(LocalDate start, LocalDate end) {
         UserSummaryDTO userSummaryDTO = userRepository.getUserSummary(start, end);
@@ -99,6 +117,4 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                         arr -> ((Long) arr[1]).intValue()
                 ));
     }
-
-
 }

@@ -9,6 +9,10 @@ public class ProfileMapper {
 
     // Profile mappings
     public ProfileDTO toProfileDTO(Profile profile, User user) {
+        if (profile == null || user == null) {
+            return null;
+        }
+
         return new ProfileDTO.Builder()
                 .email(user.getEmail())
                 .firstName(profile.getFirstName())
@@ -23,6 +27,10 @@ public class ProfileMapper {
     }
 
     public ProfileDTO toProfileDTOWithoutProjects(Profile profile, User user) {
+        if (profile == null || user == null) {
+            return null;
+        }
+
         return new ProfileDTO.Builder()
                 .email(user.getEmail())
                 .firstName(profile.getFirstName())
@@ -36,6 +44,10 @@ public class ProfileMapper {
 
     public ProfileDTO toProfileDTOWithProjects(Profile profile, User user,
                                                Project recentProject, Project mostViewedProject) {
+        if (profile == null || user == null) {
+            return null;
+        }
+
         return new ProfileDTO.Builder()
                 .firstName(profile.getFirstName())
                 .lastName(profile.getLastName())
@@ -50,6 +62,10 @@ public class ProfileMapper {
     }
 
     public void updateProfileFromDTO(Profile profile, ProfileDTO dto) {
+        if (profile == null || dto == null) {
+            return;
+        }
+
         if (dto.getFirstName() != null) {
             profile.setFirstName(dto.getFirstName());
         }
@@ -78,6 +94,10 @@ public class ProfileMapper {
 
     // Education mappings
     public EducationDTO toEducationDTO(Education education) {
+        if (education == null) {
+            return null;
+        }
+
         return new EducationDTO.Builder()
                 .universityName(education.getUniversityName())
                 .dateFrom(education.getDateFrom())
@@ -88,6 +108,10 @@ public class ProfileMapper {
     }
 
     public void updateEducationFromDTO(Education education, EducationDTO dto) {
+        if (education == null || dto == null) {
+            return;
+        }
+
         if (dto.getUniversityName() != null) {
             education.setUniversityName(dto.getUniversityName());
         }
@@ -107,6 +131,10 @@ public class ProfileMapper {
 
     // Details mappings
     public DetailsDTO toDetailsDTO(Details details) {
+        if (details == null) {
+            return null;
+        }
+
         return new DetailsDTO.Builder()
                 .notification(String.valueOf(details.getNotification()))
                 .staff(details.getStaff())
@@ -116,6 +144,10 @@ public class ProfileMapper {
     }
 
     public void updateDetailsFromDTO(Details details, DetailsDTO dto) {
+        if (details == null || dto == null) {
+            return;
+        }
+
         if (dto.getNotification() != null) {
             details.setNotification(Boolean.parseBoolean(dto.getNotification()));
         }
@@ -132,6 +164,10 @@ public class ProfileMapper {
 
     // Experience mappings
     public ExperienceDTO toExperienceDTO(Experience experience) {
+        if (experience == null) {
+            return null;
+        }
+
         return new ExperienceDTO.Builder()
                 .roleName(experience.getRoleName())
                 .dateFrom(experience.getDateFrom())
@@ -143,6 +179,10 @@ public class ProfileMapper {
     }
 
     public void updateExperienceFromDTO(Experience experience, ExperienceDTO dto) {
+        if (experience == null || dto == null) {
+            return;
+        }
+
         if (dto.getRoleName() != null) {
             experience.setRoleName(dto.getRoleName());
         }
@@ -165,6 +205,10 @@ public class ProfileMapper {
 
     // Skills mappings
     public SkillsDTO toSkillsDTO(Skills skills) {
+        if (skills == null) {
+            return null;
+        }
+
         return new SkillsDTO.Builder()
                 .programmingLanguages(skills.getProgrammingLanguages())
                 .webFrameworks(skills.getWebFrameworks())
@@ -176,6 +220,10 @@ public class ProfileMapper {
     }
 
     public void updateSkillsFromDTO(Skills skills, SkillsDTO dto) {
+        if (skills == null || dto == null) {
+            return;
+        }
+
         if (dto.getProgrammingLanguages() != null) {
             skills.setProgrammingLanguages(dto.getProgrammingLanguages());
         }
@@ -198,6 +246,10 @@ public class ProfileMapper {
 
     // Project mappings
     public ProjectDTO toProjectDTO(Project project) {
+        if (project == null) {
+            return null;
+        }
+
         return new ProjectDTO.Builder()
                 .projectName(project.getProjectName())
                 .dateFrom(project.getDateFrom())
@@ -207,6 +259,10 @@ public class ProfileMapper {
     }
 
     public void updateProjectFromDTO(Project project, ProjectDTO dto) {
+        if (project == null || dto == null) {
+            return;
+        }
+
         if (dto.getProjectName() != null) {
             project.setProjectName(dto.getProjectName());
         }
@@ -223,6 +279,10 @@ public class ProfileMapper {
 
     // Certificate mappings
     public CertificateDTO toCertificateDTO(Certificate certificate) {
+        if (certificate == null) {
+            return null;
+        }
+
         return new CertificateDTO.Builder()
                 .certificateName(certificate.getCertificateName())
                 .dateFrom(certificate.getDateFrom())
@@ -231,6 +291,10 @@ public class ProfileMapper {
     }
 
     public void updateCertificateFromDTO(Certificate certificate, CertificateDTO dto) {
+        if (certificate == null || dto == null) {
+            return;
+        }
+
         if (dto.getCertificateName() != null) {
             certificate.setCertificateName(dto.getCertificateName());
         }

@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import lombok.NonNull;
 import lombok.ToString;
 
 import java.util.Collection;
@@ -9,6 +10,7 @@ public class UserRequestDTO {
 
     private String username;
     private String email;
+    @NonNull
     private String password;
     private String deviceType;
     private String location;
