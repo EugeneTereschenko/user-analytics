@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class AssistantResponseDTO {
     private String text;
     private String type; // "success", "error", "info"
-    private Object data; // Additional data if needed
+    private Object data;
     private Long timestamp;
 
     public static AssistantResponseDTO success(String message) {
@@ -27,14 +27,6 @@ public class AssistantResponseDTO {
         return AssistantResponseDTO.builder()
                 .text(message)
                 .type("error")
-                .timestamp(System.currentTimeMillis())
-                .build();
-    }
-
-    public static AssistantResponseDTO info(String message) {
-        return AssistantResponseDTO.builder()
-                .text(message)
-                .type("info")
                 .timestamp(System.currentTimeMillis())
                 .build();
     }

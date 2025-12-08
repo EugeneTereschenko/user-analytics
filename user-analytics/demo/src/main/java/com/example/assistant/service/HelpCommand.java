@@ -3,13 +3,19 @@ package com.example.assistant.service;
 
 import com.example.assistant.service.impl.Command;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class HelpCommand implements Command {
 
-    private final CommandRegistry commandRegistry;
+    private CommandRegistry commandRegistry;
+
+    @Autowired
+    public HelpCommand(@Lazy CommandRegistry commandRegistry) {  // ✅ Lazy injection
+        this.commandRegistry = commandRegistry;
+    }
 
     @Override
     public String getCommandName() {
