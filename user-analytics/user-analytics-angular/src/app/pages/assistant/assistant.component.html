@@ -7,22 +7,77 @@
 
 <div class="container my-4">
   <div class="card shadow">
-    <div class="card-header bg-primary text-white">
-      <h2 class="mb-0"><i class="bi bi-robot me-2"></i>AI Assistant</h2>
+    <!-- Header -->
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h2 class="mb-0">
+        <i class="bi bi-robot me-2"></i>AI Assistant
+      </h2>
+      <button 
+        class="btn btn-sm btn-light" 
+        (click)="clearHistory()"
+        title="Clear conversation">
+        <i class="bi bi-trash"></i> Clear
+      </button>
     </div>
+
+    <!-- Quick Commands -->
+    <div class="card-body bg-light p-3 border-bottom">
+      <div class="d-flex flex-wrap gap-2 align-items-center">
+        <span class="text-muted small me-2">Quick actions:</span>
+        <button 
+          *ngFor="let cmd of quickCommands" 
+          class="btn btn-sm btn-outline-primary"
+          (click)="sendQuickCommand(cmd.command)"
+          [disabled]="loading">
+          {{ cmd.label }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Messages -->
     <div class="card-body p-0">
-      <div class="chat-box p-3" style="height: 500px; overflow-y: auto; background-color: #f8f9fa;">
-        <div *ngFor="let message of messages" class="mb-3">
+      <div 
+        #chatBox
+        class="chat-box p-3" 
+        style="height: 500px; overflow-y: auto; background-color: #f8f9fa;">
+        
+        <div *ngFor="let message of messages" class="mb-3 animate-fade-in">
           <div [ngClass]="message.sender === 'You' ? 'text-end' : 'text-start'">
-            <div class="d-inline-block p-3 rounded-3" 
-                 [ngClass]="message.sender === 'You' ? 'bg-primary text-white' : 'bg-white border'">
-              <strong class="d-block mb-1">{{ message.sender }}</strong>
-              <span>{{ message.text }}</span>
+            <div 
+              class="d-inline-block p-3 rounded-3 position-relative" 
+              [ngClass]="{
+                'bg-primary text-white': message.sender === 'You',
+                'bg-white border': message.sender !== 'You',
+                'command-message': isCommand(message.text)
+              }"
+              style="max-width: 75%;">
+              <strong class="d-block mb-1">
+                <i class="bi" [class.bi-person-circle]="message.sender === 'You'" 
+                   [class.bi-robot]="message.sender !== 'You'"></i>
+                {{ message.sender }}
+              </strong>
+              <span style="white-space: pre-wrap;">{{ message.text }}</span>
+              <small class="d-block mt-2 opacity-75" style="font-size: 0.75rem;">
+                {{ formatTime(message.timestamp) }}
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading indicator -->
+        <div *ngIf="loading" class="text-start mb-3">
+          <div class="d-inline-block p-3 rounded-3 bg-white border">
+            <div class="typing-indicator">
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Input -->
     <div class="card-footer bg-white">
       <div class="input-group">
         <input 
@@ -30,11 +85,22 @@
           class="form-control" 
           [(ngModel)]="userInput" 
           (keyup.enter)="sendMessage()" 
-          placeholder="Ask a question..." />
-        <button class="btn btn-primary" (click)="sendMessage()">
-          <i class="bi bi-send-fill me-1"></i>Send
+          [disabled]="loading"
+          placeholder="Ask a question or type a command..." />
+        <button 
+          class="btn btn-primary" 
+          (click)="sendMessage()"
+          [disabled]="loading || !userInput.trim()">
+          <i class="bi bi-send-fill me-1"></i>
+          <span *ngIf="!loading">Send</span>
+          <span *ngIf="loading">
+            <span class="spinner-border spinner-border-sm" role="status"></span>
+          </span>
         </button>
       </div>
+      <small class="text-muted d-block mt-2 text-center">
+        Press Enter to send
+      </small>
     </div>
   </div>
 </div>
