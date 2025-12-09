@@ -100,7 +100,7 @@ public class DatabaseInitializer {
                 users.add(UserRequestDTO.builder()
                         .username(username)
                         .email(email)
-                        .password(passwordEncoder.encode(password))
+                        .password(password)
                         .roles(roles.stream().toList())
                         .build());
             }

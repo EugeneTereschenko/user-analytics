@@ -41,6 +41,6 @@ public class AuthController {
     @GetMapping("/roles")
     public ResponseEntity<?> getRoles() {
         log.info("Fetching roles");
-        return ResponseEntity.ok(userService.getRoles());
+        return ResponseEntity.ok(userService.getUsersWithRoles());
     }
 }
