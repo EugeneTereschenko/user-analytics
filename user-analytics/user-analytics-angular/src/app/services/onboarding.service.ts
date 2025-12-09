@@ -1,7 +1,6 @@
 // src/app/services/onboarding.service.ts
 import { Injectable } from '@angular/core';
 import Shepherd from 'shepherd.js';
-import 'shepherd.js/dist/css/shepherd.css';
 
 @Injectable({ providedIn: 'root' })
 export class OnboardingService {

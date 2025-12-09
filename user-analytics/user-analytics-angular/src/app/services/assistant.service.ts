@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-interface Message {
-  sender: string;
+export interface AssistantResponse {
   text: string;
+  type: 'success' | 'error' | 'info';
+  timestamp: number;
 }
 
 @Injectable({
@@ -21,16 +23,23 @@ export class AssistantService {
     return token ? { Authorization: `Bearer ${token}` } : {};
   }
 
-  getAssistantData() {
+  getAssistantData(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/assistant/data`, { headers: this.getAuthHeaders() });
   }
-  sendAssistantCommand(command: string) {
+  
+  sendAssistantCommand(command: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/assistant/command`, { command }, { headers: this.getAuthHeaders() });
   }
-  getAssistantStatus() {
+  
+  getAssistantStatus(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/assistant/status`, { headers: this.getAuthHeaders() });
   }
-  sendMessage(message: string) {
-    return this.http.post(`${this.baseUrl}/assistant/message`, { text: message }, { headers: this.getAuthHeaders() });
+  
+  sendMessage(message: string, sessionId: string): Observable<AssistantResponse> {
+    return this.http.post<AssistantResponse>(
+      `${this.baseUrl}/assistant/message`,
+      { text: message, sessionId },
+      { headers: this.getAuthHeaders() }
+    );
   }
 }
