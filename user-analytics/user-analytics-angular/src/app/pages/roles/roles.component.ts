@@ -14,7 +14,7 @@ export class RolesComponent implements OnInit {
   users: { id: string; name: string; email?: string; role: string; }[] = [
     // your users data
   ];
-  roles = ['admin', 'editor', 'viewer'];
+  roles = ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_EDITOR', 'ROLE_VIEWER'];
 
   selectedUserId: string | null = null;
   selectedRole: string = '';
@@ -22,7 +22,10 @@ export class RolesComponent implements OnInit {
   constructor(private rolesService: RolesService) { }
 
   ngOnInit(): void {
-    this.rolesService.getUsersWithRoles().subscribe(users => this.users = users);
+    this.rolesService.getUsersWithRoles().subscribe(users => {
+      this.users = users;
+      console.log(this.users);
+    });
   }
 
   loadUsers() {
