@@ -44,7 +44,8 @@ public class SecurityConfig {
                                 "/api/register/**",
                                 "/api/login/**",
                                 "/api/auth/**",
-                                "/api/assistant/**",  // ← Add this to allow assistant endpoints
+                                "/api/assistant/**",
+                                "/api/activities/**",
                                 "/h2-console/**",
                                 "/error",
                                 "/actuator/**"
