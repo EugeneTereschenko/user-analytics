@@ -49,3 +49,9 @@ logging:
     com.example.demo: INFO
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+# Activity Logging Configuration (custom properties)
+activity:
+  logging:
+    enabled: true
+    async: true

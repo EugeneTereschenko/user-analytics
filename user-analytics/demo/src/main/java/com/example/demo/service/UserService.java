@@ -1,8 +1,11 @@
 package com.example.demo.service;
 
+import com.example.activity.dto.ActivityDTO;
+import com.example.activity.service.ActivityService;
 import com.example.demo.dto.UserDetailDTO;
 import com.example.demo.dto.UserRequestDTO;
 import com.example.demo.dto.UserResponseDTO;
+import com.example.activity.model.ActivityType;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.model.UserRoles;
@@ -10,6 +13,7 @@ import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.UserRolesRepository;
 import com.example.demo.security.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +44,8 @@ public class UserService {
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final ActivityService activityService; // ADD THIS
+    private final HttpServletRequest request; // ADD THIS for IP tracking
 
     private static final SecureRandom secureRandom = new SecureRandom();
 
@@ -51,41 +57,25 @@ public class UserService {
             Optional<User> userOptional = userRepository.findByEmail(userDTO.getEmail());
             if (userOptional.isEmpty()) {
                 log.warn("Login attempt for non-existent email");
+                // Log failed login attempt
+                logActivity(null, null, ActivityType.LOGIN,
+                        "Failed login attempt for email: " + userDTO.getEmail());
                 return createUserResponseDTO("", "", "Login failed: Invalid credentials", "false");
             }
 
             User user = userOptional.get();
-            log.info("User found in DB:");
-            log.info("  - Username: {}", user.getUsername());
-            log.info("  - Email: {}", user.getEmail());
-            log.info("  - Stored hash: {}", user.getPassword());
-            log.info("  - Hash starts with: {}", user.getPassword().substring(0, 7));
+            log.info("User found in DB: {}", user.getUsername());
 
             String plainPassword = userDTO.getPassword();
             String storedHash = user.getPassword();
 
-            log.info("Password check:");
-            log.info("  - Plain password length: {}", plainPassword.length());
-            log.info("  - Plain password: {}", plainPassword); // Remove after debugging
-            log.info("  - Stored hash length: {}", storedHash.length());
-
-            // Test encoding the plain password
-            String testHash = passwordEncoder.encode(plainPassword);
-            log.info("  - Test encoding of plain password: {}", testHash);
-
-            // Now do the actual match
             boolean matches = passwordEncoder.matches(plainPassword, storedHash);
-            log.info("  - Match result: {}", matches);
 
             if (!matches) {
                 log.warn("Password mismatch for user: {}", user.getUsername());
-
-                // Additional debugging - check if stored password is actually encoded
-                if (!storedHash.startsWith("$2a$") && !storedHash.startsWith("$2b$") && !storedHash.startsWith("$2y$")) {
-                    log.error("CRITICAL: Stored password doesn't look like a BCrypt hash!");
-                    log.error("  - Stored value: {}", storedHash);
-                }
-
+                // Log failed login attempt
+                logActivity(user.getId(), user.getUsername(), ActivityType.LOGIN,
+                        "Failed login attempt - incorrect password");
                 return createUserResponseDTO("", "", "Login failed: Invalid credentials", "false");
             }
 
@@ -98,6 +88,11 @@ public class UserService {
 
             String token = jwtUtil.generateToken(userDetails.getUsername());
             updateUserSignInDate(user);
+
+            // Log successful login
+            logActivity(user.getId(), user.getUsername(), ActivityType.LOGIN,
+                    "User logged in successfully");
+
             log.info("Login successful for user: {}", user.getUsername());
             log.info("=== LOGIN ATTEMPT END ===");
 
@@ -116,10 +111,14 @@ public class UserService {
 
         try {
             if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+                logActivity(null, userDTO.getUsername(), ActivityType.CREATE,
+                        "Failed signup attempt - email already exists");
                 return createUserResponseDTO("", "", "Signup failed: Email already exists", "false");
             }
 
             if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+                logActivity(null, userDTO.getUsername(), ActivityType.CREATE,
+                        "Failed signup attempt - username already exists");
                 return createUserResponseDTO("", "", "Signup failed: Username already exists", "false");
             }
 
@@ -128,32 +127,14 @@ public class UserService {
                 return createUserResponseDTO("", "", "Signup failed: Invalid roles", "false");
             }
 
-            // Password encoding
             String plainPassword = userDTO.getPassword();
             String encodedPassword = passwordEncoder.encode(plainPassword);
             String salt = generateSalt();
 
-            log.info("Password encoding:");
-            log.info("  - Plain password: {}", plainPassword); // Remove after debugging
-            log.info("  - Plain password length: {}", plainPassword.length());
-            log.info("  - Encoded password: {}", encodedPassword);
-            log.info("  - Encoded length: {}", encodedPassword.length());
-            log.info("  - Starts with: {}", encodedPassword.substring(0, 7));
-            log.info("  - Generated salt: {}", salt);
-
-            // Test that encoding/matching works
-            boolean testMatch = passwordEncoder.matches(plainPassword, encodedPassword);
-            log.info("  - Test match (should be true): {}", testMatch);
-
-            if (!testMatch) {
-                log.error("CRITICAL: Password encoder is not working correctly!");
-                return createUserResponseDTO("", "", "Signup failed: Password encoding error", "false");
-            }
-
             User user = new User.Builder()
                     .username(userDTO.getUsername())
                     .email(userDTO.getEmail())
-                    .password(encodedPassword) // Make sure this is the ENCODED password
+                    .password(encodedPassword)
                     .salt(salt)
                     .isActive(true)
                     .roles(roles)
@@ -166,23 +147,11 @@ public class UserService {
                     .build();
 
             User savedUser = userRepository.save(user);
-            log.info("User saved to database:");
-            log.info("  - ID: {}", savedUser.getId());
-            log.info("  - Password in DB: {}", savedUser.getPassword());
-            log.info("  - Password matches original encoded: {}", savedUser.getPassword().equals(encodedPassword));
-
-            // Verify we can retrieve and match
-            Optional<User> verifyUser = userRepository.findByEmail(userDTO.getEmail());
-            if (verifyUser.isPresent()) {
-                boolean verifyMatch = passwordEncoder.matches(plainPassword, verifyUser.get().getPassword());
-                log.info("  - Verification: Retrieved from DB and password matches: {}", verifyMatch);
-
-                if (!verifyMatch) {
-                    log.error("CRITICAL: Password stored in database doesn't match! Something is wrong with the save process.");
-                }
-            }
-
             assignRolesToUser(savedUser, roles);
+
+            // Log successful signup
+            logActivity(savedUser.getId(), savedUser.getUsername(), ActivityType.CREATE,
+                    "New user account created");
 
             log.info("Signup successful for user: {}", savedUser.getUsername());
             log.info("=== SIGNUP ATTEMPT END ===");
@@ -202,6 +171,41 @@ public class UserService {
         }
         String username = authentication.getName();
         return userRepository.findByUsername(username);
+    }
+
+    // Helper method to log activities
+    private void logActivity(Long userId, String username, ActivityType type, String description) {
+        try {
+            ActivityDTO activityDTO = new ActivityDTO.Builder()
+                    .userId(userId)
+                    .username(username != null ? username : "anonymous")
+                    .type(type)
+                    .description(description)
+                    .ipAddress(getClientIp())
+                    .deviceType(getUserAgent())
+                    .location("Unknown") // You can integrate with a geolocation service
+                    .build();
+
+            activityService.logActivity(activityDTO);
+        } catch (Exception e) {
+            log.error("Failed to log activity: {}", e.getMessage());
+            // Don't fail the main operation if activity logging fails
+        }
+    }
+
+    // Get client IP address
+    private String getClientIp() {
+        String xfHeader = request.getHeader("X-Forwarded-For");
+        if (xfHeader == null) {
+            return request.getRemoteAddr();
+        }
+        return xfHeader.split(",")[0];
+    }
+
+    // Get user agent (device/browser info)
+    private String getUserAgent() {
+        String userAgent = request.getHeader("User-Agent");
+        return userAgent != null ? userAgent : "Unknown";
     }
 
     private UserResponseDTO createUserResponseDTO(String id, String token, String message, String success) {
@@ -257,6 +261,14 @@ public class UserService {
 
     public UserDetailDTO getUserDetailsById(String userId) {
         log.debug("Fetching user details for id: {}", userId);
+
+        // Log view activity
+        User currentUser = getAuthenticatedUser().orElse(null);
+        if (currentUser != null) {
+            logActivity(currentUser.getId(), currentUser.getUsername(), ActivityType.VIEW,
+                    "Viewed user details for user ID: " + userId);
+        }
+
         return userRepository.findById(Long.parseLong(userId))
                 .map(user -> new UserDetailDTO.Builder()
                         .name(user.getUsername())
@@ -271,6 +283,14 @@ public class UserService {
 
     public List<UserDetailDTO> getAllUserDetails() {
         log.debug("Fetching all user details");
+
+        // Log view activity
+        User currentUser = getAuthenticatedUser().orElse(null);
+        if (currentUser != null) {
+            logActivity(currentUser.getId(), currentUser.getUsername(), ActivityType.VIEW,
+                    "Viewed all user details");
+        }
+
         return userRepository.findAll()
                 .stream()
                 .map(user -> new UserDetailDTO.Builder()
@@ -288,21 +308,12 @@ public class UserService {
         return userRepository.count();
     }
 
-    /**
-     * Generates a cryptographically secure random salt
-     * @return Base64 encoded salt string
-     */
     private String generateSalt() {
         byte[] salt = new byte[32];
         secureRandom.nextBytes(salt);
         return Base64.getEncoder().encodeToString(salt);
     }
 
-    /**
-     * Assigns all roles to a user
-     * @param user The user to assign roles to
-     * @param roles The roles to assign
-     */
     private void assignRolesToUser(User user, Collection<Role> roles) {
         roles.forEach(role -> {
             UserRoles userRole = new UserRoles.Builder()
