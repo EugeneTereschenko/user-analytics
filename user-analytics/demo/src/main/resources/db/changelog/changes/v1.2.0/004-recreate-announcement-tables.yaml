@@ -1,0 +1,385 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-12-10-02-create-announcements
+      author: EugeneTereshchenko
+      changes:
+        - createTable:
+            tableName: announcements
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: body
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author
+                  type: VARCHAR(100)
+              - column:
+                  name: priority
+                  type: VARCHAR(20)
+                  defaultValue: MEDIUM
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: VARCHAR(20)
+                  defaultValue: GENERAL
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+                  defaultValue: true
+              - column:
+                  name: expiry_date
+                  type: TIMESTAMP
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+        - sql:
+            splitStatements: false
+            sql: |
+              ALTER TABLE announcements
+              ADD CONSTRAINT chk_announcements_priority
+              CHECK (priority IN ('LOW', 'MEDIUM', 'HIGH', 'URGENT'));
+
+        - sql:
+            splitStatements: false
+            sql: |
+              ALTER TABLE announcements
+              ADD CONSTRAINT chk_announcements_category
+              CHECK (category IN ('GENERAL', 'MAINTENANCE', 'FEATURE', 'SECURITY', 'EVENT'));
+
+  - changeSet:
+      id: 2025-12-10-03-create-user-announcement-reads
+      author: EugeneTereshchenko
+      changes:
+        - createTable:
+            tableName: user_announcement_reads
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: announcement_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: read_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: user_announcement_reads
+            baseColumnNames: user_id
+            referencedTableName: user
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_user_announcement_reads_user_id
+        - addForeignKeyConstraint:
+            baseTableName: user_announcement_reads
+            baseColumnNames: announcement_id
+            referencedTableName: announcements
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_user_announcement_reads_announcement_id
+        - addUniqueConstraint:
+            tableName: user_announcement_reads
+            columnNames: user_id,announcement_id
+            constraintName: uq_user_announcement_reads_user_announcement
+
+  - changeSet:
+      id: 2025-12-10-04-create-announcement-indexes
+      author: EugeneTereshchenko
+      changes:
+        - createIndex:
+            indexName: idx_announcements_priority
+            tableName: announcements
+            columns:
+              - column:
+                  name: priority
+        - createIndex:
+            indexName: idx_announcements_category
+            tableName: announcements
+            columns:
+              - column:
+                  name: category
+        - createIndex:
+            indexName: idx_announcements_date
+            tableName: announcements
+            columns:
+              - column:
+                  name: date
+            descending: true
+        - createIndex:
+            indexName: idx_announcements_is_active
+            tableName: announcements
+            columns:
+              - column:
+                  name: is_active
+        - createIndex:
+            indexName: idx_announcements_expiry_date
+            tableName: announcements
+            columns:
+              - column:
+                  name: expiry_date
+        - createIndex:
+            indexName: idx_user_announcement_reads_user_id
+            tableName: user_announcement_reads
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            indexName: idx_user_announcement_reads_announcement_id
+            tableName: user_announcement_reads
+            columns:
+              - column:
+                  name: announcement_id
+
+  - changeSet:
+      id: 2025-12-10-05-insert-sample-announcements
+      author: EugeneTereshchenko
+      changes:
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: Welcome to the Platform!
+              - column:
+                  name: body
+                  value: We are excited to have you here. Explore all the features and let us know if you need any help.
+              - column:
+                  name: author
+                  value: Admin
+              - column:
+                  name: priority
+                  value: MEDIUM
+              - column:
+                  name: category
+                  value: GENERAL
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: Scheduled Maintenance
+              - column:
+                  name: body
+                  value: The system will undergo maintenance on Saturday from 2 AM to 6 AM. Please save your work.
+              - column:
+                  name: author
+                  value: IT Team
+              - column:
+                  name: priority
+                  value: HIGH
+              - column:
+                  name: category
+                  value: MAINTENANCE
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: New Feature Dark Mode
+              - column:
+                  name: body
+                  value: We have added dark mode support! You can toggle it in your settings.
+              - column:
+                  name: author
+                  value: Product Team
+              - column:
+                  name: priority
+                  value: MEDIUM
+              - column:
+                  name: category
+                  value: FEATURE
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: Security Update Required
+              - column:
+                  name: body
+                  value: Please update your password if you have not done so in the last 90 days.
+              - column:
+                  name: author
+                  value: Security Team
+              - column:
+                  name: priority
+                  value: URGENT
+              - column:
+                  name: category
+                  value: SECURITY
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: Upcoming Webinar
+              - column:
+                  name: body
+                  value: Join us for a webinar on advanced features this Friday at 3 PM.
+              - column:
+                  name: author
+                  value: Events Team
+              - column:
+                  name: priority
+                  value: LOW
+              - column:
+                  name: category
+                  value: EVENT
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: New Feature Release
+              - column:
+                  name: body
+                  value: We are excited to announce the release of our new feature that enhances user experience.
+              - column:
+                  name: date
+                  value: 2023-10-01
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: Maintenance Update
+              - column:
+                  name: body
+                  value: Scheduled maintenance will occur on 2023-10-05 from 2 AM to 4 AM. Please plan accordingly.
+              - column:
+                  name: date
+                  value: 2023-10-02
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: Security Patch
+              - column:
+                  name: body
+                  value: A critical security patch has been applied to all systems. Please ensure your applications are updated to the latest version.
+              - column:
+                  name: date
+                  value: 2023-10-03
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: New User Guide
+              - column:
+                  name: body
+                  value: Check out our new user guide that provides tips and tricks for getting the most out of our platform.
+              - column:
+                  name: date
+                  value: 2023-10-04
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: Community Event
+              - column:
+                  name: body
+                  value: Join us for our upcoming community event on 2023-10-10. We look forward to seeing you there!
+              - column:
+                  name: date
+                  value: 2023-10-05
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: Feature Feedback
+              - column:
+                  name: body
+                  value: We value your feedback! Please let us know your thoughts on the new features released this month.
+              - column:
+                  name: date
+                  value: 2023-10-06
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: System Upgrade
+              - column:
+                  name: body
+                  value: A system upgrade is scheduled for 2023-10-15. Expect improved performance and new capabilities.
+              - column:
+                  name: date
+                  value: 2023-10-07
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: Holiday Schedule
+              - column:
+                  name: body
+                  value: Please note our holiday schedule for the upcoming season. Our offices will be closed on 2023-10-20 and 2023-10-21.
+              - column:
+                  name: date
+                  value: 2023-10-08
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: New API Documentation
+              - column:
+                  name: body
+                  value: We have updated our API documentation to include the latest endpoints and usage examples.
+              - column:
+                  name: date
+                  value: 2023-10-09
+        - insert:
+            tableName: announcements
+            columns:
+              - column:
+                  name: title
+                  value: User Survey
+              - column:
+                  name: body
+                  value: Help us improve by participating in our user survey. Your input is invaluable to us.
+              - column:
+                  name: date
+                  value: 2023-10-10
+

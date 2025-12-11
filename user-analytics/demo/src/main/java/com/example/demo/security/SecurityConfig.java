@@ -45,6 +45,7 @@ public class SecurityConfig {
                                 "/api/login/**",
                                 "/api/auth/**",
                                 "/api/assistant/**",
+                                "/api/announcements/**",
                                 "/api/activities/**",
                                 "/h2-console/**",
                                 "/error",
