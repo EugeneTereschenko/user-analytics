@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
 @Component
 public class DatabaseInitializer {
 
-    private final AnnouncementService announcementService;
     private final NotificationService notificationService;
     private final ProfileNotificationRepository profileNotificationRepository;
     private final ProfileCalendarRepository profileCalendarRepository;
@@ -46,36 +45,6 @@ public class DatabaseInitializer {
     private final CalendarService calendarService;
     private final StatusService statusService;
     private final Environment environment; // Add this
-
-    public static List<AnnouncementDTO> readAnnouncementsFromFile(String filePath) throws IOException {
-        List<AnnouncementDTO> announcements = new ArrayList<>();
-        List<String> lines = Files.readAllLines(Paths.get(filePath));
-
-        Pattern pattern = Pattern.compile(
-                "AnnouncementDTO\\(id\\s*=\\s*(\\d+),\\s*title\\s*=\\s*\"(.*?)\",\\s*content\\s*=\\s*\"(.*?)\",\\s*date\\s*=\\s*\"(.*?)\"\\)"
-        );
-
-        for (String line : lines) {
-            Matcher matcher = pattern.matcher(line);
-            if (matcher.matches()) {
-                long id = Long.parseLong(matcher.group(1));
-                String title = matcher.group(2);
-                String content = matcher.group(3);
-                String date = matcher.group(4);
-
-                announcements.add(AnnouncementDTO.builder()
-                        .id(id)
-                        .title(title)
-                        .body(content)
-                        .date(date)
-                        .build());
-            } else {
-                log.debug("No match for line: {}", line);
-            }
-        }
-
-        return announcements;
-    }
 
     public static List<UserRequestDTO> readUsersFromFile(String filePath, PasswordEncoder passwordEncoder) throws IOException {
         List<UserRequestDTO> users = new ArrayList<>();
@@ -209,10 +178,6 @@ public class DatabaseInitializer {
                         "app.init.users-file",
                         "/home/yevhen/IdeaProjects/demo/user-analytics/demo/src/main/resources/usersList.txt"
                 );
-                String announcementsFile = environment.getProperty(
-                        "app.init.announcements-file",
-                        "/home/yevhen/IdeaProjects/demo/src/user-analytics/demo/main/resources/announcementsList.txt"
-                );
                 String notificationsFile = environment.getProperty(
                         "app.init.notifications-file",
                         "/home/yevhen/IdeaProjects/demo/user-analytics/demo/src/main/resources/notificationsList.txt"
@@ -227,7 +192,6 @@ public class DatabaseInitializer {
                 );
 
                 processUsers(usersFile, passwordEncoder);
-                processAnnouncements(announcementsFile);
 
                 if (userRepository.count() > 0) {
                     Long defaultProfileId = 2L; // Or get dynamically
@@ -302,33 +266,6 @@ public class DatabaseInitializer {
         }
 
         log.info("Users processed: {} successful, {} failed", successCount, failCount);
-    }
-
-    private void processAnnouncements(String filePath) throws IOException {
-        if (!Files.exists(Paths.get(filePath))) {
-            log.warn("Announcements file not found: {} - skipping", filePath);
-            return;
-        }
-
-        log.info("Processing announcements from file: {}", filePath);
-        List<AnnouncementDTO> announcements = readAnnouncementsFromFile(filePath);
-
-        if (announcements.isEmpty()) {
-            log.info("No announcements found in file");
-            return;
-        }
-
-        int count = 0;
-        for (AnnouncementDTO announcement : announcements) {
-            try {
-                announcementService.saveAnnouncement(announcement);
-                count++;
-            } catch (Exception e) {
-                log.error("Error saving announcement: {} - {}", announcement.getTitle(), e.getMessage());
-            }
-        }
-
-        log.info("Announcements processed: {} saved successfully", count);
     }
 
     private void processNotifications(String filePath, Long profileId) throws IOException {
