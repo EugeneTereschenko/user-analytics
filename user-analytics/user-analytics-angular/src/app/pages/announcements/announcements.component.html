@@ -1,38 +1,304 @@
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
 <div class="container mt-4">
+  <!-- Header -->
   <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white">
-      <h2 class="mb-0"><i class="bi bi-megaphone me-2"></i>Latest Announcements</h2>
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">
+          <i class="bi bi-megaphone me-2"></i>Announcements
+          <span class="badge bg-danger ms-2" *ngIf="unreadCount > 0">{{ unreadCount }} New</span>
+        </h2>
+        <div>
+          <button class="btn btn-light btn-sm me-2" (click)="markAllAsRead()" *ngIf="unreadCount > 0">
+            <i class="bi bi-check-all me-1"></i>Mark All Read
+          </button>
+          <button class="btn btn-light btn-sm" (click)="openCreateModal()">
+            <i class="bi bi-plus-lg me-1"></i>New Announcement
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Search</label>
+          <input type="text" class="form-control" placeholder="Search announcements..." 
+                 [(ngModel)]="searchQuery" (input)="applyFilters()">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Priority</label>
+          <select class="form-select" [(ngModel)]="selectedPriority" (change)="applyFilters()">
+            <option value="all">All Priorities</option>
+            <option value="urgent">Urgent</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Category</label>
+          <select class="form-select" [(ngModel)]="selectedCategory" (change)="applyFilters()">
+            <option value="all">All Categories</option>
+            <option value="general">General</option>
+            <option value="maintenance">Maintenance</option>
+            <option value="feature">Feature</option>
+            <option value="security">Security</option>
+            <option value="event">Event</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label d-block">&nbsp;</label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="unreadOnly" 
+                   [(ngModel)]="showOnlyUnread" (change)="applyFilters()">
+            <label class="form-check-label" for="unreadOnly">
+              Show Unread Only
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2 text-muted">Loading announcements...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="alert alert-danger" role="alert">
+    <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+  </div>
+
+  <!-- Announcements List -->
+  <div class="card shadow mb-4" *ngIf="!isLoading && !errorMessage">
     <div class="card-body p-0">
       <div class="list-group list-group-flush">
-        <div class="list-group-item" *ngFor="let announcement of announcements; let i = index">
+        <div class="list-group-item list-group-item-action" 
+             *ngFor="let announcement of paginatedAnnouncements; let i = index"
+             [class.bg-light]="announcement.isRead"
+             (click)="viewAnnouncement(announcement)"
+             style="cursor: pointer;">
           <div class="d-flex w-100 justify-content-between align-items-start mb-2">
             <h5 class="mb-1">
-              <span class="badge bg-primary rounded-pill me-2">{{ i + 1 }}</span>
+              <i [ngClass]="getCategoryIcon(announcement.category)" class="me-2 text-primary"></i>
               {{ announcement.title }}
+              <span class="badge bg-primary rounded-pill ms-2" *ngIf="!announcement.isRead">New</span>
             </h5>
+            <div>
+              <span [ngClass]="getPriorityClass(announcement.priority)" class="me-2">
+                {{ announcement.priority || 'medium' }}
+              </span>
+              <small class="text-muted">
+                {{ getRelativeTime(announcement.date) }}
+              </small>
+            </div>
+          </div>
+          <p class="mb-2 text-muted">{{ announcement.body | slice:0:150 }}{{ announcement.body.length > 150 ? '...' : '' }}</p>
+          <div class="d-flex justify-content-between align-items-center">
             <small class="text-muted">
-              <i class="bi bi-calendar-event me-1"></i>
-              {{ announcement.date | date:'short' }}
+              <i class="bi bi-person me-1"></i>{{ announcement.author || 'System' }}
+              <span class="mx-2">•</span>
+              <i class="bi bi-calendar-event me-1"></i>{{ formatDate(announcement.date) }}
+              <span class="mx-2" *ngIf="announcement.category">•</span>
+              <span class="badge bg-secondary" *ngIf="announcement.category">{{ announcement.category }}</span>
             </small>
           </div>
-          <p class="mb-2">{{ announcement.body }}</p>
-          <small class="text-muted">
-            <i class="bi bi-clock me-1"></i>Posted {{ announcement.date | date:'medium' }}
-          </small>
         </div>
       </div>
 
-      <div *ngIf="announcements.length === 0" class="alert alert-info text-center m-3">
-        <i class="bi bi-info-circle me-2"></i>No announcements at this time.
+      <!-- Empty State -->
+      <div *ngIf="filteredAnnouncements.length === 0" class="alert alert-info text-center m-3">
+        <i class="bi bi-info-circle me-2"></i>No announcements found matching your filters.
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="card-footer bg-light" *ngIf="filteredAnnouncements.length > 0">
+      <div class="d-flex justify-content-between align-items-center">
+        <small class="text-muted">
+          Showing {{ (currentPage - 1) * itemsPerPage + 1 }} - 
+          {{ Math.min(currentPage * itemsPerPage, filteredAnnouncements.length) }} 
+          of {{ filteredAnnouncements.length }}
+        </small>
+        <nav>
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <button class="page-link" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+            </li>
+            <li class="page-item active">
+              <span class="page-link">{{ currentPage }} / {{ totalPages }}</span>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <button class="page-link" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Summary -->
+  <div class="row g-4" *ngIf="!isLoading && announcements.length > 0">
+    <div class="col-md-3">
+      <div class="card shadow-sm text-center">
+        <div class="card-body">
+          <i class="bi bi-megaphone-fill display-4 text-primary"></i>
+          <h4 class="mt-2">{{ announcements.length }}</h4>
+          <p class="text-muted mb-0">Total</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm text-center">
+        <div class="card-body">
+          <i class="bi bi-envelope-open display-4 text-success"></i>
+          <h4 class="mt-2">{{ announcements.length - unreadCount }}</h4>
+          <p class="text-muted mb-0">Read</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm text-center">
+        <div class="card-body">
+          <i class="bi bi-envelope display-4 text-warning"></i>
+          <h4 class="mt-2">{{ unreadCount }}</h4>
+          <p class="text-muted mb-0">Unread</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm text-center">
+        <div class="card-body">
+          <i class="bi bi-exclamation-triangle display-4 text-danger"></i>
+          <h4 class="mt-2">{{ getUrgentCount() }}</h4>
+          <p class="text-muted mb-0">Urgent</p>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Create Modal -->
+<div class="modal" [class.show]="showCreateModal" [style.display]="showCreateModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-plus-circle me-2"></i>Create New Announcement
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeCreateModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Title <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="newAnnouncement.title" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Body <span class="text-danger">*</span></label>
+            <textarea class="form-control" rows="5" [(ngModel)]="newAnnouncement.body" name="body" required></textarea>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Priority</label>
+              <select class="form-select" [(ngModel)]="newAnnouncement.priority" name="priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Category</label>
+              <select class="form-select" [(ngModel)]="newAnnouncement.category" name="category">
+                <option value="general">General</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="feature">Feature</option>
+                <option value="security">Security</option>
+                <option value="event">Event</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Author</label>
+              <input type="text" class="form-control" [(ngModel)]="newAnnouncement.author" name="author">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeCreateModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="createAnnouncement()">
+          <i class="bi bi-check-lg me-1"></i>Create
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showCreateModal" *ngIf="showCreateModal"></div>
+
+<!-- Detail Modal -->
+<div class="modal" [class.show]="showDetailModal" [style.display]="showDetailModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" *ngIf="selectedAnnouncement">
+      <div class="modal-header" [ngClass]="{
+        'bg-danger text-white': selectedAnnouncement.priority === 'urgent',
+        'bg-warning text-dark': selectedAnnouncement.priority === 'high',
+        'bg-info text-white': selectedAnnouncement.priority === 'medium',
+        'bg-secondary text-white': selectedAnnouncement.priority === 'low'
+      }">
+        <h5 class="modal-title">
+          <i [ngClass]="getCategoryIcon(selectedAnnouncement.category)" class="me-2"></i>
+          {{ selectedAnnouncement.title }}
+        </h5>
+        <button type="button" class="btn-close" 
+                [class.btn-close-white]="selectedAnnouncement.priority !== 'high'"
+                (click)="closeDetailModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <span [ngClass]="getPriorityClass(selectedAnnouncement.priority)" class="me-2">
+            {{ selectedAnnouncement.priority }}
+          </span>
+          <span class="badge bg-secondary">{{ selectedAnnouncement.category }}</span>
+        </div>
+        <p class="lead">{{ selectedAnnouncement.body }}</p>
+        <hr>
+        <div class="row">
+          <div class="col-md-6">
+            <small class="text-muted">
+              <i class="bi bi-person me-1"></i><strong>Author:</strong> {{ selectedAnnouncement.author || 'System' }}
+            </small>
+          </div>
+          <div class="col-md-6">
+            <small class="text-muted">
+              <i class="bi bi-calendar-event me-1"></i><strong>Posted:</strong> {{ formatDate(selectedAnnouncement.date) }}
+            </small>
+          </div>
+        </div>
+        <div class="row mt-2" *ngIf="selectedAnnouncement.expiryDate">
+          <div class="col-12">
+            <small class="text-muted">
+              <i class="bi bi-clock me-1"></i><strong>Expires:</strong> {{ formatDate(selectedAnnouncement.expiryDate) }}
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" 
+                (click)="deleteAnnouncement(selectedAnnouncement.id!)"
+                *ngIf="selectedAnnouncement.id">
+          <i class="bi bi-trash me-1"></i>Delete
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="closeDetailModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showDetailModal" *ngIf="showDetailModal"></div>
