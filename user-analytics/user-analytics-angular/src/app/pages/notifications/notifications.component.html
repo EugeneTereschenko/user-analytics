@@ -1,27 +1,148 @@
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
 <div class="container mt-4">
-  <div class="card shadow">
+  <!-- Header -->
+  <div class="card shadow mb-4">
     <div class="card-header bg-primary text-white">
-      <h2 class="mb-0"><i class="bi bi-bell-fill me-2"></i>Notifications Center</h2>
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">
+          <i class="bi bi-bell-fill me-2"></i>Notifications Center
+          <span class="badge bg-danger ms-2" *ngIf="unreadCount > 0">{{ unreadCount }} Unread</span>
+        </h2>
+        <div>
+          <button class="btn btn-light btn-sm me-2" (click)="markAllAsRead()" *ngIf="unreadCount > 0">
+            <i class="bi bi-check-all me-1"></i>Mark All Read
+          </button>
+          <button class="btn btn-light btn-sm me-2" (click)="deleteAllRead()">
+            <i class="bi bi-trash me-1"></i>Delete Read
+          </button>
+          <button class="btn btn-light btn-sm me-2" (click)="exportNotifications()">
+            <i class="bi bi-download me-1"></i>Export
+          </button>
+          <button class="btn btn-light btn-sm" (click)="openCreateModal()">
+            <i class="bi bi-plus-lg me-1"></i>New
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters & Sorting -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Search</label>
+          <input type="text" class="form-control" placeholder="Search notifications..." 
+                 [(ngModel)]="searchQuery" (input)="applyFilters()">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Type</label>
+          <select class="form-select" [(ngModel)]="selectedType" (change)="applyFilters()">
+            <option value="all">All Types</option>
+            <option value="INFO">Info</option>
+            <option value="SUCCESS">Success</option>
+            <option value="WARNING">Warning</option>
+            <option value="ERROR">Error</option>
+            <option value="MESSAGE">Message</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Priority</label>
+          <select class="form-select" [(ngModel)]="selectedPriority" (change)="applyFilters()">
+            <option value="all">All Priorities</option>
+            <option value="URGENT">Urgent</option>
+            <option value="HIGH">High</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="LOW">Low</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Sort By</label>
+          <select class="form-select" [(ngModel)]="sortBy" (change)="applyFilters()">
+            <option value="date">Date</option>
+            <option value="priority">Priority</option>
+            <option value="type">Type</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label d-block">&nbsp;</label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="unreadOnly" 
+                   [(ngModel)]="showOnlyUnread" (change)="applyFilters()">
+            <label class="form-check-label" for="unreadOnly">
+              Unread Only
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12">
+          <button class="btn btn-outline-secondary btn-sm" (click)="clearFilters()">
+            <i class="bi bi-x-circle me-1"></i>Clear Filters
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2 text-muted">Loading notifications...</p>
+  </div>
+
+  <!-- Notifications List -->
+  <div class="card shadow" *ngIf="!isLoading">
+    <div class="card-header bg-light">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          <i class="bi bi-list-ul me-2 text-primary"></i>Notifications
+        </h5>
+        <span class="badge bg-primary">{{ filteredNotifications.length }} Total</span>
+      </div>
     </div>
     <div class="card-body p-0">
       <div class="accordion" id="notificationsAccordion">
-        <div class="accordion-item border-0 border-bottom" *ngFor="let notification of notifications; let i = index">
+        <div class="accordion-item border-0 border-bottom" 
+             *ngFor="let notification of filteredNotifications; let i = index"
+             [class.bg-light]="notification.isRead">
           <h2 class="accordion-header" [id]="'heading' + i">
             <button class="accordion-button" [class.collapsed]="expandedIndex !== i" type="button" 
-              (click)="toggleAccordion(notification, i)">
+              (click)="toggleAccordion(notification, i)"
+              [class.fw-bold]="!notification.isRead">
               <div class="d-flex w-100 align-items-center">
-                <i class="bi bi-envelope me-3 text-primary"></i>
-                <strong class="flex-grow-1">{{ notification.title }}</strong>
-                <small class="text-muted me-3">
-                  <i class="bi bi-clock me-1"></i>{{ notification.timestamp | date:'short' }}
-                </small>
+                <i [ngClass]="getTypeIcon(notification.type)" class="me-3 fs-5"></i>
+                <div class="flex-grow-1">
+                  <div class="d-flex align-items-center">
+                    <strong class="me-2">{{ notification.title }}</strong>
+                    <span [ngClass]="getPriorityBadge(notification.priority)" class="me-2">
+                      {{ notification.priority || 'medium' }}
+                    </span>
+                    <span class="badge bg-secondary" *ngIf="notification.category">
+                      {{ notification.category }}
+                    </span>
+                  </div>
+                  <small class="text-muted d-block mt-1">
+                    <i class="bi bi-clock me-1"></i>{{ getRelativeTime(notification.timestamp) }}
+                    <span class="mx-2" *ngIf="notification.sender">•</span>
+                    <i class="bi bi-person me-1" *ngIf="notification.sender"></i>
+                    <span *ngIf="notification.sender">{{ notification.sender }}</span>
+                  </small>
+                </div>
+                <div class="ms-3 d-flex align-items-center">
+                  <button class="btn btn-sm btn-outline-success me-2" 
+                          (click)="markAsRead(notification, $event)"
+                          *ngIf="!notification.isRead"
+                          title="Mark as read">
+                    <i class="bi bi-check"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" 
+                          (click)="deleteNotification(notification, $event)"
+                          title="Delete">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
               </div>
             </button>
           </h2>
@@ -29,16 +150,136 @@
             class="accordion-collapse collapse" 
             [class.show]="expandedIndex === i"
             [attr.aria-labelledby]="'heading' + i">
-            <div class="accordion-body bg-light">
-              <p class="mb-0">{{ notification.message }}</p>
+            <div class="accordion-body">
+              <p class="mb-2">{{ notification.message }}</p>
+              <hr>
+              <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">
+                  <i class="bi bi-calendar me-1"></i>{{ formatDate(notification.timestamp) }}
+                  <span class="mx-2" *ngIf="notification.readAt">•</span>
+                  <span *ngIf="notification.readAt">Read: {{ formatDate(notification.readAt) }}</span>
+                </small>
+                <button class="btn btn-sm btn-primary" *ngIf="notification.actionUrl">
+                  <i class="bi bi-box-arrow-up-right me-1"></i>View Details
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div *ngIf="notifications.length === 0" class="alert alert-info text-center m-3">
-        <i class="bi bi-info-circle me-2"></i>No notifications at this time.
+      <!-- Empty State -->
+      <div *ngIf="filteredNotifications.length === 0" class="alert alert-info text-center m-3">
+        <i class="bi bi-info-circle me-2"></i>No notifications found matching your filters.
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="row g-4 mt-4" *ngIf="notifications.length > 0">
+    <div class="col-md-3">
+      <div class="card shadow-sm text-center">
+        <div class="card-body">
+          <i class="bi bi-bell-fill display-4 text-primary"></i>
+          <h4 class="mt-2">{{ notifications.length }}</h4>
+          <p class="text-muted mb-0">Total</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm text-center">
+        <div class="card-body">
+          <i class="bi bi-envelope-open display-4 text-success"></i>
+          <h4 class="mt-2">{{ notifications.length - unreadCount }}</h4>
+          <p class="text-muted mb-0">Read</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm text-center">
+        <div class="card-body">
+          <i class="bi bi-envelope display-4 text-warning"></i>
+          <h4 class="mt-2">{{ unreadCount }}</h4>
+          <p class="text-muted mb-0">Unread</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm text-center">
+        <div class="card-body">
+          <i class="bi bi-exclamation-triangle display-4 text-danger"></i>
+          <h4 class="mt-2">{{ getUrgentCount() }}</h4>
+          <p class="text-muted mb-0">Urgent</p>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Create Modal -->
+<div class="modal" [class.show]="showCreateModal" [style.display]="showCreateModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-plus-circle me-2"></i>Create New Notification
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeCreateModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Title <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="newNotification.title" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Message <span class="text-danger">*</span></label>
+            <textarea class="form-control" rows="4" [(ngModel)]="newNotification.message" name="message" required></textarea>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Type</label>
+              <select class="form-select" [(ngModel)]="newNotification.type" name="type">
+                <option value="INFO">Info</option>
+                <option value="SUCCESS">Success</option>
+                <option value="WARNING">Warning</option>
+                <option value="ERROR">Error</option>
+                <option value="MESSAGE">Message</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Priority</label>
+              <select class="form-select" [(ngModel)]="newNotification.priority" name="priority">
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+                <option value="URGENT">Urgent</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Category</label>
+              <input type="text" class="form-control" [(ngModel)]="newNotification.category" name="category">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Sender</label>
+              <input type="text" class="form-control" [(ngModel)]="newNotification.sender" name="sender">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Action URL</label>
+              <input type="url" class="form-control" [(ngModel)]="newNotification.actionUrl" name="actionUrl">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeCreateModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="createNotification()">
+          <i class="bi bi-check-lg me-1"></i>Create
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showCreateModal" *ngIf="showCreateModal"></div>
