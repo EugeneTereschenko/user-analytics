@@ -1,24 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NotificationService } from '../../services/notification.service';
+import { NotificationService, NotificationDTO } from '../../services/notification.service';
 import { Subscription } from 'rxjs';
 
-
-export interface NotificationDTO {
-  id?: number;
-  title: string;
-  message: string;
-  timestamp: string;
-  type?: 'info' | 'success' | 'warning' | 'error' | 'message';
-  priority?: 'low' | 'medium' | 'high' | 'urgent';
-  isRead?: boolean;
-  readAt?: string;
-  category?: string;
-  actionUrl?: string;
-  sender?: string;
-  metadata?: any;
-}
 
 @Component({
   selector: 'app-notifications',
@@ -52,8 +37,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     title: '',
     message: '',
     timestamp: new Date().toISOString(),
-    type: 'info',
-    priority: 'medium'
+    type: 'INFO',
+    priority: 'MEDIUM'
   };
   
   private subscriptions = new Subscription();
@@ -135,9 +120,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
           comparison = new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
           break;
         case 'priority':
-          const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 };
-          comparison = (priorityOrder[a.priority || 'medium'] || 0) - 
-                      (priorityOrder[b.priority || 'medium'] || 0);
+          const priorityOrder = { URGENT: 4, HIGH: 3, MEDIUM: 2, LOW: 1 };
+          comparison = (priorityOrder[a.priority || 'MEDIUM'] || 0) - 
+                      (priorityOrder[b.priority || 'MEDIUM'] || 0);
           break;
         case 'type':
           comparison = (a.type || '').localeCompare(b.type || '');
@@ -230,8 +215,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       title: '',
       message: '',
       timestamp: new Date().toISOString(),
-      type: 'info',
-      priority: 'medium'
+      type: 'INFO',
+      priority: 'MEDIUM'
     };
   }
 
@@ -245,21 +230,21 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   getTypeIcon(type?: string): string {
     switch (type) {
-      case 'success': return 'bi-check-circle-fill text-success';
-      case 'warning': return 'bi-exclamation-triangle-fill text-warning';
-      case 'error': return 'bi-x-circle-fill text-danger';
-      case 'info': return 'bi-info-circle-fill text-info';
-      case 'message': return 'bi-envelope-fill text-primary';
+      case 'SUCCESS': return 'bi-check-circle-fill text-success';
+      case 'WARNING': return 'bi-exclamation-triangle-fill text-warning';
+      case 'ERROR': return 'bi-x-circle-fill text-danger';
+      case 'INFO': return 'bi-info-circle-fill text-info';
+      case 'MESSAGE': return 'bi-envelope-fill text-primary';
       default: return 'bi-bell-fill text-secondary';
     }
   }
 
   getPriorityBadge(priority?: string): string {
     switch (priority) {
-      case 'urgent': return 'badge bg-danger';
-      case 'high': return 'badge bg-warning text-dark';
-      case 'medium': return 'badge bg-info';
-      case 'low': return 'badge bg-secondary';
+      case 'URGENT': return 'badge bg-danger';
+      case 'HIGH': return 'badge bg-warning text-dark';
+      case 'MEDIUM': return 'badge bg-info';
+      case 'LOW': return 'badge bg-secondary';
       default: return 'badge bg-secondary';
     }
   }
@@ -311,6 +296,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   getUrgentCount(): number {
-    return this.notifications.filter(n => n.priority === 'urgent').length;
+    return this.notifications.filter(n => n.priority === 'URGENT').length;
   }
 }

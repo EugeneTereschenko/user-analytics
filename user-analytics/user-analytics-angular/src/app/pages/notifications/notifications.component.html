@@ -38,21 +38,21 @@
           <label class="form-label">Type</label>
           <select class="form-select" [(ngModel)]="selectedType" (change)="applyFilters()">
             <option value="all">All Types</option>
-            <option value="info">Info</option>
-            <option value="success">Success</option>
-            <option value="warning">Warning</option>
-            <option value="error">Error</option>
-            <option value="message">Message</option>
+            <option value="INFO">Info</option>
+            <option value="SUCCESS">Success</option>
+            <option value="WARNING">Warning</option>
+            <option value="ERROR">Error</option>
+            <option value="MESSAGE">Message</option>
           </select>
         </div>
         <div class="col-md-2">
           <label class="form-label">Priority</label>
           <select class="form-select" [(ngModel)]="selectedPriority" (change)="applyFilters()">
             <option value="all">All Priorities</option>
-            <option value="urgent">Urgent</option>
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
+            <option value="URGENT">Urgent</option>
+            <option value="HIGH">High</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="LOW">Low</option>
           </select>
         </div>
         <div class="col-md-2">
@@ -240,20 +240,20 @@
             <div class="col-md-4 mb-3">
               <label class="form-label">Type</label>
               <select class="form-select" [(ngModel)]="newNotification.type" name="type">
-                <option value="info">Info</option>
-                <option value="success">Success</option>
-                <option value="warning">Warning</option>
-                <option value="error">Error</option>
-                <option value="message">Message</option>
+                <option value="INFO">Info</option>
+                <option value="SUCCESS">Success</option>
+                <option value="WARNING">Warning</option>
+                <option value="ERROR">Error</option>
+                <option value="MESSAGE">Message</option>
               </select>
             </div>
             <div class="col-md-4 mb-3">
               <label class="form-label">Priority</label>
               <select class="form-select" [(ngModel)]="newNotification.priority" name="priority">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-                <option value="urgent">Urgent</option>
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+                <option value="URGENT">Urgent</option>
               </select>
             </div>
             <div class="col-md-4 mb-3">

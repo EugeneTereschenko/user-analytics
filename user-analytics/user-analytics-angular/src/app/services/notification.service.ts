@@ -8,8 +8,8 @@ export interface NotificationDTO {
   title: string;
   message: string;
   timestamp: string;
-  type?: 'info' | 'success' | 'warning' | 'error' | 'message';
-  priority?: 'low' | 'medium' | 'high' | 'urgent';
+  type?: 'INFO' | 'SUCCESS' | 'WARNING' | 'ERROR' | 'MESSAGE';
+  priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
   isRead?: boolean;
   readAt?: string;
   category?: string;
