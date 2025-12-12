@@ -8,7 +8,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EntityScan({"com.example.activity.model", "com.example.demo.model", "com.example.announcement.model"})
+@EntityScan({"com.example.activity.model",
+        "com.example.demo.model",
+        "com.example.announcement.model",
+        "com.example.notification.model"})
 @ComponentScan(basePackages = {
         "com.example.announcement.controller",
         "com.example.announcement.service",
@@ -20,6 +23,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
         "com.example.activity.service",
         "com.example.activity.model",
         "com.example.activity",
+        "com.example.notification.controller",
+        "com.example.notification.service",
+        "com.example.notification",
         "com.example.demo.controller",
         "com.example.demo.service",
         "com.example.demo.repository",

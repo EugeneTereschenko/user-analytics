@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
 @Component
 public class DatabaseInitializer {
 
-    private final NotificationService notificationService;
     private final ProfileNotificationRepository profileNotificationRepository;
     private final ProfileCalendarRepository profileCalendarRepository;
     private final AuditService auditService;
@@ -76,28 +75,6 @@ public class DatabaseInitializer {
         }
 
         return users;
-    }
-
-    public static List<NotificationsDTO> readNotificationsFromFile(String filePath) throws IOException {
-        List<NotificationsDTO> notifications = new ArrayList<>();
-        List<String> lines = Files.readAllLines(Paths.get(filePath));
-
-        Pattern pattern = Pattern.compile(
-                "NotificationsDTO\\(title = \"(.*?)\", timestamp = \"(.*?)\", message = \"(.*?)\"\\)"
-        );
-
-        for (String line : lines) {
-            Matcher matcher = pattern.matcher(line);
-            if (matcher.matches()) {
-                String title = matcher.group(1);
-                String timestamp = matcher.group(2);
-                String message = matcher.group(3);
-
-                notifications.add(new NotificationsDTO(title, timestamp, message));
-            }
-        }
-
-        return notifications;
     }
 
     public static List<CalendarDTO> readCalendarsFromFile(String filePath) throws IOException {
@@ -178,10 +155,6 @@ public class DatabaseInitializer {
                         "app.init.users-file",
                         "/home/yevhen/IdeaProjects/demo/user-analytics/demo/src/main/resources/usersList.txt"
                 );
-                String notificationsFile = environment.getProperty(
-                        "app.init.notifications-file",
-                        "/home/yevhen/IdeaProjects/demo/user-analytics/demo/src/main/resources/notificationsList.txt"
-                );
                 String calendarFile = environment.getProperty(
                         "app.init.calendar-file",
                         "/home/yevhen/IdeaProjects/demo/user-analytics/demo/src/main/resources/calendarList.txt"
@@ -195,7 +168,6 @@ public class DatabaseInitializer {
 
                 if (userRepository.count() > 0) {
                     Long defaultProfileId = 2L; // Or get dynamically
-                    processNotifications(notificationsFile, defaultProfileId);
                     processCalendar(calendarFile, defaultProfileId);
                     processAudit(auditFile, defaultProfileId);
                 }
@@ -266,36 +238,6 @@ public class DatabaseInitializer {
         }
 
         log.info("Users processed: {} successful, {} failed", successCount, failCount);
-    }
-
-    private void processNotifications(String filePath, Long profileId) throws IOException {
-        if (!Files.exists(Paths.get(filePath))) {
-            log.warn("Notifications file not found: {} - skipping", filePath);
-            return;
-        }
-
-        log.info("Processing notifications from file: {}", filePath);
-        List<NotificationsDTO> notifications = readNotificationsFromFile(filePath);
-
-        if (notifications.isEmpty()) {
-            log.info("No notifications found in file");
-            return;
-        }
-
-        int count = 0;
-        for (NotificationsDTO notification : notifications) {
-            try {
-                ProfileNotification profileNotification = new ProfileNotification();
-                profileNotification.setProfileId(profileId);
-                profileNotification.setNotificationId(notificationService.saveNotification(notification).getId());
-                profileNotificationRepository.save(profileNotification);
-                count++;
-            } catch (Exception e) {
-                log.error("Error saving notification: {} - {}", notification.getTitle(), e.getMessage());
-            }
-        }
-
-        log.info("Notifications processed: {} saved successfully", count);
     }
 
     private void processCalendar(String filePath, Long profileId) {
