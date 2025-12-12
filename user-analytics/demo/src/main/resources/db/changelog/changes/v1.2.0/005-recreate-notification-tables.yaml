@@ -1,0 +1,381 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-recreate-notification-tables
+      author: EugeneTereschenko
+      changes:
+        - createTable:
+            tableName: notifications
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: message
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: VARCHAR(20)
+                  defaultValue: INFO
+              - column:
+                  name: priority
+                  type: VARCHAR(20)
+                  defaultValue: MEDIUM
+              - column:
+                  name: category
+                  type: VARCHAR(100)
+              - column:
+                  name: action_url
+                  type: VARCHAR(500)
+              - column:
+                  name: sender
+                  type: VARCHAR(100)
+              - column:
+                  name: metadata
+                  type: TEXT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+        - sql:
+            splitStatements: false
+            sql: |
+              ALTER TABLE notifications
+                ADD CONSTRAINT chk_notifications_type
+                CHECK (type IN ('INFO', 'SUCCESS', 'WARNING', 'ERROR', 'MESSAGE'));
+        - sql:
+            splitStatements: false
+            sql: |
+              ALTER TABLE notifications
+                ADD CONSTRAINT chk_notifications_priority
+                CHECK (priority IN ('LOW', 'MEDIUM', 'HIGH', 'URGENT'));
+
+        - createTable:
+            tableName: user_notification_reads
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: notification_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: read_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: user_notification_reads
+            baseColumnNames: user_id
+            referencedTableName: user
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_user_notification_reads_user
+
+        - addForeignKeyConstraint:
+            baseTableName: user_notification_reads
+            baseColumnNames: notification_id
+            referencedTableName: notifications
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_user_notification_reads_notification
+
+        - addForeignKeyConstraint:
+            baseTableName: profile_notification
+            baseColumnNames: notification_id
+            referencedTableName: notifications
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_profile_notification_notification
+
+
+        - addUniqueConstraint:
+            tableName: user_notification_reads
+            columnNames: user_id, notification_id
+            constraintName: uq_user_notification_reads_user_notification
+
+        - dropTable:
+            tableName: profile_notification
+            cascadeConstraints: true
+            ifExists: true
+
+        - createTable:
+            tableName: profile_notification
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: profile_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: notification_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: profile_notification
+            baseColumnNames: notification_id
+            referencedTableName: notifications
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_profile_notification_notification
+        - addUniqueConstraint:
+            tableName: profile_notification
+            columnNames: profile_id, notification_id
+            constraintName: uq_profile_notification_profile_notification
+
+        - createIndex:
+            tableName: notifications
+            indexName: idx_notifications_type
+            columns:
+              - column:
+                  name: type
+        - createIndex:
+            tableName: notifications
+            indexName: idx_notifications_priority
+            columns:
+              - column:
+                  name: priority
+        - createIndex:
+            tableName: notifications
+            indexName: idx_notifications_timestamp
+            columns:
+              - column:
+                  name: timestamp
+                  descending: true
+        - createIndex:
+            tableName: notifications
+            indexName: idx_notifications_category
+            columns:
+              - column:
+                  name: category
+        - createIndex:
+            tableName: user_notification_reads
+            indexName: idx_user_notification_reads_user_id
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: user_notification_reads
+            indexName: idx_user_notification_reads_notification_id
+            columns:
+              - column:
+                  name: notification_id
+        - createIndex:
+            tableName: profile_notification
+            indexName: idx_profile_notification_profile_id
+            columns:
+              - column:
+                  name: profile_id
+        - createIndex:
+            tableName: profile_notification
+            indexName: idx_profile_notification_notification_id
+            columns:
+              - column:
+                  name: notification_id
+
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "Welcome to the Platform" }
+              - column: { name: message, value: "Thank you for joining us! We are excited to have you here." }
+              - column: { name: type, value: "SUCCESS" }
+              - column: { name: priority, value: "MEDIUM" }
+              - column: { name: sender, value: "System" }
+              - column: { name: category, value: "Welcome" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "Security Alert" }
+              - column: { name: message, value: "Unusual login activity detected from a new device. Please verify it was you." }
+              - column: { name: type, value: "WARNING" }
+              - column: { name: priority, value: "HIGH" }
+              - column: { name: sender, value: "Security Team" }
+              - column: { name: category, value: "Security" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "New Feature Available" }
+              - column: { name: message, value: "Check out our new dark mode feature! Enable it in your settings." }
+              - column: { name: type, value: "INFO" }
+              - column: { name: priority, value: "MEDIUM" }
+              - column: { name: sender, value: "Product Team" }
+              - column: { name: category, value: "Features" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "Action Required" }
+              - column: { name: message, value: "Your password expires in 3 days. Please update it to maintain account security." }
+              - column: { name: type, value: "ERROR" }
+              - column: { name: priority, value: "URGENT" }
+              - column: { name: sender, value: "Security Team" }
+              - column: { name: category, value: "Security" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "System Maintenance" }
+              - column: { name: message, value: "Scheduled maintenance this weekend. System will be down from 2 AM to 6 AM." }
+              - column: { name: type, value: "WARNING" }
+              - column: { name: priority, value: "HIGH" }
+              - column: { name: sender, value: "IT Team" }
+              - column: { name: category, value: "Maintenance" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "Message from Admin" }
+              - column: { name: message, value: "Welcome to our community! Feel free to explore all features." }
+              - column: { name: type, value: "MESSAGE" }
+              - column: { name: priority, value: "LOW" }
+              - column: { name: sender, value: "Admin" }
+              - column: { name: category, value: "General" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "Profile Updated" }
+              - column: { name: message, value: "Your profile information has been successfully updated." }
+              - column: { name: type, value: "SUCCESS" }
+              - column: { name: priority, value: "LOW" }
+              - column: { name: sender, value: "System" }
+              - column: { name: category, value: "Profile" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "New Message" }
+              - column: { name: message, value: "You have a new message from the support team." }
+              - column: { name: type, value: "MESSAGE" }
+              - column: { name: priority, value: "MEDIUM" }
+              - column: { name: sender, value: "Support" }
+              - column: { name: category, value: "Messages" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "New Feature Release" }
+              - column: { name: message, value: "We are excited to announce the release of our new feature that enhances user experience." }
+              - column: { name: type, value: "INFO" }
+              - column: { name: priority, value: "MEDIUM" }
+              - column: { name: sender, value: "System" }
+              - column: { name: category, value: "Features" }
+              - column: { name: timestamp, value: "2023-10-01" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "Maintenance Update" }
+              - column: { name: message, value: "Scheduled maintenance will occur on 2023-10-05 from 2 AM to 4 AM. Please plan accordingly." }
+              - column: { name: type, value: "WARNING" }
+              - column: { name: priority, value: "HIGH" }
+              - column: { name: sender, value: "IT Team" }
+              - column: { name: category, value: "Maintenance" }
+              - column: { name: timestamp, value: "2023-10-02" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "Security Patch" }
+              - column: { name: message, value: "A critical security patch has been applied to all systems. Please ensure your applications are updated to the latest version." }
+              - column: { name: type, value: "ERROR" }
+              - column: { name: priority, value: "URGENT" }
+              - column: { name: sender, value: "Security Team" }
+              - column: { name: category, value: "Security" }
+              - column: { name: timestamp, value: "2023-10-03" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "New User Guide" }
+              - column: { name: message, value: "Check out our new user guide that provides tips and tricks for getting the most out of our platform." }
+              - column: { name: type, value: "INFO" }
+              - column: { name: priority, value: "LOW" }
+              - column: { name: sender, value: "Support" }
+              - column: { name: category, value: "Documentation" }
+              - column: { name: timestamp, value: "2023-10-04" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "Community Event" }
+              - column: { name: message, value: "Join us for our upcoming community event on 2023-10-10. We look forward to seeing you there!" }
+              - column: { name: type, value: "MESSAGE" }
+              - column: { name: priority, value: "MEDIUM" }
+              - column: { name: sender, value: "Admin" }
+              - column: { name: category, value: "Community" }
+              - column: { name: timestamp, value: "2023-10-05" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "Feature Feedback" }
+              - column: { name: message, value: "We value your feedback! Please let us know your thoughts on the new features released this month." }
+              - column: { name: type, value: "INFO" }
+              - column: { name: priority, value: "LOW" }
+              - column: { name: sender, value: "Product Team" }
+              - column: { name: category, value: "Feedback" }
+              - column: { name: timestamp, value: "2023-10-06" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "System Upgrade" }
+              - column: { name: message, value: "A system upgrade is scheduled for 2023-10-15. Expect improved performance and new capabilities." }
+              - column: { name: type, value: "INFO" }
+              - column: { name: priority, value: "HIGH" }
+              - column: { name: sender, value: "IT Team" }
+              - column: { name: category, value: "Upgrade" }
+              - column: { name: timestamp, value: "2023-10-07" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "Holiday Schedule" }
+              - column: { name: message, value: "Please note our holiday schedule for the upcoming season. Our offices will be closed on 2023-10-20 and 2023-10-21." }
+              - column: { name: type, value: "INFO" }
+              - column: { name: priority, value: "LOW" }
+              - column: { name: sender, value: "HR" }
+              - column: { name: category, value: "Holiday" }
+              - column: { name: timestamp, value: "2023-10-08" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "New API Documentation" }
+              - column: { name: message, value: "We have updated our API documentation to include the latest endpoints and usage examples." }
+              - column: { name: type, value: "INFO" }
+              - column: { name: priority, value: "MEDIUM" }
+              - column: { name: sender, value: "Dev Team" }
+              - column: { name: category, value: "Documentation" }
+              - column: { name: timestamp, value: "2023-10-09" }
+        - insert:
+            tableName: notifications
+            columns:
+              - column: { name: title, value: "User Survey" }
+              - column: { name: message, value: "Help us improve by participating in our user survey. Your input is invaluable to us." }
+              - column: { name: type, value: "MESSAGE" }
+              - column: { name: priority, value: "LOW" }
+              - column: { name: sender, value: "Admin" }
+              - column: { name: category, value: "Survey" }
+              - column: { name: timestamp, value: "2023-10-10" }
+

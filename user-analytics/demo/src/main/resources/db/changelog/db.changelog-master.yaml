@@ -41,3 +41,5 @@ databaseChangeLog:
       file: db/changelog/changes/v1.2.0/003-create-user-activity.yaml
   - include:
       file: db/changelog/changes/v1.2.0/004-recreate-announcement-tables.yaml
+  - include:
+      file: db/changelog/changes/v1.2.0/005-recreate-notification-tables.yaml
