@@ -1,28 +1,49 @@
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
 <div class="container mt-4">
   <!-- Header -->
   <div class="card shadow-sm mb-4">
     <div class="card-body bg-gradient text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-      <h2 class="display-6 mb-2">
-        <i class="bi bi-bar-chart-line me-2"></i>Feature Usage Insights
-      </h2>
-      <p class="mb-0 opacity-75">Analyze how users interact with different features</p>
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h2 class="display-6 mb-2">
+            <i class="bi bi-bar-chart-line me-2"></i>Feature Usage Insights
+          </h2>
+          <p class="mb-0 opacity-75">Analyze how users interact with different features</p>
+        </div>
+        <div>
+          <button class="btn btn-light btn-sm me-2" (click)="refreshData()">
+            <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+          </button>
+          <button class="btn btn-light btn-sm me-2" (click)="exportData('json')">
+            <i class="bi bi-download me-1"></i>JSON
+          </button>
+          <button class="btn btn-light btn-sm" (click)="exportData('csv')">
+            <i class="bi bi-file-earmark-spreadsheet me-1"></i>CSV
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2 text-muted">Loading usage insights...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="alert alert-danger" role="alert">
+    <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+  </div>
+
   <!-- Stats Cards -->
-  <div class="row g-4 mb-4">
+  <div class="row g-4 mb-4" *ngIf="!isLoading && statistics">
     <div class="col-md-3">
       <div class="card shadow-sm text-center">
         <div class="card-body">
           <i class="bi bi-people-fill display-4 text-primary"></i>
-          <h4 class="mt-2">12,345</h4>
+          <h4 class="mt-2">{{ formatNumber(statistics.totalUsers) }}</h4>
           <p class="text-muted mb-0">Total Users</p>
         </div>
       </div>
@@ -31,7 +52,7 @@
       <div class="card shadow-sm text-center">
         <div class="card-body">
           <i class="bi bi-activity display-4 text-success"></i>
-          <h4 class="mt-2">8,456</h4>
+          <h4 class="mt-2">{{ formatNumber(statistics.activeUsers) }}</h4>
           <p class="text-muted mb-0">Active Users</p>
         </div>
       </div>
@@ -40,7 +61,7 @@
       <div class="card shadow-sm text-center">
         <div class="card-body">
           <i class="bi bi-graph-up display-4 text-warning"></i>
-          <h4 class="mt-2">68.5%</h4>
+          <h4 class="mt-2">{{ formatPercentage(statistics.engagementRate) }}</h4>
           <p class="text-muted mb-0">Engagement Rate</p>
         </div>
       </div>
@@ -49,7 +70,7 @@
       <div class="card shadow-sm text-center">
         <div class="card-body">
           <i class="bi bi-star-fill display-4 text-info"></i>
-          <h4 class="mt-2">4.7/5</h4>
+          <h4 class="mt-2">{{ statistics.avgRating.toFixed(1) }}/5</h4>
           <p class="text-muted mb-0">Avg Rating</p>
         </div>
       </div>
@@ -57,24 +78,70 @@
   </div>
 
   <!-- Chart Section -->
-  <div class="row">
+  <div class="row" *ngIf="!isLoading">
     <div class="col-lg-8">
       <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">
-            <i class="bi bi-bar-chart me-2 text-primary"></i>Feature Usage by Category
-          </h5>
-          <div class="btn-group btn-group-sm" role="group">
-            <button type="button" class="btn btn-outline-primary active">Weekly</button>
-            <button type="button" class="btn btn-outline-primary">Monthly</button>
-            <button type="button" class="btn btn-outline-primary">Yearly</button>
+        <div class="card-header bg-light">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">
+              <i class="bi bi-bar-chart me-2 text-primary"></i>Feature Usage Analytics
+            </h5>
+            <div class="btn-group btn-group-sm" role="group">
+              <button type="button" class="btn btn-outline-primary" 
+                      [class.active]="selectedPeriod === 'daily'"
+                      (click)="changePeriod('daily')">Daily</button>
+              <button type="button" class="btn btn-outline-primary"
+                      [class.active]="selectedPeriod === 'weekly'"
+                      (click)="changePeriod('weekly')">Weekly</button>
+              <button type="button" class="btn btn-outline-primary"
+                      [class.active]="selectedPeriod === 'monthly'"
+                      (click)="changePeriod('monthly')">Monthly</button>
+              <button type="button" class="btn btn-outline-primary"
+                      [class.active]="selectedPeriod === 'yearly'"
+                      (click)="changePeriod('yearly')">Yearly</button>
+            </div>
+          </div>
+          <div class="btn-group btn-group-sm w-100" role="group">
+            <button type="button" class="btn btn-outline-secondary"
+                    [class.active]="selectedChart === 'bar'"
+                    (click)="changeChart('bar')">
+              <i class="bi bi-bar-chart me-1"></i>Bar Chart
+            </button>
+            <button type="button" class="btn btn-outline-secondary"
+                    [class.active]="selectedChart === 'line'"
+                    (click)="changeChart('line')">
+              <i class="bi bi-graph-up me-1"></i>Line Chart
+            </button>
+            <button type="button" class="btn btn-outline-secondary"
+                    [class.active]="selectedChart === 'pie'"
+                    (click)="changeChart('pie')">
+              <i class="bi bi-pie-chart me-1"></i>Pie Chart
+            </button>
           </div>
         </div>
         <div class="card-body" style="height: 400px;">
-          <canvas baseChart
-            [data]="usageData"
-            [labels]="labels"
-            chartType="bar">
+          <!-- Bar Chart -->
+          <canvas *ngIf="selectedChart === 'bar'" 
+                  baseChart
+                  [data]="barChartData"
+                  [options]="barChartOptions"
+                  [type]="barChartType">
+          </canvas>
+          
+          <!-- Line Chart -->
+          <canvas *ngIf="selectedChart === 'line'"
+                  baseChart
+                  [data]="lineChartData"
+                  [options]="lineChartOptions"
+                  [type]="lineChartType">
+          </canvas>
+          
+          <!-- Pie Chart -->
+          <canvas *ngIf="selectedChart === 'pie'"
+                  baseChart
+                  [data]="pieChartData"
+                  [options]="pieChartOptions"
+                  [type]="pieChartType">
           </canvas>
         </div>
       </div>
@@ -89,50 +156,45 @@
           </h5>
         </div>
         <div class="card-body p-0">
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
+          <ul class="list-group list-group-flush" *ngIf="topFeatures.length > 0">
+            <li class="list-group-item d-flex justify-content-between align-items-center"
+                *ngFor="let feature of topFeatures; let i = index">
               <div>
-                <i class="bi bi-circle-fill text-primary me-2"></i>
-                <strong>Dashboard</strong>
+                <i class="bi bi-circle-fill me-2" 
+                   [ngClass]="{
+                     'text-primary': i === 0,
+                     'text-success': i === 1,
+                     'text-info': i === 2,
+                     'text-warning': i === 3,
+                     'text-secondary': i === 4
+                   }"></i>
+                <strong>{{ feature.name }}</strong>
               </div>
-              <span class="badge bg-primary rounded-pill">95%</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
               <div>
-                <i class="bi bi-circle-fill text-success me-2"></i>
-                <strong>Reports</strong>
+                <span class="badge rounded-pill me-2"
+                      [ngClass]="{
+                        'bg-primary': i === 0,
+                        'bg-success': i === 1,
+                        'bg-info': i === 2,
+                        'bg-warning': i === 3,
+                        'bg-secondary': i === 4
+                      }">
+                  {{ feature.rating.toFixed(1) }}/5
+                </span>
+                <small class="text-muted">{{ formatNumber(feature.users) }} users</small>
               </div>
-              <span class="badge bg-success rounded-pill">87%</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <i class="bi bi-circle-fill text-info me-2"></i>
-                <strong>Analytics</strong>
-              </div>
-              <span class="badge bg-info rounded-pill">76%</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <i class="bi bi-circle-fill text-warning me-2"></i>
-                <strong>Settings</strong>
-              </div>
-              <span class="badge bg-warning rounded-pill">64%</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <i class="bi bi-circle-fill text-secondary me-2"></i>
-                <strong>Profile</strong>
-              </div>
-              <span class="badge bg-secondary rounded-pill">52%</span>
             </li>
           </ul>
+          <div *ngIf="topFeatures.length === 0" class="alert alert-info m-3">
+            <i class="bi bi-info-circle me-2"></i>No feature data available
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Detailed Metrics Table -->
-  <div class="card shadow-sm">
+  <div class="card shadow-sm" *ngIf="!isLoading">
     <div class="card-header bg-light">
       <h5 class="mb-0">
         <i class="bi bi-table me-2 text-primary"></i>Detailed Usage Metrics
@@ -148,72 +210,33 @@
               <th><i class="bi bi-clock me-2"></i>Avg Time</th>
               <th><i class="bi bi-graph-up me-2"></i>Growth</th>
               <th><i class="bi bi-star me-2"></i>Rating</th>
+              <th><i class="bi bi-folder me-2"></i>Category</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="fw-bold">Dashboard</td>
-              <td>11,725</td>
-              <td>5m 32s</td>
-              <td><span class="badge bg-success"><i class="bi bi-arrow-up"></i> 12%</span></td>
+          <tbody *ngIf="featureDetails.length > 0">
+            <tr *ngFor="let feature of featureDetails">
+              <td class="fw-bold">{{ feature.name }}</td>
+              <td>{{ formatNumber(feature.users) }}</td>
+              <td>{{ feature.avgTime }}</td>
               <td>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-half text-warning"></i>
+                <span [ngClass]="getGrowthClass(feature.growth)">
+                  <i [ngClass]="getGrowthIcon(feature.growth)"></i> 
+                  {{ formatPercentage(Math.abs(feature.growth)) }}
+                </span>
               </td>
-            </tr>
-            <tr>
-              <td class="fw-bold">Reports</td>
-              <td>10,740</td>
-              <td>8m 15s</td>
-              <td><span class="badge bg-success"><i class="bi bi-arrow-up"></i> 8%</span></td>
               <td>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
+                <span *ngFor="let star of getStars(feature.rating)" class="text-warning">
+                  <i [ngClass]="star"></i>
+                </span>
+                <small class="text-muted ms-1">({{ feature.rating.toFixed(1) }})</small>
               </td>
+              <td>{{ feature.category }}</td>
             </tr>
+          </tbody>
+          <tbody *ngIf="featureDetails.length === 0">
             <tr>
-              <td class="fw-bold">Analytics</td>
-              <td>9,382</td>
-              <td>6m 45s</td>
-              <td><span class="badge bg-warning"><i class="bi bi-dash"></i> 2%</span></td>
-              <td>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-half text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-              </td>
-            </tr>
-            <tr>
-              <td class="fw-bold">Settings</td>
-              <td>7,901</td>
-              <td>3m 20s</td>
-              <td><span class="badge bg-danger"><i class="bi bi-arrow-down"></i> 5%</span></td>
-              <td>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
-              </td>
-            </tr>
-            <tr>
-              <td class="fw-bold">Profile</td>
-              <td>6,419</td>
-              <td>4m 10s</td>
-              <td><span class="badge bg-success"><i class="bi bi-arrow-up"></i> 15%</span></td>
-              <td>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star-fill text-warning"></i>
-                <i class="bi bi-star text-warning"></i>
+              <td colspan="6" class="text-center py-4">
+                <i class="bi bi-info-circle me-2"></i>No detailed metrics available
               </td>
             </tr>
           </tbody>
