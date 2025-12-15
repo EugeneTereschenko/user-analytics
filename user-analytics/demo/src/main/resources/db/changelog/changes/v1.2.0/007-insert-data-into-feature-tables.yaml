@@ -1,0 +1,86 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-insert-sample-feature-usage
+      author: EugeneTereshchenko
+      changes:
+        - sql:
+            splitStatements: false
+            stripComments: false
+            sql: |
+              DO $$
+              DECLARE
+                  user_record RECORD;
+                  feature_names TEXT[] := ARRAY['Dashboard', 'Reports', 'Analytics', 'Settings', 'Profile', 'Users', 'Tasks', 'Calendar', 'Notifications', 'Documents'];
+                  categories TEXT[] := ARRAY['Analytics', 'Analytics', 'Analytics', 'Configuration', 'User Management', 'User Management', 'Productivity', 'Productivity', 'Communication', 'Files'];
+                  random_feature TEXT;
+                  random_category TEXT;
+                  random_duration INTEGER;
+                  i INTEGER;
+                  j INTEGER;
+              BEGIN
+                  FOR user_record IN SELECT id FROM "user" LOOP
+                      FOR i IN 1..FLOOR(RANDOM() * 51 + 50) LOOP
+                          j := FLOOR(RANDOM() * array_length(feature_names, 1)) + 1;
+                          random_feature := feature_names[j];
+                          random_category := categories[j];
+                          random_duration := FLOOR(RANDOM() * 600 + 60);
+                          INSERT INTO feature_usage (
+                              user_id, 
+                              feature_name, 
+                              category, 
+                              timestamp, 
+                              duration_seconds,
+                              session_id,
+                              device_type
+                          ) VALUES (
+                              user_record.id,
+                              random_feature,
+                              random_category,
+                              CURRENT_TIMESTAMP - (RANDOM() * INTERVAL '90 days'),
+                              random_duration,
+                              gen_random_uuid()::text,
+                              CASE FLOOR(RANDOM() * 3)
+                                  WHEN 0 THEN 'Desktop'
+                                  WHEN 1 THEN 'Mobile'
+                                  ELSE 'Tablet'
+                              END
+                          );
+                      END LOOP;
+                  END LOOP;
+              END $$;
+
+  - changeSet:
+      id: 007-insert-sample-feature-ratings
+      author: EugeneTereshchenko
+      changes:
+        - sql:
+            splitStatements: false
+            stripComments: false
+            sql: |
+              DO $$
+              DECLARE
+                  user_record RECORD;
+                  feature_names TEXT[] := ARRAY['Dashboard', 'Reports', 'Analytics', 'Settings', 'Profile'];
+                  random_feature TEXT;
+                  random_rating INTEGER;
+                  i INTEGER;
+              BEGIN
+                  FOR user_record IN SELECT id FROM "user" LOOP
+                      FOR i IN 1..FLOOR(RANDOM() * 3 + 2) LOOP
+                          random_feature := feature_names[FLOOR(RANDOM() * array_length(feature_names, 1)) + 1];
+                          random_rating := FLOOR(RANDOM() * 3 + 3);
+                          INSERT INTO feature_ratings (user_id, feature_name, rating, feedback)
+                          VALUES (
+                              user_record.id,
+                              random_feature,
+                              random_rating,
+                              CASE random_rating
+                                  WHEN 5 THEN 'Excellent feature! Very useful.'
+                                  WHEN 4 THEN 'Good feature, works well.'
+                                  ELSE 'Decent feature, could be improved.'
+                              END
+                          )
+                          ON CONFLICT (user_id, feature_name) DO NOTHING;
+                      END LOOP;
+                  END LOOP;
+              END $$;
