@@ -43,3 +43,5 @@ databaseChangeLog:
       file: db/changelog/changes/v1.2.0/004-recreate-announcement-tables.yaml
   - include:
       file: db/changelog/changes/v1.2.0/005-recreate-notification-tables.yaml
+  - include:
+      file: db/changelog/changes/v1.2.0/006-create-feature_usage-feature_ratings-tables.yaml
