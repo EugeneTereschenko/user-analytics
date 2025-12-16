@@ -1,8 +1,391 @@
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+</head>
+<body>
+    <div class="container" *ngIf="!currentReport">
+        <!-- Header -->
+        <div class="reports-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1><i class="bi bi-file-earmark-bar-graph me-2"></i>Reports Center</h1>
+                    <p class="text-muted mb-0">Generate comprehensive reports and insights</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" (click)="showSavedReports = !showSavedReports">
+                        <i class="bi bi-folder me-1"></i>Saved Reports ({{savedReports.length}})
+                    </button>
+                    <button class="btn btn-custom" (click)="loadScheduledReports()">
+                        <i class="bi bi-calendar3 me-1"></i>Schedules ({{scheduledReports.length}})
+                    </button>
+                </div>
+            </div>
+        </div>
 
-<p>reports works!</p>
+        <!-- Quick Reports -->
+        <div class="report-content">
+            <h4 class="mb-3"><i class="bi bi-lightning-charge me-2 text-warning"></i>Quick Reports</h4>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="quick-report-btn" (click)="generateQuickReport('user-activity')">
+                        <i class="bi bi-people fs-2 mb-2 d-block"></i>
+                        <strong>User Activity</strong>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="quick-report-btn" (click)="generateQuickReport('system-usage')">
+                        <i class="bi bi-bar-chart fs-2 mb-2 d-block"></i>
+                        <strong>System Usage</strong>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="quick-report-btn" (click)="generateQuickReport('audit-logs')">
+                        <i class="bi bi-shield-check fs-2 mb-2 d-block"></i>
+                        <strong>Audit Logs</strong>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="quick-report-btn" (click)="generateQuickReport('performance')">
+                        <i class="bi bi-speedometer2 fs-2 mb-2 d-block"></i>
+                        <strong>Performance</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Templates by Category -->
+        <div class="report-content" *ngFor="let category of ['user', 'activity', 'usage', 'system', 'financial']">
+            <h4 class="mb-3">
+                <i [class]="'bi ' + getCategoryIcon(category) + ' me-2'"></i>
+                {{category | titlecase}} Reports
+            </h4>
+            <div class="row">
+                <div class="col-md-6 col-lg-4" *ngFor="let template of getReportsByCategory(category)">
+                    <div class="report-template-card" (click)="selectTemplate(template)">
+                        <div [class]="'report-template-icon icon-' + category">
+                            <i [class]="'bi ' + template.icon"></i>
+                        </div>
+                        <h5>{{template.name}}</h5>
+                        <p class="text-muted small mb-0">{{template.description}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saved Reports Section -->
+        <div class="report-content" *ngIf="showSavedReports">
+            <h4 class="mb-3"><i class="bi bi-folder-open me-2"></i>Saved Reports</h4>
+            <div *ngIf="savedReports.length === 0" class="text-center py-5 text-muted">
+                <i class="bi bi-inbox fs-1 mb-3 d-block"></i>
+                <p>No saved reports yet</p>
+            </div>
+            <div *ngFor="let report of savedReports" class="saved-report-item"
+                 (click)="loadSavedReport(report)">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{report.title}}</strong>
+                        <div class="text-muted small">
+                            Generated: {{formatDate(report.generatedAt)}}
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger" 
+                            (click)="deleteSavedReport(report.id!); $event.stopPropagation()">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scheduled Reports -->
+        <div class="report-content" *ngIf="scheduledReports.length > 0">
+            <h4 class="mb-3"><i class="bi bi-calendar-check me-2"></i>Scheduled Reports</h4>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Frequency</th>
+                            <th>Recipients</th>
+                            <th>Next Run</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let schedule of scheduledReports">
+                            <td><strong>{{schedule.name}}</strong></td>
+                            <td><span class="badge bg-primary">{{schedule.frequency}}</span></td>
+                            <td>{{schedule.recipients.length}} recipient(s)</td>
+                            <td>{{schedule.nextRun ? formatDate(schedule.nextRun) : 'N/A'}}</td>
+                            <td>
+                                <span [class]="schedule.enabled ? 'schedule-badge schedule-active' : 'schedule-badge schedule-inactive'">
+                                    {{schedule.enabled ? 'Active' : 'Inactive'}}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1" 
+                                        (click)="toggleScheduledReport(schedule)">
+                                    <i [class]="schedule.enabled ? 'bi bi-pause' : 'bi bi-play'"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" 
+                                        (click)="deleteScheduledReport(schedule.id!)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report View -->
+    <div class="container" *ngIf="currentReport">
+        <div class="reports-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1>{{currentReport.title}}</h1>
+                    <p class="text-muted mb-0">Generated: {{formatDate(currentReport.generatedAt)}}</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary" (click)="currentReport = null">
+                        <i class="bi bi-arrow-left me-1"></i>Back
+                    </button>
+                    <button class="btn btn-outline-primary" (click)="refreshReport()">
+                        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                    </button>
+                    <button class="btn btn-outline-success" (click)="exportReport('excel')">
+                        <i class="bi bi-file-earmark-excel me-1"></i>Excel
+                    </button>
+                    <button class="btn btn-outline-danger" (click)="exportReport('pdf')">
+                        <i class="bi bi-file-earmark-pdf me-1"></i>PDF
+                    </button>
+                    <button class="btn btn-outline-info" (click)="exportReport('csv')">
+                        <i class="bi bi-file-earmark-text me-1"></i>CSV
+                    </button>
+                    <button class="btn btn-custom" (click)="saveCurrentReport()">
+                        <i class="bi bi-save me-1"></i>Save
+                    </button>
+                    <button class="btn btn-outline-primary" (click)="printReport()">
+                        <i class="bi bi-printer me-1"></i>Print
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Tabs -->
+        <div class="report-content">
+            <div class="view-tabs">
+                <button [class.active]="selectedView === 'summary'" 
+                        class="view-tab" 
+                        (click)="selectedView = 'summary'">
+                    <i class="bi bi-clipboard-data me-1"></i>Summary
+                </button>
+                <button [class.active]="selectedView === 'chart'" 
+                        class="view-tab" 
+                        (click)="selectedView = 'chart'">
+                    <i class="bi bi-graph-up me-1"></i>Charts
+                </button>
+                <button [class.active]="selectedView === 'table'" 
+                        class="view-tab" 
+                        (click)="selectedView = 'table'">
+                    <i class="bi bi-table me-1"></i>Data Table
+                </button>
+            </div>
+
+            <!-- Summary View -->
+            <div *ngIf="selectedView === 'summary' && currentReport.summary">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="summary-card">
+                            <div class="small opacity-75">Total Records</div>
+                            <h3>{{currentReport.summary.totalRecords}}</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="currentReport.summary.totalValue">
+                        <div class="summary-card">
+                            <div class="small opacity-75">Total Value</div>
+                            <h3>{{currentReport.summary.totalValue | currency}}</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="currentReport.summary.averageValue">
+                        <div class="summary-card">
+                            <div class="small opacity-75">Average Value</div>
+                            <h3>{{currentReport.summary.averageValue | number:'1.2-2'}}</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trends -->
+                <div *ngIf="currentReport.summary.trends">
+                    <h5 class="mb-3">Key Trends</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6" *ngFor="let trend of currentReport.summary.trends">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6>{{trend.label}}</h6>
+                                            <h4>{{trend.value}}</h4>
+                                        </div>
+                                        <span [class]="'trend-indicator trend-' + trend.changeType">
+                                            <i [class]="'bi ' + getTrendIcon(trend.changeType)"></i>
+                                            {{trend.change}}%
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Highlights -->
+                <div *ngIf="currentReport.summary.highlights" class="mt-4">
+                    <h5 class="mb-3">Highlights</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item" *ngFor="let highlight of currentReport.summary.highlights">
+                            <i class="bi bi-check-circle text-success me-2"></i>{{highlight}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Chart View -->
+            <div *ngIf="selectedView === 'chart' && currentReport.charts">
+                <div *ngFor="let chart of currentReport.charts" class="mb-4">
+                    <canvas baseChart
+                        [type]="chart.type"
+                        [data]="{ labels: chart.labels, datasets: chart.datasets }"
+                        [options]="{ responsive: true, maintainAspectRatio: false }"
+                        style="height: 400px;">
+                    </canvas>
+                </div>
+            </div>
+
+            <!-- Table View -->
+            <div *ngIf="selectedView === 'table'">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th *ngFor="let key of currentReport.data[0] | keyvalue">
+                                    {{$any(key.key) | titlecase}}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let row of currentReport.data">
+                                <td *ngFor="let cell of row | keyvalue">
+                                    {{cell.value}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Modal -->
+    <div class="modal fade" [class.show]="showFilterModal" 
+         [style.display]="showFilterModal ? 'block' : 'none'" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-funnel me-2"></i>Configure Report
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" (click)="closeFilterModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Start Date</label>
+                            <input type="date" class="form-control" [(ngModel)]="filters.startDate">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">End Date</label>
+                            <input type="date" class="form-control" [(ngModel)]="filters.endDate">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeFilterModal()">Cancel</button>
+                    <button type="button" class="btn btn-custom" (click)="generateReport()">
+                        <i class="bi bi-play-fill me-1"></i>Generate Report
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" (click)="openScheduleModal()">
+                        <i class="bi bi-calendar-plus me-1"></i>Schedule
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Modal -->
+    <div class="modal fade" [class.show]="showScheduleModal" 
+         [style.display]="showScheduleModal ? 'block' : 'none'" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-calendar-plus me-2"></i>Schedule Report
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" (click)="closeScheduleModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Report Name</label>
+                        <input type="text" class="form-control" [(ngModel)]="scheduleForm.name" 
+                               placeholder="e.g., Weekly User Report">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Frequency</label>
+                        <select class="form-select" [(ngModel)]="scheduleForm.frequency">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Recipients</label>
+                        <div class="input-group mb-2">
+                            <input type="email" class="form-control" [(ngModel)]="recipientEmail" 
+                                   placeholder="email@example.com">
+                            <button class="btn btn-outline-primary" (click)="addRecipient()">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+                        <div *ngFor="let recipient of scheduleForm.recipients" class="recipient-chip">
+                            {{recipient}}
+                            <i class="bi bi-x" (click)="removeRecipient(recipient)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeScheduleModal()">Cancel</button>
+                    <button type="button" class="btn btn-custom" (click)="scheduleReport()">
+                        <i class="bi bi-check-lg me-1"></i>Schedule Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div *ngIf="isGenerating" class="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"></div>
+            <div class="mt-3">Generating report...</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
