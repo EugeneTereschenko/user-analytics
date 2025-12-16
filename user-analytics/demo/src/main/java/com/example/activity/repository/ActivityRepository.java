@@ -1,4 +1,10 @@
-package com.example.demo.repository;
+/*
+ * © ${year} Yevhen Tereshchenko
+ * All rights reserved.
+ *
+ */
+
+package com.example.activity.repository;
 import com.example.activity.model.Activity;
 import com.example.activity.model.ActivityType;
 import org.springframework.data.jpa.repository.JpaRepository;

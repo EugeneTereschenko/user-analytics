@@ -4,7 +4,7 @@ import com.example.activity.dto.ActivityDTO;
 import com.example.activity.dto.ActivityStatsDTO;
 import com.example.activity.model.Activity;
 import com.example.activity.model.ActivityType;
-import com.example.demo.repository.ActivityRepository;
+import com.example.activity.repository.ActivityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

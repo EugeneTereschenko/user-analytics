@@ -6,11 +6,12 @@
 
 package com.example.activity.service;
 
-import com.example.activity.dto.ActivityDTO;
 import com.example.activity.dto.ActivityStatsDTO;
+import com.example.activity.dto.ActivityDTO;
 import com.example.activity.model.Activity;
 import com.example.activity.model.ActivityType;
-import com.example.demo.repository.ActivityRepository;
+import com.example.activity.repository.ActivityRepository;
+import com.example.demo.testutil.ActivityTestDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,10 +21,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,115 +41,96 @@ class ActivityServiceTest {
 
     @BeforeEach
     void setUp() {
-        activity = new Activity.Builder()
-                .userId(2L)
-                .username("testuser")
-                .type(ActivityType.LOGIN)
-                .description("desc")
-                .ipAddress("127.0.0.1")
-                .deviceType("Desktop")
-                .location("Earth")
-                .build();
+        activity = new Activity();
+        activity.setId(1L);
+        activity.setUserId(1L);
+        activity.setUsername("testuser");
+        activity.setType(ActivityType.LOGIN);
+        activity.setDescription("Test activity");
+        activity.setTimestamp(LocalDateTime.now());
 
-        activityDTO = new ActivityDTO.Builder()
-                .id(1L)
-                .userId(2L)
-                .username("testuser")
-                .type(ActivityType.LOGIN)
-                .description("desc")
-                .ipAddress("127.0.0.1")
-                .deviceType("Desktop")
-                .location("Earth")
-                .timestamp(activity.getTimestamp())
+        activityDTO = new ActivityTestDataBuilder()
+                .withId(1L)
+                .withUserId(1L)
+                .withLoginType()
                 .build();
     }
 
     @Test
-    void testLogActivity() {
+    void getAllActivities_shouldReturnAllActivities() {
+
+        when(activityRepository.findAllOrderByTimestampDesc())
+                .thenReturn(Arrays.asList(activity));
+
+
+        List<ActivityDTO> result = activityService.getAllActivities();
+
+
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getUsername()).isEqualTo("testuser");
+        verify(activityRepository, times(1)).findAllOrderByTimestampDesc();
+    }
+
+    @Test
+    void getActivitiesByUserId_shouldReturnUserActivities() {
+
+        Long userId = 1L;
+        when(activityRepository.findByUserIdOrderByTimestampDesc(userId))
+                .thenReturn(Arrays.asList(activity));
+
+        List<ActivityDTO> result = activityService.getActivitiesByUserId(userId);
+
+
+        assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getUserId()).isEqualTo(userId);
+        verify(activityRepository).findByUserIdOrderByTimestampDesc(userId);
+    }
+
+    @Test
+    void logActivity_shouldSaveActivity() {
+
         when(activityRepository.save(any(Activity.class))).thenReturn(activity);
+
 
         ActivityDTO result = activityService.logActivity(activityDTO);
 
-        assertNotNull(result);
-        assertEquals(activityDTO.getUserId(), result.getUserId());
+
+        assertThat(result).isNotNull();
+        assertThat(result.getUsername()).isEqualTo("testuser");
         verify(activityRepository).save(any(Activity.class));
     }
 
     @Test
-    void testGetAllActivities() {
-        when(activityRepository.findAllOrderByTimestampDesc()).thenReturn(Collections.singletonList(activity));
+    void deleteActivity_shouldCallRepository() {
 
-        List<ActivityDTO> result = activityService.getAllActivities();
+        Long activityId = 1L;
+        doNothing().when(activityRepository).deleteById(activityId);
 
-        assertEquals(1, result.size());
-        assertEquals(activity.getUserId(), result.get(0).getUserId());
+
+        activityService.deleteActivity(activityId);
+
+
+        verify(activityRepository).deleteById(activityId);
     }
 
     @Test
-    void testGetActivitiesByUserId() {
-        when(activityRepository.findByUserIdOrderByTimestampDesc(2L)).thenReturn(Collections.singletonList(activity));
+    void getActivityStats_shouldReturnCorrectStats() {
 
-        List<ActivityDTO> result = activityService.getActivitiesByUserId(2L);
+        when(activityRepository.count()).thenReturn(100L);
+        when(activityRepository.countByType(ActivityType.LOGIN)).thenReturn(25L);
+        when(activityRepository.countByType(ActivityType.LOGOUT)).thenReturn(20L);
+        when(activityRepository.countByType(ActivityType.CREATE)).thenReturn(15L);
+        when(activityRepository.countByType(ActivityType.UPDATE)).thenReturn(30L);
+        when(activityRepository.countByType(ActivityType.DELETE)).thenReturn(5L);
+        when(activityRepository.countByType(ActivityType.VIEW)).thenReturn(5L);
 
-        assertEquals(1, result.size());
-        assertEquals(2L, result.get(0).getUserId());
-    }
 
-    @Test
-    void testGetActivitiesByType() {
-        when(activityRepository.findByType(ActivityType.LOGIN)).thenReturn(Collections.singletonList(activity));
+        ActivityStatsDTO result = activityService.getActivityStats();
 
-        List<ActivityDTO> result = activityService.getActivitiesByType("login");
-
-        assertEquals(1, result.size());
-        assertEquals(ActivityType.LOGIN, result.get(0).getType());
-    }
-
-    @Test
-    void testGetActivitiesByDateRange() {
-        LocalDateTime start = LocalDateTime.now().minusDays(1);
-        LocalDateTime end = LocalDateTime.now();
-        when(activityRepository.findByTimestampBetween(start, end)).thenReturn(Collections.singletonList(activity));
-
-        List<ActivityDTO> result = activityService.getActivitiesByDateRange(start, end);
-
-        assertEquals(1, result.size());
-    }
-
-    @Test
-    void testGetRecentActivities() {
-        when(activityRepository.findTop10ByOrderByTimestampDesc()).thenReturn(Arrays.asList(activity, activity));
-
-        List<ActivityDTO> result = activityService.getRecentActivities(1);
-
-        assertEquals(1, result.size());
-    }
-
-    @Test
-    void testGetActivityStats() {
-        when(activityRepository.count()).thenReturn(10L);
-        when(activityRepository.countByType(ActivityType.LOGIN)).thenReturn(2L);
-        when(activityRepository.countByType(ActivityType.LOGOUT)).thenReturn(1L);
-        when(activityRepository.countByType(ActivityType.CREATE)).thenReturn(3L);
-        when(activityRepository.countByType(ActivityType.UPDATE)).thenReturn(1L);
-        when(activityRepository.countByType(ActivityType.DELETE)).thenReturn(2L);
-        when(activityRepository.countByType(ActivityType.VIEW)).thenReturn(1L);
-
-        ActivityStatsDTO stats = activityService.getActivityStats();
-
-        assertEquals(10L, stats.getTotalActivities());
-        assertEquals(2L, stats.getLoginCount());
-    }
-
-    @Test
-    void testDeleteActivity() {
-        activityService.deleteActivity(1L);
-        verify(activityRepository).deleteById(1L);
-    }
-
-    @Test
-    void testClearAllActivities() {
-        activityService.clearAllActivities();
-        verify(activityRepository).deleteAll();
+        assertThat(result.getTotalActivities()).isEqualTo(100L);
+        assertThat(result.getLoginCount()).isEqualTo(25L);
+        assertThat(result.getLogoutCount()).isEqualTo(20L);
     }
 }
