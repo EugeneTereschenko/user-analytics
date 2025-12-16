@@ -1,4 +1,10 @@
-package com.example.demo.repository;
+/*
+ * © ${year} Yevhen Tereshchenko
+ * All rights reserved.
+ *
+ */
+
+package com.example.announcement.repository;
 
 import com.example.announcement.model.Announcement;
 import com.example.announcement.model.AnnouncementCategory;

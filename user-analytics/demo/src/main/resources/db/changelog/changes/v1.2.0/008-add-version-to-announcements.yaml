@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-version-column-to-announcements
+      author: EugeneTereshchenko
+      changes:
+        - addColumn:
+            tableName: announcements
+            columns:
+              - column:
+                  name: version
+                  type: BIGINT

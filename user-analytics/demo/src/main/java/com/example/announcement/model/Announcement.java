@@ -21,6 +21,9 @@ public class Announcement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version
+    private Long version;
+
     @Column(name = "title", nullable = false, length = 255)
     private String title;
 
@@ -76,6 +79,7 @@ public class Announcement {
 
     public static class Builder {
         private Long id;
+        private Long version;
         private String title;
         private String body;
         private Date date;
@@ -87,6 +91,11 @@ public class Announcement {
 
         public Builder id(Long id) {
             this.id = id;
+            return this;
+        }
+
+        public Builder version(Long version) {
+            this.version = version;
             return this;
         }
 
@@ -133,6 +142,7 @@ public class Announcement {
         public Announcement build() {
             Announcement announcement = new Announcement();
             announcement.id = this.id;
+            announcement.version =  this.version;
             announcement.title = this.title;
             announcement.body = this.body;
             announcement.date = this.date;
