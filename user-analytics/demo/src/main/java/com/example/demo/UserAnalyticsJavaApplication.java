@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -14,6 +15,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
         "com.example.notification.model",
 		"com.example.assistant.model",
 		"com.example.featureusage.model"})
+@EnableJpaRepositories(basePackages = {
+		"com.example.activity.repository",
+		"com.example.announcement.repository",
+		"com.example.notification.repository",
+		"com.example.assistant.repository",
+		"com.example.featureusage.repository",
+		"com.example.demo.repository"
+})
 @ComponentScan(basePackages = {
 		"com.example.featureusage.controller",
 		"com.example.featureusage.service",

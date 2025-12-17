@@ -47,3 +47,5 @@ databaseChangeLog:
       file: db/changelog/changes/v1.2.0/006-create-feature_usage-feature_ratings-tables.yaml
   - include:
       file: db/changelog/changes/v1.2.0/007-insert-data-into-feature-tables.yaml
+  - include:
+      file: db/changelog/changes/v1.2.0/008-add-version-to-announcements.yaml

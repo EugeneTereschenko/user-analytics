@@ -21,6 +21,10 @@ public class ActivityDTO {
     private String deviceType;
     private String location;
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private Long id;
         private Long userId;
