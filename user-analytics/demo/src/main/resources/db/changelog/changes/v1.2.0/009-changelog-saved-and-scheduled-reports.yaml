@@ -1,0 +1,164 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1-create-saved-reports
+      author: EugeneTereshchenko
+      changes:
+        - createTable:
+            tableName: saved_reports
+            columns:
+              - column:
+                  name: id
+                  type: varchar(36)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: data
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
+                  name: summary
+                  type: jsonb
+              - column:
+                  name: generated_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: saved_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: saved_reports
+            baseColumnNames: user_id
+            referencedTableName: user
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_saved_reports_user_id
+
+  - changeSet:
+      id: 2-create-scheduled-reports
+      author: EugeneTereshchenko
+      changes:
+        - createTable:
+            tableName: scheduled_reports
+            columns:
+              - column:
+                  name: id
+                  type: varchar(36)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: template_id
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: frequency
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: recipients
+                  type: text[]
+                  constraints:
+                    nullable: false
+              - column:
+                  name: filters
+                  type: jsonb
+              - column:
+                  name: enabled
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: next_run
+                  type: timestamp
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+        - addForeignKeyConstraint:
+            baseTableName: scheduled_reports
+            baseColumnNames: user_id
+            referencedTableName: user
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_scheduled_reports_user_id
+        - sql:
+            sql: ALTER TABLE scheduled_reports ADD CONSTRAINT chk_scheduled_reports_frequency CHECK (frequency IN ('daily', 'weekly', 'monthly'));
+
+  - changeSet:
+      id: 3-create-indexes
+      author: EugeneTereshchenko
+      changes:
+        - createIndex:
+            indexName: idx_saved_reports_user_id
+            tableName: saved_reports
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            indexName: idx_saved_reports_type
+            tableName: saved_reports
+            columns:
+              - column:
+                  name: type
+        - createIndex:
+            indexName: idx_saved_reports_saved_at
+            tableName: saved_reports
+            columns:
+              - column:
+                  name: saved_at
+            descending: true
+        - createIndex:
+            indexName: idx_scheduled_reports_user_id
+            tableName: scheduled_reports
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            indexName: idx_scheduled_reports_enabled
+            tableName: scheduled_reports
+            columns:
+              - column:
+                  name: enabled
+        - createIndex:
+            indexName: idx_scheduled_reports_next_run
+            tableName: scheduled_reports
+            columns:
+              - column:
+                  name: next_run

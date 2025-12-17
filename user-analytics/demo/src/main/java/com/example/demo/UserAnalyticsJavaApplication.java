@@ -14,14 +14,16 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "com.example.announcement.model",
         "com.example.notification.model",
 		"com.example.assistant.model",
-		"com.example.featureusage.model"})
+		"com.example.featureusage.model",
+		"com.example.report.model"})
 @EnableJpaRepositories(basePackages = {
 		"com.example.activity.repository",
 		"com.example.announcement.repository",
 		"com.example.notification.repository",
 		"com.example.assistant.repository",
 		"com.example.featureusage.repository",
-		"com.example.demo.repository"
+		"com.example.demo.repository",
+		"com.example.report.repository"
 })
 @ComponentScan(basePackages = {
 		"com.example.featureusage.controller",
@@ -40,6 +42,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "com.example.notification.controller",
         "com.example.notification.service",
         "com.example.notification",
+		"com.example.report.controller",
+		"com.example.report.service",
+		"com.example.report",
         "com.example.demo.controller",
         "com.example.demo.service",
         "com.example.demo.repository",
