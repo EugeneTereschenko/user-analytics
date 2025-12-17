@@ -49,3 +49,7 @@ databaseChangeLog:
       file: db/changelog/changes/v1.2.0/007-insert-data-into-feature-tables.yaml
   - include:
       file: db/changelog/changes/v1.2.0/008-add-version-to-announcements.yaml
+  - include:
+      file: db/changelog/changes/v1.2.0/009-changelog-saved-and-scheduled-reports.yaml
+  - include:
+      file: db/changelog/changes/v1.2.0/010-add-recipients-and-filters-to-saved-reports.yaml

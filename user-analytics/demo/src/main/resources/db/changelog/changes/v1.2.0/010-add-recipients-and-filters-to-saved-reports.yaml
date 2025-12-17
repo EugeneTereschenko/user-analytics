@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-recipients-and-filters-to-saved-reports
+      author: your_name
+      changes:
+        - addColumn:
+            tableName: saved_reports
+            columns:
+              - column:
+                  name: recipients
+                  type: text[]
+                  constraints:
+                    nullable: false
+              - column:
+                  name: filters
+                  type: jsonb

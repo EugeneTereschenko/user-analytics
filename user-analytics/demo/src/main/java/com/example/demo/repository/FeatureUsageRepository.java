@@ -53,4 +53,32 @@ public interface FeatureUsageRepository extends JpaRepository<FeatureUsage, Long
             "WHERE fu.durationSeconds IS NOT NULL " +
             "GROUP BY fu.featureName")
     List<Object[]> getAvgTimePerFeature();
+
+
+    List<FeatureUsage> findByUserIdAndTimestampBetween(Long userId,
+                                                       LocalDateTime start,
+                                                       LocalDateTime end);
+
+    @Query("SELECT f.featureName, COUNT(f) FROM FeatureUsage f " +
+            "WHERE f.timestamp BETWEEN :start AND :end " +
+            "GROUP BY f.featureName " +
+            "ORDER BY COUNT(f) DESC")
+    List<Object[]> getFeatureUsageCounts(@Param("start") LocalDateTime start,
+                                         @Param("end") LocalDateTime end);
+
+    @Query("SELECT f.featureName, COUNT(DISTINCT f.userId) FROM FeatureUsage f " +
+            "WHERE f.timestamp BETWEEN :start AND :end " +
+            "GROUP BY f.featureName")
+    List<Object[]> getUniqueUsersByFeature(@Param("start") LocalDateTime start,
+                                           @Param("end") LocalDateTime end);
+
+    Long countByTimestampBetween(LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT FUNCTION('date', f.timestamp) as date, COUNT(f) FROM FeatureUsage f " +
+            "WHERE f.timestamp BETWEEN :start AND :end " +
+            "GROUP BY FUNCTION('date', f.timestamp) " +
+            "ORDER BY date")
+    List<Object[]> getDailyUsageStats(@Param("start") LocalDateTime start,
+                                      @Param("end") LocalDateTime end);
+
 }

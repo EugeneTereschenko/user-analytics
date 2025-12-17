@@ -34,4 +34,24 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
     @Query("SELECT a FROM Activity a WHERE a.userId = :userId ORDER BY a.timestamp DESC")
     List<Activity> findByUserIdOrderByTimestampDesc(@Param("userId") Long userId);
+
+
+    List<Activity> findByUsernameAndTimestampBetween(String username,
+                                                     LocalDateTime start,
+                                                     LocalDateTime end);
+
+    @Query("SELECT a.username, COUNT(a) FROM Activity a " +
+            "WHERE a.timestamp BETWEEN :start AND :end " +
+            "GROUP BY a.username " +
+            "ORDER BY COUNT(a) DESC")
+    List<Object[]> getUserActivityCounts(@Param("start") LocalDateTime start,
+                                         @Param("end") LocalDateTime end);
+
+    @Query("SELECT a.type, COUNT(a) FROM Activity a " +
+            "WHERE a.timestamp BETWEEN :start AND :end " +
+            "GROUP BY a.type")
+    List<Object[]> getActivityTypeCounts(@Param("start") LocalDateTime start,
+                                         @Param("end") LocalDateTime end);
+
+    Long countByTimestampBetween(LocalDateTime start, LocalDateTime end);
 }
