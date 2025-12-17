@@ -1,11 +1,5 @@
 /*
- * © ${year} Yevhen Tereshchenko
- * All rights reserved.
- *
- */
-
-/*
- * © ${year} Yevhen Tereshchenko
+ * © 2025 Yevhen Tereshchenko
  * All rights reserved.
  *
  */

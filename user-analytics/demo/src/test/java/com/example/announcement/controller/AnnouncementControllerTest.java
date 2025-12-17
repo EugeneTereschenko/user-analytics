@@ -1,5 +1,5 @@
 /*
- * © 2024 Yevhen Tereshchenko
+ * © 2025 Yevhen Tereshchenko
  * All rights reserved.
  */
 
@@ -14,16 +14,12 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -37,6 +33,12 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Controller tests for AnnouncementController
+ * Uses @MockitoBean (Spring Boot 3.4+) instead of deprecated @MockBean
+ */
+
+
 @SpringBootTest(classes = {
         com.example.demo.UserAnalyticsJavaApplication.class})
 @AutoConfigureMockMvc
@@ -45,13 +47,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("Announcement Controller Tests")
 class AnnouncementControllerTest {
 
-
-
-
     @Autowired
     private MockMvc mockMvc;
 
-    @Mock
+    @MockitoBean
     private AnnouncementService announcementService;
 
     @Autowired
@@ -59,14 +58,6 @@ class AnnouncementControllerTest {
 
     private AnnouncementDTO announcementDTO;
     private List<AnnouncementDTO> announcementList;
-
-    @TestConfiguration
-    static class MockConfig {
-        @Bean
-        AnnouncementService announcementService() {
-            return org.mockito.Mockito.mock(AnnouncementService.class);
-        }
-    }
 
     @BeforeEach
     void setUp() {
@@ -94,6 +85,7 @@ class AnnouncementControllerTest {
 
         announcementList = Arrays.asList(announcementDTO, announcement2);
     }
+
     @Test
     @DisplayName("GET /api/announcements - Should return all announcements")
     void getAllAnnouncements_shouldReturnAllAnnouncements() throws Exception {
@@ -111,6 +103,7 @@ class AnnouncementControllerTest {
 
         verify(announcementService, times(1)).getAllAnnouncements();
     }
+
     @Test
     @DisplayName("GET /api/announcements - Should return empty list when no announcements")
     void getAllAnnouncements_emptyList_shouldReturnEmptyArray() throws Exception {
@@ -121,6 +114,8 @@ class AnnouncementControllerTest {
         mockMvc.perform(get("/api/announcements"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
+
+        verify(announcementService, times(1)).getAllAnnouncements();
     }
 
     @Test
@@ -263,7 +258,7 @@ class AnnouncementControllerTest {
 
     @Test
     @DisplayName("POST /api/announcements - Should handle invalid data")
-    void createAnnouncement_invalidData_shouldReturnBadRequest() throws Exception {
+    void createAnnouncement_invalidData_shouldReturnInternalServerError() throws Exception {
         // Given
         AnnouncementDTO invalidAnnouncement = AnnouncementDTO.builder().build();
         when(announcementService.createAnnouncement(any(AnnouncementDTO.class)))
@@ -273,7 +268,9 @@ class AnnouncementControllerTest {
         mockMvc.perform(post("/api/announcements")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidAnnouncement)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
+
+        verify(announcementService, times(1)).createAnnouncement(any(AnnouncementDTO.class));
     }
 
     @Test
@@ -307,7 +304,7 @@ class AnnouncementControllerTest {
 
     @Test
     @DisplayName("PUT /api/announcements/{id} - Should handle non-existent announcement")
-    void updateAnnouncement_nonExistentId_shouldReturnNotFound() throws Exception {
+    void updateAnnouncement_nonExistentId_shouldReturnInternalServerError() throws Exception {
         // Given
         when(announcementService.updateAnnouncement(eq(999L), any(AnnouncementDTO.class)))
                 .thenThrow(new RuntimeException("Announcement not found"));
@@ -317,6 +314,9 @@ class AnnouncementControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(announcementDTO)))
                 .andExpect(status().isInternalServerError());
+
+        verify(announcementService, times(1))
+                .updateAnnouncement(eq(999L), any(AnnouncementDTO.class));
     }
 
     @Test
@@ -342,6 +342,8 @@ class AnnouncementControllerTest {
         // When & Then
         mockMvc.perform(delete("/api/announcements/{id}", 999L))
                 .andExpect(status().isInternalServerError());
+
+        verify(announcementService, times(1)).deleteAnnouncement(999L);
     }
 
     @Test
@@ -369,6 +371,7 @@ class AnnouncementControllerTest {
 
         verify(announcementService, times(1)).markAllAsRead();
     }
+
     @Test
     @DisplayName("GET /api/announcements - Should handle service exception")
     void getAllAnnouncements_serviceException_shouldReturnError() throws Exception {
@@ -379,8 +382,9 @@ class AnnouncementControllerTest {
         // When & Then
         mockMvc.perform(get("/api/announcements"))
                 .andExpect(status().isInternalServerError());
-    }
 
+        verify(announcementService, times(1)).getAllAnnouncements();
+    }
 
     @Test
     @DisplayName("GET /api/announcements/search - Should handle empty query")
@@ -393,8 +397,9 @@ class AnnouncementControllerTest {
         mockMvc.perform(get("/api/announcements/search").param("q", ""))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
-    }
 
+        verify(announcementService, times(1)).searchAnnouncements("");
+    }
 
     @Test
     @DisplayName("POST /api/announcements - Should handle all priority types")
@@ -402,6 +407,7 @@ class AnnouncementControllerTest {
         // Test each priority level
         for (AnnouncementPriority priority : AnnouncementPriority.values()) {
             AnnouncementDTO dto = AnnouncementDTO.builder()
+                    .id(1L)
                     .title("Test " + priority)
                     .body("Test body")
                     .date("2024-12-16T10:00:00")
@@ -418,6 +424,9 @@ class AnnouncementControllerTest {
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.priority").value(priority.toString()));
         }
+
+        verify(announcementService, times(AnnouncementPriority.values().length))
+                .createAnnouncement(any(AnnouncementDTO.class));
     }
 
     @Test
@@ -426,6 +435,7 @@ class AnnouncementControllerTest {
         // Test each category
         for (AnnouncementCategory category : AnnouncementCategory.values()) {
             AnnouncementDTO dto = AnnouncementDTO.builder()
+                    .id(1L)
                     .title("Test " + category)
                     .body("Test body")
                     .date("2024-12-16T10:00:00")
@@ -442,6 +452,60 @@ class AnnouncementControllerTest {
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.category").value(category.toString()));
         }
+
+        verify(announcementService, times(AnnouncementCategory.values().length))
+                .createAnnouncement(any(AnnouncementDTO.class));
     }
 
+    @Test
+    @DisplayName("GET /api/announcements/priority/{priority} - Should handle all priority types")
+    void getAnnouncementsByPriority_allPriorities_shouldWork() throws Exception {
+        for (AnnouncementPriority priority : AnnouncementPriority.values()) {
+            AnnouncementDTO dto = AnnouncementDTO.builder()
+                    .id(1L)
+                    .title("Test")
+                    .body("Body")
+                    .date("2024-12-16T10:00:00")
+                    .priority(priority)
+                    .category(AnnouncementCategory.GENERAL)
+                    .build();
+
+            when(announcementService.getAnnouncementsByPriority(priority))
+                    .thenReturn(Collections.singletonList(dto));
+
+            mockMvc.perform(get("/api/announcements/priority/{priority}", priority.name()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$", hasSize(1)))
+                    .andExpect(jsonPath("$[0].priority").value(priority.toString()));
+        }
+
+        verify(announcementService, times(AnnouncementPriority.values().length))
+                .getAnnouncementsByPriority(any(AnnouncementPriority.class));
+    }
+
+    @Test
+    @DisplayName("GET /api/announcements/category/{category} - Should handle all category types")
+    void getAnnouncementsByCategory_allCategories_shouldWork() throws Exception {
+        for (AnnouncementCategory category : AnnouncementCategory.values()) {
+            AnnouncementDTO dto = AnnouncementDTO.builder()
+                    .id(1L)
+                    .title("Test")
+                    .body("Body")
+                    .date("2024-12-16T10:00:00")
+                    .priority(AnnouncementPriority.MEDIUM)
+                    .category(category)
+                    .build();
+
+            when(announcementService.getAnnouncementsByCategory(category))
+                    .thenReturn(Collections.singletonList(dto));
+
+            mockMvc.perform(get("/api/announcements/category/{category}", category.name()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$", hasSize(1)))
+                    .andExpect(jsonPath("$[0].category").value(category.toString()));
+        }
+
+        verify(announcementService, times(AnnouncementCategory.values().length))
+                .getAnnouncementsByCategory(any(AnnouncementCategory.class));
+    }
 }

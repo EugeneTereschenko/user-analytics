@@ -1,5 +1,5 @@
 /*
- * © 2024 Yevhen Tereshchenko
+ * © 2025 Yevhen Tereshchenko
  * All rights reserved.
  */
 
