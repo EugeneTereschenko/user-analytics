@@ -7,8 +7,8 @@
 
 package com.example.featureusage.service;
 
-import com.example.demo.repository.FeatureRatingRepository;
-import com.example.demo.repository.FeatureUsageRepository;
+import com.example.featureusage.repository.FeatureRatingRepository;
+import com.example.featureusage.repository.FeatureUsageRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.featureusage.dto.CategoryUsageDTO;
 import com.example.featureusage.dto.FeatureUsageDTO;

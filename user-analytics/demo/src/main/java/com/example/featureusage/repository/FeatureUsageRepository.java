@@ -1,10 +1,11 @@
 /*
- * © ${year} Yevhen Tereshchenko
+ * © 2025 Yevhen Tereshchenko
  * All rights reserved.
  *
  */
 
-package com.example.demo.repository;
+
+package com.example.featureusage.repository;
 
 import com.example.featureusage.model.FeatureUsage;
 import org.springframework.data.jpa.repository.JpaRepository;
