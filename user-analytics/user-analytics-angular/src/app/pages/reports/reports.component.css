@@ -1,0 +1,257 @@
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.reports-header {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.reports-header h1 {
+    color: #667eea;
+    margin: 0;
+    font-weight: 700;
+}
+
+.report-template-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.report-template-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.report-template-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.icon-user {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.icon-activity {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.icon-usage {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.icon-system {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.icon-financial {
+    background: #fce4ec;
+    color: #c2185b;
+}
+
+.quick-report-btn {
+    background: white;
+    border: 2px solid #667eea;
+    color: #667eea;
+    padding: 1rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+}
+
+.quick-report-btn:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.report-content {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.summary-card h3 {
+    font-size: 2.5rem;
+    margin: 0;
+    font-weight: 700;
+}
+
+.trend-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.trend-up {
+    background: #d4edda;
+    color: #155724;
+}
+
+.trend-down {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.trend-stable {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.view-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.view-tab {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #667eea;
+    background: white;
+    color: #667eea;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.view-tab.active {
+    background: #667eea;
+    color: white;
+}
+
+.modal-content {
+    border-radius: 15px;
+    border: none;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px 15px 0 0;
+}
+
+.btn-custom {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+}
+
+.btn-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    text-align: center;
+    color: white;
+}
+
+.saved-report-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.saved-report-item:hover {
+    background: #e9ecef;
+}
+
+.schedule-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.schedule-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.schedule-inactive {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.recipient-chip {
+    display: inline-block;
+    background: #e9ecef;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    margin: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.recipient-chip i {
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+@media print {
+    body {
+        background: white;
+    }
+
+    .reports-header,
+    .btn,
+    .view-tabs {
+        display: none;
+    }
+}
