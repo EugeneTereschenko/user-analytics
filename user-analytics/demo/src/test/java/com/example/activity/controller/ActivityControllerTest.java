@@ -9,18 +9,14 @@ package com.example.activity.controller;
 import com.example.activity.dto.ActivityDTO;
 import com.example.activity.model.ActivityType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -32,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
-class ActivityIntegrationTest {
+class ActivityControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -56,6 +52,7 @@ class ActivityIntegrationTest {
 
 
     @Test
+    @WithMockUser
     void createAndRetrieveActivity_fullCycle() throws Exception {
         mockMvc.perform(post("/api/activities")
                         .contentType(MediaType.APPLICATION_JSON)

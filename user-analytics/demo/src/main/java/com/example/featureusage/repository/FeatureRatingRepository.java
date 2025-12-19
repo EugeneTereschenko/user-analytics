@@ -1,10 +1,16 @@
 /*
+ * © 2025 Yevhen Tereshchenko
+ * All rights reserved.
+ *
+ */
+
+/*
  * © ${year} Yevhen Tereshchenko
  * All rights reserved.
  *
  */
 
-package com.example.demo.repository;
+package com.example.featureusage.repository;
 
 import com.example.featureusage.model.FeatureRating;
 import org.springframework.data.jpa.repository.JpaRepository;

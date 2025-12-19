@@ -1,4 +1,10 @@
-package com.example.demo.repository;
+/*
+ * © 2025 Yevhen Tereshchenko
+ * All rights reserved.
+ *
+ */
+
+package com.example.notification.repository;
 
 import com.example.demo.model.ProfileNotification;
 import org.springframework.data.jpa.repository.JpaRepository;
