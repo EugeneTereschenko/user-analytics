@@ -27,6 +27,7 @@ export interface ActivityStats {
 
 @Injectable({ providedIn: 'root' })
 export class ActivityService {
+  private readonly tokenKey = 'auth_token';
   private apiUrl = 'http://localhost:8080/api/activities'; // Adjust to your backend URL
   private activities$ = new BehaviorSubject<UserActivity[]>([]);
   private loading$ = new BehaviorSubject<boolean>(false);
@@ -36,6 +37,11 @@ export class ActivityService {
     this.loadActivities();
   }
 
+  private getAuthHeaders(): { [header: string]: string } {
+    const token = localStorage.getItem(this.tokenKey);
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
   /**
    * Get all activities from backend
    */
@@ -43,7 +49,7 @@ export class ActivityService {
     this.loading$.next(true);
     this.error$.next(null);
 
-    this.http.get<UserActivity[]>(`${this.apiUrl}`)
+    this.http.get<UserActivity[]>(`${this.apiUrl}`, { headers: this.getAuthHeaders() })
       .pipe(
         tap(activities => {
           // Convert timestamp strings to Date objects
@@ -68,7 +74,7 @@ export class ActivityService {
    * Get activities for a specific user
    */
   getActivitiesByUserId(userId: number): Observable<UserActivity[]> {
-    return this.http.get<UserActivity[]>(`${this.apiUrl}/user/${userId}`)
+    return this.http.get<UserActivity[]>(`${this.apiUrl}/user/${userId}`, { headers: this.getAuthHeaders() })
       .pipe(
         tap(activities => {
           const formattedActivities = activities.map(a => ({
@@ -89,7 +95,7 @@ export class ActivityService {
    * Get activities by type
    */
   getActivitiesByType(type: string): Observable<UserActivity[]> {
-    return this.http.get<UserActivity[]>(`${this.apiUrl}/type/${type}`)
+    return this.http.get<UserActivity[]>(`${this.apiUrl}/type/${type}`, { headers: this.getAuthHeaders() })
       .pipe(
         catchError(error => {
           console.error('Error loading activities by type:', error);
@@ -103,6 +109,7 @@ export class ActivityService {
    */
   getActivitiesByDateRange(startDate: string, endDate: string): Observable<UserActivity[]> {
     return this.http.get<UserActivity[]>(`${this.apiUrl}/date-range`, {
+      headers: this.getAuthHeaders(),
       params: { startDate, endDate }
     }).pipe(
       tap(activities => {
@@ -123,7 +130,7 @@ export class ActivityService {
    * Log a new activity
    */
   logActivity(activity: Omit<UserActivity, 'id' | 'timestamp'>): Observable<UserActivity> {
-    return this.http.post<UserActivity>(`${this.apiUrl}`, activity)
+    return this.http.post<UserActivity>(`${this.apiUrl}`, activity, { headers: this.getAuthHeaders() })
       .pipe(
         tap(newActivity => {
           const current = this.activities$.value;
@@ -144,7 +151,7 @@ export class ActivityService {
    * Get activity statistics
    */
   getActivityStats(): Observable<ActivityStats> {
-    return this.http.get<ActivityStats>(`${this.apiUrl}/stats`)
+    return this.http.get<ActivityStats>(`${this.apiUrl}/stats`, { headers: this.getAuthHeaders() })
       .pipe(
         catchError(error => {
           console.error('Error loading activity stats:', error);
@@ -166,6 +173,7 @@ export class ActivityService {
    */
   getRecentActivities(limit: number = 10): Observable<UserActivity[]> {
     return this.http.get<UserActivity[]>(`${this.apiUrl}/recent`, {
+      headers: this.getAuthHeaders(),
       params: { limit: limit.toString() }
     }).pipe(
       tap(activities => {
@@ -186,7 +194,7 @@ export class ActivityService {
    * Delete an activity (admin only)
    */
   deleteActivity(activityId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${activityId}`)
+    return this.http.delete<void>(`${this.apiUrl}/${activityId}`, { headers: this.getAuthHeaders() })
       .pipe(
         tap(() => {
           const current = this.activities$.value;
@@ -204,7 +212,7 @@ export class ActivityService {
    * Clear all activities (admin only)
    */
   clearAllActivities(): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/clear`)
+    return this.http.delete<void>(`${this.apiUrl}/clear`, { headers: this.getAuthHeaders() })
       .pipe(
         tap(() => {
           this.activities$.next([]);
