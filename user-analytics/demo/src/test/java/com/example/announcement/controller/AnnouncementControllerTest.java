@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
@@ -87,6 +88,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /api/announcements - Should return all announcements")
     void getAllAnnouncements_shouldReturnAllAnnouncements() throws Exception {
         // Given
@@ -105,6 +107,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /api/announcements - Should return empty list when no announcements")
     void getAllAnnouncements_emptyList_shouldReturnEmptyArray() throws Exception {
         // Given
@@ -119,6 +122,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /api/announcements/{id} - Should return announcement by ID")
     void getAnnouncementById_validId_shouldReturnAnnouncement() throws Exception {
         // Given
@@ -136,6 +140,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /api/announcements/{id} - Should return 500 when announcement not found")
     void getAnnouncementById_invalidId_shouldReturnNotFound() throws Exception {
         // Given
@@ -150,6 +155,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /api/announcements/priority/{priority} - Should return announcements by priority")
     void getAnnouncementsByPriority_shouldReturnFilteredAnnouncements() throws Exception {
         // Given
@@ -171,6 +177,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /api/announcements/category/{category} - Should return announcements by category")
     void getAnnouncementsByCategory_shouldReturnFilteredAnnouncements() throws Exception {
         // Given
@@ -191,6 +198,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /api/announcements/active - Should return active announcements")
     void getActiveAnnouncements_shouldReturnActiveOnly() throws Exception {
         // Given
@@ -205,6 +213,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /api/announcements/unread - Should return unread announcements")
     void getUnreadAnnouncements_shouldReturnUnreadOnly() throws Exception {
         // Given
@@ -221,6 +230,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /api/announcements/search - Should return announcements matching query")
     void searchAnnouncements_shouldReturnMatchingResults() throws Exception {
         // Given
@@ -239,6 +249,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("POST /api/announcements - Should create new announcement")
     void createAnnouncement_validData_shouldReturnCreated() throws Exception {
         // Given
@@ -257,6 +268,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("POST /api/announcements - Should handle invalid data")
     void createAnnouncement_invalidData_shouldReturnInternalServerError() throws Exception {
         // Given
@@ -274,6 +286,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("PUT /api/announcements/{id} - Should update announcement")
     void updateAnnouncement_validData_shouldReturnUpdated() throws Exception {
         // Given
@@ -303,6 +316,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("PUT /api/announcements/{id} - Should handle non-existent announcement")
     void updateAnnouncement_nonExistentId_shouldReturnInternalServerError() throws Exception {
         // Given
@@ -320,6 +334,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("DELETE /api/announcements/{id} - Should delete announcement")
     void deleteAnnouncement_validId_shouldReturnNoContent() throws Exception {
         // Given
@@ -333,6 +348,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("DELETE /api/announcements/{id} - Should handle deletion error")
     void deleteAnnouncement_error_shouldReturnInternalServerError() throws Exception {
         // Given
@@ -347,6 +363,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("POST /api/announcements/{id}/read - Should mark announcement as read")
     void markAsRead_validId_shouldReturnOk() throws Exception {
         // Given
@@ -360,6 +377,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("POST /api/announcements/read-all - Should mark all announcements as read")
     void markAllAsRead_shouldReturnOk() throws Exception {
         // Given
@@ -373,6 +391,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /api/announcements - Should handle service exception")
     void getAllAnnouncements_serviceException_shouldReturnError() throws Exception {
         // Given
@@ -387,6 +406,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /api/announcements/search - Should handle empty query")
     void searchAnnouncements_emptyQuery_shouldReturnEmptyList() throws Exception {
         // Given
@@ -402,6 +422,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("POST /api/announcements - Should handle all priority types")
     void createAnnouncement_allPriorities_shouldSucceed() throws Exception {
         // Test each priority level
@@ -430,6 +451,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("POST /api/announcements - Should handle all category types")
     void createAnnouncement_allCategories_shouldSucceed() throws Exception {
         // Test each category
@@ -458,6 +480,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /api/announcements/priority/{priority} - Should handle all priority types")
     void getAnnouncementsByPriority_allPriorities_shouldWork() throws Exception {
         for (AnnouncementPriority priority : AnnouncementPriority.values()) {
@@ -484,6 +507,7 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("GET /api/announcements/category/{category} - Should handle all category types")
     void getAnnouncementsByCategory_allCategories_shouldWork() throws Exception {
         for (AnnouncementCategory category : AnnouncementCategory.values()) {

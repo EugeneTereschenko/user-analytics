@@ -18,12 +18,18 @@ import com.example.notification.model.Notification;
 import com.example.notification.model.NotificationPriority;
 import com.example.notification.model.NotificationType;
 import com.example.notification.model.UserNotificationRead;
+import com.example.notification.repository.NotificationRepository;
+import com.example.notification.repository.ProfileNotificationRepository;
+import com.example.notification.repository.UserNotificationReadRepository;
 import com.example.notification.service.impl.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +37,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     private final NotificationRepository notificationRepository;
     private final UserService userService;
@@ -109,7 +117,7 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = new Notification.Builder()
                 .title(notificationsDTO.getTitle())
                 .message(notificationsDTO.getMessage())
-                .timestamp(DateTimeConverter.convertStringToTimestamp(notificationsDTO.getTimestamp()))
+                .timestamp(convertStringToTimestamp(notificationsDTO.getTimestamp()))
                 .type(notificationsDTO.getType())
                 .priority(notificationsDTO.getPriority())
                 .category(notificationsDTO.getCategory())
@@ -197,7 +205,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .id(notification.getId())
                 .title(notification.getTitle())
                 .message(notification.getMessage())
-                .timestamp(DateTimeConverter.convertTimestampToString(notification.getTimestamp()))
+                .timestamp(notification.getTimestamp().toString())
                 .type(notification.getType())
                 .priority(notification.getPriority())
                 .isRead(readStatus != null)
@@ -235,4 +243,11 @@ public class NotificationServiceImpl implements NotificationService {
 
         profileNotificationRepository.saveAndFlush(profileNotification);
     }
+
+
+    public static Timestamp convertStringToTimestamp(String dateTimeStr) {
+        LocalDateTime localDateTime = LocalDateTime.parse(dateTimeStr, FORMATTER);
+        return Timestamp.valueOf(localDateTime);
+    }
+
 }
