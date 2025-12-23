@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @RequiredArgsConstructor
-@Table(name = "\"user\"")
+@Table(name = "users")
 @Entity
 @Data
 public class User implements UserDetails {

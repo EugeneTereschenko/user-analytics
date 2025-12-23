@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: add-version-column-to-announcements
+      id: 008-add-version-to-announcements
       author: EugeneTereshchenko
       changes:
         - addColumn:

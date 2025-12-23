@@ -38,13 +38,13 @@ public class SavedReport {
     @Column(nullable = false, length = 50)
     private String type;
 
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(columnDefinition = "text[]", nullable = false)
-    private String[] recipients;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb", nullable = false)
+    private String data;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    private String filters;
+    private String summary;
 
     @Column(name = "generated_at", nullable = false)
     private LocalDateTime generatedAt;
@@ -55,5 +55,4 @@ public class SavedReport {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
-
 }

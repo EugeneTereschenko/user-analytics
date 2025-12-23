@@ -1,0 +1,80 @@
+databaseChangeLog:
+  - changeSet:
+      id: 012-insert-data-into-users
+      author: eugene.tereschenko
+      changes:
+
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: username, value: testuser }
+              - column: { name: email, value: testuser@example.com }
+              - column: { name: password, value: "$2a$10$examplehash" }
+              - column: { name: password_generate, value: randomsalt }
+              - column: { name: secret_key, value: secret123 }
+              - column: { name: login_count, valueNumeric: 0 }
+              - column: { name: signup_date, valueDate: 2024-01-01 }
+              - column: { name: last_login, valueDate: 2024-01-01T12:00:00 }
+              - column: { name: is_active, valueBoolean: true }
+              - column: { name: is_two_factor, valueBoolean: false }
+              - column: { name: location, value: Earth }
+              - column: { name: device_type, value: Web }
+              - column: { name: activity_score, valueNumeric: 0.0 }
+              - column: { name: created_at, valueDate: 2024-01-01T12:00:00 }
+              - column: { name: updated_at, valueDate: 2024-01-01T12:00:00 }
+              - column: { name: last_login_at, valueDate: 2024-01-01T12:00:00 }
+              - column: { name: activity_count, valueNumeric: 0 }
+              - column: { name: enabled, valueBoolean: true }
+              - column: { name: account_non_expired, valueBoolean: true }
+              - column: { name: account_non_locked, valueBoolean: true }
+              - column: { name: credentials_non_expired, valueBoolean: true }
+
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: username, value: testuser2 }
+              - column: { name: email, value: testuser2@example.com }
+              - column: { name: password, value: "$2a$10$examplehash2" }
+              - column: { name: password_generate, value: randomsalt2 }
+              - column: { name: secret_key, value: secret456 }
+              - column: { name: login_count, valueNumeric: 0 }
+              - column: { name: signup_date, valueDate: 2024-01-02 }
+              - column: { name: last_login, valueDate: 2024-01-02T12:00:00 }
+              - column: { name: is_active, valueBoolean: true }
+              - column: { name: is_two_factor, valueBoolean: false }
+              - column: { name: location, value: Mars }
+              - column: { name: device_type, value: Mobile }
+              - column: { name: activity_score, valueNumeric: 0.0 }
+              - column: { name: created_at, valueDate: 2024-01-02T12:00:00 }
+              - column: { name: updated_at, valueDate: 2024-01-02T12:00:00 }
+              - column: { name: last_login_at, valueDate: 2024-01-02T12:00:00 }
+              - column: { name: activity_count, valueNumeric: 0 }
+              - column: { name: enabled, valueBoolean: true }
+              - column: { name: account_non_expired, valueBoolean: true }
+              - column: { name: account_non_locked, valueBoolean: true }
+              - column: { name: credentials_non_expired, valueBoolean: true }
+
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: username, value: testuser3 }
+              - column: { name: email, value: testuser3@example.com }
+              - column: { name: password, value: "$2a$10$examplehash3" }
+              - column: { name: password_generate, value: randomsalt3 }
+              - column: { name: secret_key, value: secret789 }
+              - column: { name: login_count, valueNumeric: 0 }
+              - column: { name: signup_date, valueDate: 2024-01-03 }
+              - column: { name: last_login, valueDate: 2024-01-03T12:00:00 }
+              - column: { name: is_active, valueBoolean: true }
+              - column: { name: is_two_factor, valueBoolean: false }
+              - column: { name: location, value: Venus }
+              - column: { name: device_type, value: Tablet }
+              - column: { name: activity_score, valueNumeric: 0.0 }
+              - column: { name: created_at, valueDate: 2024-01-03T12:00:00 }
+              - column: { name: updated_at, valueDate: 2024-01-03T12:00:00 }
+              - column: { name: last_login_at, valueDate: 2024-01-03T12:00:00 }
+              - column: { name: activity_count, valueNumeric: 0 }
+              - column: { name: enabled, valueBoolean: true }
+              - column: { name: account_non_expired, valueBoolean: true }
+              - column: { name: account_non_locked, valueBoolean: true }
+              - column: { name: credentials_non_expired, valueBoolean: true }

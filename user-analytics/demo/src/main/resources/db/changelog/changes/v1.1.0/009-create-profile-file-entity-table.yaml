@@ -1,7 +1,7 @@
 # db/changelog/changes/v1.1.0/009-create-profile-file-entity-table.yaml
 databaseChangeLog:
   - changeSet:
-      id: 001-create-profile-file-entity-table
+      id: 009-create-profile-file-entity-table
       author: developer
       changes:
         - createTable:

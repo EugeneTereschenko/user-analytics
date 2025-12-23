@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1-create-saved-reports
+      id: 009-changelog-saved-and-scheduled-reports
       author: EugeneTereshchenko
       changes:
         - createTable:
@@ -49,7 +49,7 @@ databaseChangeLog:
         - addForeignKeyConstraint:
             baseTableName: saved_reports
             baseColumnNames: user_id
-            referencedTableName: user
+            referencedTableName: users
             referencedColumnNames: id
             onDelete: CASCADE
             constraintName: fk_saved_reports_user_id
@@ -114,7 +114,7 @@ databaseChangeLog:
         - addForeignKeyConstraint:
             baseTableName: scheduled_reports
             baseColumnNames: user_id
-            referencedTableName: user
+            referencedTableName: users
             referencedColumnNames: id
             onDelete: CASCADE
             constraintName: fk_scheduled_reports_user_id

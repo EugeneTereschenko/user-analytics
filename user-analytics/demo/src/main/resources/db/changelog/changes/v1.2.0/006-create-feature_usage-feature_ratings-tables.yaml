@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 002-create-feature-usage-table
+      id: 006-create-feature_usage-feature_ratings-tables
       author: EugeneTereshchenko
       changes:
         - createTable:
@@ -46,7 +46,7 @@ databaseChangeLog:
         - addForeignKeyConstraint:
             baseTableName: feature_usage
             baseColumnNames: user_id
-            referencedTableName: user
+            referencedTableName: users
             referencedColumnNames: id
             onDelete: CASCADE
             constraintName: fk_feature_usage_user
@@ -91,7 +91,7 @@ databaseChangeLog:
         - addForeignKeyConstraint:
             baseTableName: feature_ratings
             baseColumnNames: user_id
-            referencedTableName: user
+            referencedTableName: users
             referencedColumnNames: id
             onDelete: CASCADE
             constraintName: fk_feature_ratings_user

@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 001-create-profile-reminder-table
+      id: 011-create-profile-reminder-table
       author: developer
       changes:
         - createTable:

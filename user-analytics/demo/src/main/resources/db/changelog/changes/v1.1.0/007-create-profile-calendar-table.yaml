@@ -1,7 +1,7 @@
 # db/changelog/changes/v1.1.0/007-create-profile-calendar-table.yaml
 databaseChangeLog:
   - changeSet:
-      id: 001-create-profile-calendar-table
+      id: 007-create-profile-calendar-table
       author: developer
       changes:
         - createTable:

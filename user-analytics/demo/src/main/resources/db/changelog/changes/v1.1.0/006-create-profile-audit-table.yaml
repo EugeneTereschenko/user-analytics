@@ -1,7 +1,7 @@
 # db/changelog/changes/v1.1.0/006-create-profile-audit-table.yaml
 databaseChangeLog:
   - changeSet:
-      id: 001-create-profile-audit-table
+      id: 006-create-profile-audit-table
       author: developer
       changes:
         - createTable:

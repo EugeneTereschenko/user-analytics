@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 003-create-profile-task-table
+      id: 013-create-profile-task-table
       author: developer
       changes:
         - createTable:

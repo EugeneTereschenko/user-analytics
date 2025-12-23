@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 2025-12-08-01-create-user-activity
+      id: 003-create-user-activity
       author: EugeneTereschenko
       changes:
         - createTable:
@@ -46,7 +46,7 @@ databaseChangeLog:
         - addForeignKeyConstraint:
             baseTableName: user_activity
             baseColumnNames: user_id
-            referencedTableName: user
+            referencedTableName: users
             referencedColumnNames: id
             onDelete: CASCADE
             constraintName: fk_user_activity_user_id

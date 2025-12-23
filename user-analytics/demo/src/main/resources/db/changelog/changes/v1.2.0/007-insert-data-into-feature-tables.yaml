@@ -1,7 +1,11 @@
 databaseChangeLog:
   - changeSet:
-      id: 006-insert-sample-feature-usage
+      id: 007-insert-data-into-feature-tables
       author: EugeneTereshchenko
+      preConditions:
+        - onFail: MARK_RAN
+        - dbms:
+            type: postgresql
       changes:
         - sql:
             splitStatements: false
@@ -18,7 +22,7 @@ databaseChangeLog:
                   i INTEGER;
                   j INTEGER;
               BEGIN
-                  FOR user_record IN SELECT id FROM "user" LOOP
+                  FOR user_record IN SELECT id FROM "users" LOOP
                       FOR i IN 1..FLOOR(RANDOM() * 51 + 50) LOOP
                           j := FLOOR(RANDOM() * array_length(feature_names, 1)) + 1;
                           random_feature := feature_names[j];
@@ -65,7 +69,7 @@ databaseChangeLog:
                   random_rating INTEGER;
                   i INTEGER;
               BEGIN
-                  FOR user_record IN SELECT id FROM "user" LOOP
+                  FOR user_record IN SELECT id FROM "users" LOOP
                       FOR i IN 1..FLOOR(RANDOM() * 3 + 2) LOOP
                           random_feature := feature_names[FLOOR(RANDOM() * array_length(feature_names, 1)) + 1];
                           random_rating := FLOOR(RANDOM() * 3 + 3);
