@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 2025-12-10-02-create-announcements
+      id: 004-recreate-announcement-tables
       author: EugeneTereshchenko
       changes:
         - createTable:
@@ -104,7 +104,7 @@ databaseChangeLog:
         - addForeignKeyConstraint:
             baseTableName: user_announcement_reads
             baseColumnNames: user_id
-            referencedTableName: user
+            referencedTableName: users
             referencedColumnNames: id
             onDelete: CASCADE
             constraintName: fk_user_announcement_reads_user_id
@@ -273,7 +273,7 @@ databaseChangeLog:
                   value: We are excited to announce the release of our new feature that enhances user experience.
               - column:
                   name: date
-                  value: 2023-10-01
+                  value: 2023-10-01 00:00:00
         - insert:
             tableName: announcements
             columns:
@@ -285,7 +285,7 @@ databaseChangeLog:
                   value: Scheduled maintenance will occur on 2023-10-05 from 2 AM to 4 AM. Please plan accordingly.
               - column:
                   name: date
-                  value: 2023-10-02
+                  value: 2023-10-02 00:00:00
         - insert:
             tableName: announcements
             columns:
@@ -297,7 +297,7 @@ databaseChangeLog:
                   value: A critical security patch has been applied to all systems. Please ensure your applications are updated to the latest version.
               - column:
                   name: date
-                  value: 2023-10-03
+                  value: 2023-10-03 00:00:00
         - insert:
             tableName: announcements
             columns:
@@ -309,7 +309,7 @@ databaseChangeLog:
                   value: Check out our new user guide that provides tips and tricks for getting the most out of our platform.
               - column:
                   name: date
-                  value: 2023-10-04
+                  value: 2023-10-04 00:00:00
         - insert:
             tableName: announcements
             columns:
@@ -321,7 +321,7 @@ databaseChangeLog:
                   value: Join us for our upcoming community event on 2023-10-10. We look forward to seeing you there!
               - column:
                   name: date
-                  value: 2023-10-05
+                  value: 2023-10-05 00:00:00
         - insert:
             tableName: announcements
             columns:
@@ -333,7 +333,7 @@ databaseChangeLog:
                   value: We value your feedback! Please let us know your thoughts on the new features released this month.
               - column:
                   name: date
-                  value: 2023-10-06
+                  value: 2023-10-06 00:00:00
         - insert:
             tableName: announcements
             columns:
@@ -345,7 +345,7 @@ databaseChangeLog:
                   value: A system upgrade is scheduled for 2023-10-15. Expect improved performance and new capabilities.
               - column:
                   name: date
-                  value: 2023-10-07
+                  value: 2023-10-07 00:00:00
         - insert:
             tableName: announcements
             columns:
@@ -357,7 +357,7 @@ databaseChangeLog:
                   value: Please note our holiday schedule for the upcoming season. Our offices will be closed on 2023-10-20 and 2023-10-21.
               - column:
                   name: date
-                  value: 2023-10-08
+                  value: 2023-10-08 00:00:00
         - insert:
             tableName: announcements
             columns:
@@ -369,7 +369,7 @@ databaseChangeLog:
                   value: We have updated our API documentation to include the latest endpoints and usage examples.
               - column:
                   name: date
-                  value: 2023-10-09
+                  value: 2023-10-09 00:00:00
         - insert:
             tableName: announcements
             columns:
@@ -381,5 +381,4 @@ databaseChangeLog:
                   value: Help us improve by participating in our user survey. Your input is invaluable to us.
               - column:
                   name: date
-                  value: 2023-10-10
-
+                  value: 2023-10-10 00:00:00

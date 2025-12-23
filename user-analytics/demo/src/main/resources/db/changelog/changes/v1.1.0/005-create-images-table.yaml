@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 001-create-images-table
+      id: 005-create-images-table
       author: developer
       changes:
         - createTable:

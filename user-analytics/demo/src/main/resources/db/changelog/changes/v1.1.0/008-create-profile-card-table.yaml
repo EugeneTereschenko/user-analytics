@@ -1,7 +1,7 @@
 # db/changelog/changes/v1.1.0/008-create-profile-card-table.yaml
 databaseChangeLog:
   - changeSet:
-      id: 001-create-profile-card-table
+      id: 008-create-profile-card-table
       author: developer
       changes:
         - createTable:

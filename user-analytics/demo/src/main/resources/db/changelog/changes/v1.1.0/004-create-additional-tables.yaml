@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 001-create-announcement-table
+      id: 004-create-announcement-table
       author: developer
       changes:
         - createTable:

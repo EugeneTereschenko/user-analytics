@@ -32,8 +32,8 @@ class FeatureRatingRepositoryTest {
     @DisplayName("findByFeatureName returns correct ratings")
     void testFindByFeatureName() {
         FeatureRating rating1 = new FeatureRating(null, 1L, "Dashboard", 4, null, null);
-        FeatureRating rating2 = new FeatureRating(null, 1L,"Dashboard", 5, null, null);
-        FeatureRating rating3 = new FeatureRating(null, 1L,"Reports", 3, null, null);
+        FeatureRating rating2 = new FeatureRating(null, 2L,"Dashboard", 5, null, null);
+        FeatureRating rating3 = new FeatureRating(null, 3L,"Reports", 3, null, null);
         featureRatingRepository.save(rating1);
         featureRatingRepository.save(rating2);
         featureRatingRepository.save(rating3);
@@ -47,8 +47,8 @@ class FeatureRatingRepositoryTest {
     @DisplayName("getAverageRating returns correct average")
     void testGetAverageRating() {
         featureRatingRepository.save(new FeatureRating(null,1L, "Dashboard", 4, null, null));
-        featureRatingRepository.save(new FeatureRating(null,1L, "Dashboard", 5, null, null));
-        featureRatingRepository.save(new FeatureRating(null,1L, "Reports", 3, null, null));
+        featureRatingRepository.save(new FeatureRating(null,2L, "Dashboard", 5, null, null));
+        featureRatingRepository.save(new FeatureRating(null,3L, "Reports", 3, null, null));
 
         Double avg = featureRatingRepository.getAverageRating();
         assertNotNull(avg);
@@ -59,8 +59,8 @@ class FeatureRatingRepositoryTest {
     @DisplayName("getAverageRatingPerFeature returns correct averages per feature")
     void testGetAverageRatingPerFeature() {
         featureRatingRepository.save(new FeatureRating(null,1L, "Dashboard", 4, null, null));
-        featureRatingRepository.save(new FeatureRating(null,1L, "Dashboard", 2, null, null));
-        featureRatingRepository.save(new FeatureRating(null,1L, "Reports", 5, null, null));
+        featureRatingRepository.save(new FeatureRating(null,2L, "Dashboard", 2, null, null));
+        featureRatingRepository.save(new FeatureRating(null,3L, "Reports", 5, null, null));
 
         List<Object[]> result = featureRatingRepository.getAverageRatingPerFeature();
         assertEquals(2, result.size());
