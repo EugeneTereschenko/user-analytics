@@ -37,8 +37,6 @@ spring:
 app:
   init:
     users-file: ${user.home}/IdeaProjects/demo/user-analytics/demo/src/main/resources/usersList.txt
-    calendar-file: ${user.home}/IdeaProjects/demo/user-analytics/demo/src/main/resources/calendarList.txt
-    audit-file: ${user.home}/IdeaProjects/demo/user-analytics/demo/src/main/resources/auditList.txt
 
 # Logging
 logging:

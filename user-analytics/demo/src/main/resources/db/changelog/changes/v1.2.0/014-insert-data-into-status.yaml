@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 014-insert-data-into-status
+      author: developer
+      changes:
+        - insert:
+            tableName: status
+            columns:
+              - column:
+                  name: cpu
+                  value: 2.5 GHz
+              - column:
+                  name: memory
+                  value: 8 GB
+              - column:
+                  name: uptime
+                  value: 24 days, 5 hours
+              - column:
+                  name: api_latency
+                  value: 100 ms
+              - column:
+                  name: jobs
+                  value: 5 active jobs
