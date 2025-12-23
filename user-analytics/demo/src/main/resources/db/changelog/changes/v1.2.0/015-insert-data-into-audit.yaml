@@ -1,0 +1,125 @@
+databaseChangeLog:
+  - changeSet:
+      id: 015-insert-data-into-audit
+      author: developer
+      changes:
+        - insert:
+            tableName: audit
+            columns:
+              - column:
+                  name: username
+                  value: john.doe
+              - column:
+                  name: action
+                  value: LOGIN
+              - column:
+                  name: target
+                  value: SYSTEM
+        - insert:
+            tableName: audit
+            columns:
+              - column:
+                  name: username
+                  value: jane.smith
+              - column:
+                  name: action
+                  value: CREATE
+              - column:
+                  name: target
+                  value: DOCUMENT
+        - insert:
+            tableName: audit
+            columns:
+              - column:
+                  name: username
+                  value: admin
+              - column:
+                  name: action
+                  value: DELETE
+              - column:
+                  name: target
+                  value: USER_ACCOUNT
+        - insert:
+            tableName: audit
+            columns:
+              - column:
+                  name: username
+                  value: alice.wong
+              - column:
+                  name: action
+                  value: UPDATE
+              - column:
+                  name: target
+                  value: PROFILE
+        - insert:
+            tableName: audit
+            columns:
+              - column:
+                  name: username
+                  value: bob.jones
+              - column:
+                  name: action
+                  value: LOGOUT
+              - column:
+                  name: target
+                  value: SYSTEM
+        - insert:
+            tableName: audit
+            columns:
+              - column:
+                  name: username
+                  value: charlie.brown
+              - column:
+                  name: action
+                  value: ACCESS
+              - column:
+                  name: target
+                  value: REPORT
+        - insert:
+            tableName: audit
+            columns:
+              - column:
+                  name: username
+                  value: david.lee
+              - column:
+                  name: action
+                  value: UPLOAD
+              - column:
+                  name: target
+                  value: FILE
+        - insert:
+            tableName: audit
+            columns:
+              - column:
+                  name: username
+                  value: emma.green
+              - column:
+                  name: action
+                  value: DOWNLOAD
+              - column:
+                  name: target
+                  value: RESOURCE
+        - insert:
+            tableName: audit
+            columns:
+              - column:
+                  name: username
+                  value: frank.white
+              - column:
+                  name: action
+                  value: SHARE
+              - column:
+                  name: target
+                  value: FOLDER
+        - insert:
+            tableName: audit
+            columns:
+              - column:
+                  name: username
+                  value: grace.black
+              - column:
+                  name: action
+                  value: RENAME
+              - column:
+                  name: target
+                  value: ITEM

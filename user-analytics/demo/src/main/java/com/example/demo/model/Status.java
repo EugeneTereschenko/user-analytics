@@ -20,7 +20,7 @@ public class Status {
     private String cpu;
     @Column(name = "memory", length = 255)
     private String memory;
-    @Column(name = "apiLatency", length = 255)
+    @Column(name = "api_latency", length = 255)
     private String apiLatency;
     @Column(name = "jobs", length = 255)
     private String jobs;

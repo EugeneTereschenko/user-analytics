@@ -51,3 +51,9 @@ databaseChangeLog:
       file: db/changelog/changes/v1.2.0/011-insert-data-into-role.yaml
   - include:
       file: db/changelog/changes/v1.2.0/012-insert-data-into-users.yaml
+  - include:
+      file: db/changelog/changes/v1.2.0/013-insert-data-into-calendar.yaml
+  - include:
+      file: db/changelog/changes/v1.2.0/014-insert-data-into-status.yaml
+  - include:
+      file: db/changelog/changes/v1.2.0/015-insert-data-into-audit.yaml
