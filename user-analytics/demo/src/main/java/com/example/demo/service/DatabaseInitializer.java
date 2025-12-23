@@ -32,11 +32,9 @@ import java.util.regex.Pattern;
 @Component
 public class DatabaseInitializer {
 
-    private final ProfileNotificationRepository profileNotificationRepository;
     private final ProfileCalendarRepository profileCalendarRepository;
     private final AuditService auditService;
     private final ProfileAuditRepository profileAuditRepository;
-    private final RoleService roleService;
     private final UserService userService;
     private final UserRepository userRepository; // Add this
     private final ProfileService profileService;
@@ -134,7 +132,7 @@ public class DatabaseInitializer {
 
             long userCount = userRepository.count();
 
-            if (userCount > 0) {
+            if (userCount > 3) {
                 log.info("=================================================");
                 log.info("Database already contains {} users - skipping initialization", userCount);
                 log.info("=================================================");
@@ -146,7 +144,7 @@ public class DatabaseInitializer {
             log.info("=================================================");
 
             try {
-                initializeRoles();
+                //initializeRoles();
                 initializeStatuses();
 
                 // Use configurable file paths (from application.yml)
@@ -165,7 +163,7 @@ public class DatabaseInitializer {
 
                 processUsers(usersFile, passwordEncoder);
 
-                if (userRepository.count() > 0) {
+                if (userRepository.count() > 3) {
                     Long defaultProfileId = 2L; // Or get dynamically
                     processCalendar(calendarFile, defaultProfileId);
                     processAudit(auditFile, defaultProfileId);
@@ -183,14 +181,14 @@ public class DatabaseInitializer {
         };
     }
 
-    private void initializeRoles() {
+/*    private void initializeRoles() {
         log.info("Initializing roles...");
         roleService.createRole("ROLE_USER");
         roleService.createRole("ROLE_ADMIN");
         roleService.createRole("ROLE_EDITOR");
         roleService.createRole("ROLE_VIEWER");
         log.info("Roles initialized successfully");
-    }
+    }*/
 
     private void initializeStatuses() {
         log.info("Initializing system status...");
