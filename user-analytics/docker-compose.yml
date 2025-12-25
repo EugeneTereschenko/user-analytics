@@ -24,8 +24,9 @@ services:
 
   # Eureka Server (Service Discovery)
   eureka-server:
-    image: springcloud/eureka:latest
-    container_name: eureka-server
+    build:
+      context: .
+      dockerfile: eureka-server/Dockerfile
     ports:
       - "8761:8761"
     networks:
@@ -36,8 +37,8 @@ services:
   # Patient Service
   patient-service:
     build:
-      context: patientservice
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: patientservice/Dockerfile
     container_name: patient-service
     ports:
       - "8081:8081"
