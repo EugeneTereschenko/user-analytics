@@ -21,6 +21,7 @@
     <modules>
         <module>demo</module>
         <module>patientservice</module>
+        <module>eureka-server</module>
     </modules>
     <dependencyManagement>
         <dependencies>
