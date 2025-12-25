@@ -13,6 +13,7 @@ import com.healthcare.patientservice.exception.PatientAlreadyExistsException;
 import com.healthcare.patientservice.exception.PatientNotFoundException;
 import com.healthcare.patientservice.mapper.PatientMapper;
 import com.healthcare.patientservice.repository.PatientRepository;
+import com.healthcare.patientservice.service.impl.PatientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,11 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class PatientService {
+public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
 
+    @Override
     public PatientDTO createPatient(PatientDTO patientDTO) {
         log.info("Creating new patient with email: {}", patientDTO.getEmail());
 
@@ -44,6 +46,7 @@ public class PatientService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public PatientDTO getPatientById(Long id) {
         log.info("Fetching patient with ID: {}", id);
 
@@ -54,6 +57,7 @@ public class PatientService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public PatientDTO getPatientByEmail(String email) {
         log.info("Fetching patient with email: {}", email);
 
@@ -64,6 +68,7 @@ public class PatientService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<PatientDTO> getAllPatients(Pageable pageable) {
         log.info("Fetching all patients with pagination");
 
@@ -72,6 +77,7 @@ public class PatientService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<PatientDTO> searchPatients(String searchTerm, Pageable pageable) {
         log.info("Searching patients with term: {}", searchTerm);
 
@@ -80,6 +86,7 @@ public class PatientService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<PatientDTO> getPatientsByStatus(PatientStatus status, Pageable pageable) {
         log.info("Fetching patients with status: {}", status);
 
@@ -87,6 +94,7 @@ public class PatientService {
                 .map(patientMapper::toDTO);
     }
 
+    @Override
     public PatientDTO updatePatient(Long id, PatientDTO patientDTO) {
         log.info("Updating patient with ID: {}", id);
 
@@ -105,6 +113,7 @@ public class PatientService {
         return patientMapper.toDTO(updatedPatient);
     }
 
+    @Override
     public void deletePatient(Long id) {
         log.info("Deleting patient with ID: {}", id);
 
@@ -116,6 +125,7 @@ public class PatientService {
         log.info("Patient deleted successfully with ID: {}", id);
     }
 
+    @Override
     public PatientDTO deactivatePatient(Long id) {
         log.info("Deactivating patient with ID: {}", id);
 

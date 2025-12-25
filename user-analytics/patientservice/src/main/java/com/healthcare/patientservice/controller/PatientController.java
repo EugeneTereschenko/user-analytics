@@ -8,7 +8,7 @@ package com.healthcare.patientservice.controller;
 
 import com.healthcare.patientservice.dto.PatientDTO;
 import com.healthcare.patientservice.entity.PatientStatus;
-import com.healthcare.patientservice.service.PatientService;
+import com.healthcare.patientservice.service.PatientServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,29 +22,29 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PatientController {
 
-    private final PatientService patientService;
+    private final PatientServiceImpl patientServiceImpl;
 
     @PostMapping
     public ResponseEntity<PatientDTO> createPatient(@Valid @RequestBody PatientDTO patientDTO) {
-        PatientDTO createdPatient = patientService.createPatient(patientDTO);
+        PatientDTO createdPatient = patientServiceImpl.createPatient(patientDTO);
         return new ResponseEntity<>(createdPatient, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PatientDTO> getPatientById(@PathVariable Long id) {
-        PatientDTO patient = patientService.getPatientById(id);
+        PatientDTO patient = patientServiceImpl.getPatientById(id);
         return ResponseEntity.ok(patient);
     }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<PatientDTO> getPatientByEmail(@PathVariable String email) {
-        PatientDTO patient = patientService.getPatientByEmail(email);
+        PatientDTO patient = patientServiceImpl.getPatientByEmail(email);
         return ResponseEntity.ok(patient);
     }
 
     @GetMapping
     public ResponseEntity<Page<PatientDTO>> getAllPatients(Pageable pageable) {
-        Page<PatientDTO> patients = patientService.getAllPatients(pageable);
+        Page<PatientDTO> patients = patientServiceImpl.getAllPatients(pageable);
         return ResponseEntity.ok(patients);
     }
 
@@ -52,7 +52,7 @@ public class PatientController {
     public ResponseEntity<Page<PatientDTO>> searchPatients(
             @RequestParam String query,
             Pageable pageable) {
-        Page<PatientDTO> patients = patientService.searchPatients(query, pageable);
+        Page<PatientDTO> patients = patientServiceImpl.searchPatients(query, pageable);
         return ResponseEntity.ok(patients);
     }
 
@@ -60,7 +60,7 @@ public class PatientController {
     public ResponseEntity<Page<PatientDTO>> getPatientsByStatus(
             @PathVariable PatientStatus status,
             Pageable pageable) {
-        Page<PatientDTO> patients = patientService.getPatientsByStatus(status, pageable);
+        Page<PatientDTO> patients = patientServiceImpl.getPatientsByStatus(status, pageable);
         return ResponseEntity.ok(patients);
     }
 
@@ -68,19 +68,19 @@ public class PatientController {
     public ResponseEntity<PatientDTO> updatePatient(
             @PathVariable Long id,
             @Valid @RequestBody PatientDTO patientDTO) {
-        PatientDTO updatedPatient = patientService.updatePatient(id, patientDTO);
+        PatientDTO updatedPatient = patientServiceImpl.updatePatient(id, patientDTO);
         return ResponseEntity.ok(updatedPatient);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
-        patientService.deletePatient(id);
+        patientServiceImpl.deletePatient(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/deactivate")
     public ResponseEntity<PatientDTO> deactivatePatient(@PathVariable Long id) {
-        PatientDTO deactivatedPatient = patientService.deactivatePatient(id);
+        PatientDTO deactivatedPatient = patientServiceImpl.deactivatePatient(id);
         return ResponseEntity.ok(deactivatedPatient);
     }
 }
