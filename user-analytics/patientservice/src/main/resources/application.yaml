@@ -15,12 +15,18 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate  # Changed from 'update' to 'validate' when using Liquibase
     show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+
+  # Liquibase Configuration
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+    drop-first: false
 
   cloud:
     discovery:
@@ -45,6 +51,7 @@ logging:
     com.healthcare.patientservice: DEBUG
     org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
+    liquibase: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
 
@@ -53,7 +60,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
+        include: health,info,metrics,prometheus,liquibase
   endpoint:
     health:
       show-details: always
