@@ -1,0 +1,205 @@
+databaseChangeLog:
+  # Create addresses table first (referenced by patients)
+  - changeSet:
+      id: 1
+      author: healthcare-system
+      changes:
+        - createTable:
+            tableName: addresses
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: street
+                  type: VARCHAR(200)
+              - column:
+                  name: city
+                  type: VARCHAR(100)
+              - column:
+                  name: state
+                  type: VARCHAR(100)
+              - column:
+                  name: zip_code
+                  type: VARCHAR(20)
+              - column:
+                  name: country
+                  type: VARCHAR(100)
+
+  # Create patients table
+  - changeSet:
+      id: 2
+      author: healthcare-system
+      changes:
+        - createTable:
+            tableName: patients
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: phone_number
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_of_birth
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: gender
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: blood_group
+                  type: VARCHAR(20)
+              - column:
+                  name: address_id
+                  type: BIGINT
+              - column:
+                  name: medical_notes
+                  type: VARCHAR(1000)
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: patients
+            baseColumnNames: address_id
+            constraintName: fk_patients_address
+            referencedTableName: addresses
+            referencedColumnNames: id
+            onDelete: SET NULL
+
+        - createIndex:
+            indexName: idx_patients_address_id
+            tableName: patients
+            columns:
+              - column:
+                  name: address_id
+
+  # Create patient_allergies table
+  - changeSet:
+      id: 3
+      author: healthcare-system
+      changes:
+        - createTable:
+            tableName: patient_allergies
+            columns:
+              - column:
+                  name: patient_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: allergy
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: patient_allergies
+            baseColumnNames: patient_id
+            constraintName: fk_patient_allergies_patient
+            referencedTableName: patients
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_patient_allergies_patient_id
+            tableName: patient_allergies
+            columns:
+              - column:
+                  name: patient_id
+
+  # Create emergency_contacts table
+  - changeSet:
+      id: 4
+      author: healthcare-system
+      changes:
+        - createTable:
+            tableName: emergency_contacts
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: relationship
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phone_number
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(100)
+              - column:
+                  name: patient_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: emergency_contacts
+            baseColumnNames: patient_id
+            constraintName: fk_emergency_contacts_patient
+            referencedTableName: patients
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_emergency_contacts_patient_id
+            tableName: emergency_contacts
+            columns:
+              - column:
+                  name: patient_id
