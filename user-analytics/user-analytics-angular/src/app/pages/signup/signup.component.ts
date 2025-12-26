@@ -45,6 +45,7 @@ import { AuthService } from '../../services/auth.service';
                     type="text" 
                     id="form3Example1" 
                     class="form-control" 
+                    [(ngModel)]="firstName"
                     name="firstName" 
                     style="border: 2px solid #007bff;" />
                   </div>
@@ -55,7 +56,8 @@ import { AuthService } from '../../services/auth.service';
                     <input 
                     type="text" 
                     id="form3Example2" 
-                    class="form-control" 
+                    class="form-control"
+                    [(ngModel)]="lastName" 
                     name="lastName" 
                     style="border: 2px solid #007bff;" />
                   </div>
@@ -179,7 +181,7 @@ export class SignupComponent {
       return;
     }
 
-    if (!this.firstName || !this.lastName){
+    if (this.firstName && this.lastName) {
       this.username = this.firstName + ' ' + this.lastName;
     }
 
