@@ -14,26 +14,19 @@ RUN mvn install:install-file \
     -Dpackaging=pom \
     -DgeneratePom=false
 
-# Now copy patientservice module files
-COPY demo/pom.xml ./pom.xml
-COPY demo/src ./src
 
+# Now copy eureka-server module
+COPY eureka-server/pom.xml ./pom.xml
+COPY eureka-server/src ./src
 
-# Download dependencies
-RUN mvn dependency:go-offline -B
-
-# Build the application
 RUN mvn clean package -DskipTests
 
 # Stage 2: Runtime
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/eureka-server-*.jar app.jar
 
-EXPOSE 8080
-
-HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
+EXPOSE 8761
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

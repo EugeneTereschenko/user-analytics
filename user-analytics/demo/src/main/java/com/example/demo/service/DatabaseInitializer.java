@@ -91,10 +91,12 @@ public class DatabaseInitializer {
             try {
 
                 // Use configurable file paths (from application.yml)
-                String usersFile = environment.getProperty(
-                        "app.init.users-file",
-                        "/home/yevhen/IdeaProjects/demo/user-analytics/demo/src/main/resources/usersList.txt"
-                );
+                String usersFile = environment.getProperty("app.init.users-file", "usersList.txt");
+                if (!usersFile.contains("/") && getClass().getClassLoader().getResource(usersFile) != null) {
+                    usersFile = Paths.get(getClass().getClassLoader().getResource(usersFile).toURI()).toString();
+                }
+
+
 
                 processUsers(usersFile, passwordEncoder);
 
