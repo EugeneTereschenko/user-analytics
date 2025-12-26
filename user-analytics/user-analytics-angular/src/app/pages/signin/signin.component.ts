@@ -93,6 +93,11 @@ import { AuthService } from '../../services/auth.service';
                   <!-- Submit button -->
                   <button  type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Sign in</button>
 
+                  <!-- Sign up link -->
+                  <div class="text-center">
+                    <p>Don't have an account? <a href="/signup" class="fw-bold">Sign up</a></p>
+                  </div>
+
                 </form>
 
               </div>
