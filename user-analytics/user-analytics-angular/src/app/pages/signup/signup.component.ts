@@ -134,6 +134,11 @@ import { AuthService } from '../../services/auth.service';
                   <i class="fab fa-github"></i>
                 </button>
               </div>
+
+              <!-- Sign in link -->
+              <div class="text-center mt-3">
+                <p>Already have an account? <a href="/signin" class="fw-bold">Sign in</a></p>
+              </div>
             </form>
           </div>
         </div>
@@ -182,7 +187,7 @@ export class SignupComponent {
     console.log('Signing up user:', this.email);
     this.successMessage = 'Signup successful!';
 
-    this.authService.signUp(this.username, this.email, this.password, this.confirmPassword, this.roles).subscribe({
+    this.authService.signUp(this.username, this.email, this.password, undefined, undefined, this.roles).subscribe({
       next: () => {
       this.successMessage = 'Signup successful!';
       // Navigate to signin page after successful signup

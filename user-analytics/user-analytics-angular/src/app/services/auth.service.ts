@@ -27,11 +27,22 @@ export class AuthService {
    * Sign up a new user.
    * @param email User's email address.
    * @param password User's password.
-   * @param confirmPassword Confirmation of the user's password.
+   * @param deviceType User's device type (optional).
+   * @param location User's location (optional).
+   * @param roles User's roles (optional).
    * @returns An observable that emits the server response.
    */
-  signUp(username: string, email: string, password: string, confirmPassword: string, roles: string[] = []) {
-    return this.http.post(this.url + '/signup', { username, email, password, confirmPassword, roles }).pipe(
+  signUp(username: string, email: string, password: string, deviceType?: string, location?: string, roles: string[] = []) {
+    const signupData: any = { username, email, password, roles };
+    
+    if (deviceType) {
+      signupData.deviceType = deviceType;
+    }
+    if (location) {
+      signupData.location = location;
+    }
+    
+    return this.http.post(this.url + '/signup', signupData).pipe(
       tap(() => {
         // Optionally, you can redirect or perform other actions after successful signup
         this.router.navigate(['/signin']);
