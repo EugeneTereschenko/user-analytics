@@ -101,10 +101,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                 .toList());
         return devices.stream()
                 .collect(java.util.stream.Collectors.toMap(
-                        arr -> (String) arr[0],
+                        arr -> arr[0] == null ? "unknown" : (String) arr[0],
                         arr -> ((Long) arr[1]).intValue()
                 ));
     }
+
 
     public Map<String, Integer> getUserLocations() {
         List<Object[]> locations = userRepository.getUserLocations();

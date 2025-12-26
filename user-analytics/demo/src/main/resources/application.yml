@@ -39,10 +39,6 @@ spring:
       repositories:
         enabled: true
 
-app:
-  init:
-    users-file: usersList.txt
-
 # Logging
 logging:
   level:

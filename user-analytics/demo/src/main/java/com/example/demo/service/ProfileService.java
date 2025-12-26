@@ -89,6 +89,11 @@ public class ProfileService {
         return savedImage;
     }
 
+    @Transactional
+    public Profile getOrCreateUserProfile(Long userId) {
+        return profileRepository.findLatestProfileByUserId(userId)
+                .orElseGet(() -> createProfile(userId));
+    }
 
     @Transactional
     public Profile createProfile(Long userId) {
@@ -447,11 +452,6 @@ public class ProfileService {
                     log.info("No profile found for user ID: {}, creating new profile", userId);
                     return createProfile(userId);
                 });
-    }
-
-    private Profile getOrCreateUserProfile(Long userId) {
-        return profileRepository.findLatestProfileByUserId(userId)
-                .orElseGet(() -> createProfile(userId));
     }
 
     private ResponseDTO createSuccessResponse(String message) {

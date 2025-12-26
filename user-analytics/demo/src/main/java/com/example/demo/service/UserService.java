@@ -6,12 +6,8 @@ import com.example.demo.dto.UserDetailDTO;
 import com.example.demo.dto.UserRequestDTO;
 import com.example.demo.dto.UserResponseDTO;
 import com.example.activity.model.ActivityType;
-import com.example.demo.model.Role;
-import com.example.demo.model.User;
-import com.example.demo.model.UserRoles;
-import com.example.demo.repository.RoleRepository;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.repository.UserRolesRepository;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
 import com.example.demo.security.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -39,6 +35,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
+    private final UserProfileRepository userProfileRepository;
     private final RoleRepository roleRepository;
     private final UserRolesRepository userRolesRepository;
     private final CustomUserDetailsService customUserDetailsService;
@@ -156,6 +154,7 @@ public class UserService {
             log.info("Signup successful for user: {}", savedUser.getUsername());
             log.info("=== SIGNUP ATTEMPT END ===");
 
+            getOrCreateUserProfile(savedUser.getId());
             return createUserResponseDTO(String.valueOf(savedUser.getId()), "", "Signup successful", "true");
         } catch (Exception e) {
             log.error("Failed to create user: {}", e.getMessage(), e);
@@ -171,6 +170,29 @@ public class UserService {
         }
         String username = authentication.getName();
         return userRepository.findByUsername(username);
+    }
+
+    @Transactional
+    private Profile getOrCreateUserProfile(Long userId) {
+
+        log.debug("Creating profile for user ID: {}", userId);
+        return profileRepository.findLatestProfileByUserId(userId)
+                .orElseGet(() -> createProfile(userId));
+    }
+
+    @Transactional
+    public Profile createProfile(Long userId) {
+        Profile profile = profileRepository.saveAndFlush(new Profile());
+
+        UserProfile userProfile = userProfileRepository.saveAndFlush(
+                new UserProfile.Builder()
+                        .userId(userId)
+                        .profileId(profile.getId())
+                        .build()
+        );
+
+        log.info("Profile created successfully with ID: {} for user ID: {}", profile.getId(), userId);
+        return profile;
     }
 
     // Helper method to log activities

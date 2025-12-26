@@ -35,40 +35,35 @@ public class DatabaseInitializer {
 
     private final UserService userService;
     private final UserRepository userRepository;
-    private final ProfileService profileService;
-    private final Environment environment;
 
-    public static List<UserRequestDTO> readUsersFromFile(String filePath, PasswordEncoder passwordEncoder) throws IOException {
-        List<UserRequestDTO> users = new ArrayList<>();
-        List<String> lines = Files.readAllLines(Paths.get(filePath));
 
-        Pattern pattern = Pattern.compile(
-                "UserRequestDTO\\(username=(.*?), email=(.*?), password=(.*?), roles=\\[(.*?)\\]\\)"
+    private List<UserRequestDTO> getPredefinedUsers() {
+        return List.of(
+                UserRequestDTO.builder().username("admin").email("test@test.com").password("admin123").roles(List.of("ROLE_ADMIN")).build(),
+                UserRequestDTO.builder().username("wer").email("wer@test.com").password("asdasd").roles(List.of("ROLE_USER")).build(),
+                UserRequestDTO.builder().username("john_doe").email("john.doe@example.com").password("pass123").roles(List.of("ROLE_USER")).build(),
+                UserRequestDTO.builder().username("admin_jane").email("jane.admin@example.com").password("adminpass").roles(List.of("ROLE_ADMIN")).build(),
+                UserRequestDTO.builder().username("editor_bob").email("bob.editor@example.com").password("editme").roles(List.of("ROLE_EDITOR")).build(),
+                UserRequestDTO.builder().username("viewer_sue").email("sue.viewer@example.com").password("seeall").roles(List.of("ROLE_VIEWER")).build(),
+                UserRequestDTO.builder().username("multi_role_mike").email("mike.multi@example.com").password("multi123").roles(List.of("ROLE_USER", "ROLE_EDITOR")).build(),
+                UserRequestDTO.builder().username("full_access_amy").email("amy.all@example.com").password("rootpass").roles(List.of("ROLE_USER", "ROLE_ADMIN", "ROLE_EDITOR", "ROLE_VIEWER")).build(),
+                UserRequestDTO.builder().username("user_mary").email("mary.user@example.com").password("user123").roles(List.of("ROLE_USER")).build(),
+                UserRequestDTO.builder().username("admin_ben").email("ben.admin@example.com").password("benpass").roles(List.of("ROLE_ADMIN", "ROLE_VIEWER")).build(),
+                UserRequestDTO.builder().username("team_lead_alex").email("alex.lead@example.com").password("leadpass").roles(List.of("ROLE_ADMIN", "ROLE_EDITOR")).build(),
+                UserRequestDTO.builder().username("guest_ken").email("ken.guest@example.com").password("guest123").roles(List.of("ROLE_VIEWER")).build(),
+                UserRequestDTO.builder().username("support_lisa").email("lisa.support@example.com").password("supportme").roles(List.of("ROLE_USER", "ROLE_VIEWER")).build(),
+                UserRequestDTO.builder().username("qa_nick").email("nick.qa@example.com").password("test123").roles(List.of("ROLE_EDITOR")).build(),
+                UserRequestDTO.builder().username("dev_sam").email("sam.dev@example.com").password("devpass").roles(List.of("ROLE_USER", "ROLE_EDITOR")).build(),
+                UserRequestDTO.builder().username("ops_ray").email("ray.ops@example.com").password("ops123").roles(List.of("ROLE_ADMIN")).build(),
+                UserRequestDTO.builder().username("mod_danny").email("danny.mod@example.com").password("mod456").roles(List.of("ROLE_EDITOR", "ROLE_VIEWER")).build(),
+                UserRequestDTO.builder().username("auditor_kim").email("kim.audit@example.com").password("audit789").roles(List.of("ROLE_VIEWER")).build(),
+                UserRequestDTO.builder().username("analyst_tina").email("tina.analyst@example.com").password("analyze123").roles(List.of("ROLE_USER", "ROLE_VIEWER")).build(),
+                UserRequestDTO.builder().username("trainer_lee").email("lee.trainer@example.com").password("teachme").roles(List.of("ROLE_EDITOR")).build(),
+                UserRequestDTO.builder().username("guest_felix").email("felix.guest@example.com").password("temporary").roles(List.of("ROLE_USER")).build(),
+                UserRequestDTO.builder().username("admin_ceo").email("ceo.admin@example.com").password("ceopower").roles(List.of("ROLE_ADMIN", "ROLE_USER", "ROLE_EDITOR")).build()
         );
-
-        for (String line : lines) {
-            Matcher matcher = pattern.matcher(line);
-            if (matcher.matches()) {
-                String username = matcher.group(1);
-                String email = matcher.group(2);
-                String password = matcher.group(3);
-                String rolesString = matcher.group(4);
-
-                List<String> roles = Arrays.stream(rolesString.split(","))
-                        .map(String::trim)
-                        .toList();
-
-                users.add(UserRequestDTO.builder()
-                        .username(username)
-                        .email(email)
-                        .password(password)
-                        .roles(roles.stream().toList())
-                        .build());
-            }
-        }
-
-        return users;
     }
+
 
 
     @Bean
@@ -90,21 +85,14 @@ public class DatabaseInitializer {
 
             try {
 
-                // Use configurable file paths (from application.yml)
-                String usersFile = environment.getProperty("app.init.users-file", "usersList.txt");
-                if (!usersFile.contains("/") && getClass().getClassLoader().getResource(usersFile) != null) {
-                    usersFile = Paths.get(getClass().getClassLoader().getResource(usersFile).toURI()).toString();
-                }
-
-
-
-                processUsers(usersFile, passwordEncoder);
+                List<UserRequestDTO> users = getPredefinedUsers();
+                processUsers(users);
 
                 log.info("=================================================");
                 log.info("Database initialization completed successfully!");
                 log.info("=================================================");
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 log.error("=================================================");
                 log.error("Error initializing database: {}", e.getMessage(), e);
                 log.error("=================================================");
@@ -113,40 +101,21 @@ public class DatabaseInitializer {
     }
 
 
-    private void processUsers(String filePath, PasswordEncoder passwordEncoder) throws IOException {
-        if (!Files.exists(Paths.get(filePath))) {
-            log.warn("Users file not found: {} - skipping user creation", filePath);
-            return;
-        }
-
-        log.info("Processing users from file: {}", filePath);
-        List<UserRequestDTO> users = readUsersFromFile(filePath, passwordEncoder);
-
-        int successCount = 0;
+    private void processUsers(List<UserRequestDTO> users) {
         int failCount = 0;
-
         for (UserRequestDTO user : users) {
             try {
                 user.setDeviceType(generateDeviceType());
                 user.setLocation(generateLocation());
-                UserResponseDTO response = userService.createUser(user);
-
-                if ("true".equals(response.getSuccess())) {
-                    profileService.createProfile(Long.valueOf(response.getId()));
-                    successCount++;
-                    log.debug("User created successfully: {}", user.getUsername());
-                } else {
-                    failCount++;
-                    log.error("User creation failed: {} - {}", user.getUsername(), response.getMessage());
-                }
+                userService.createUser(user);
             } catch (Exception e) {
                 failCount++;
                 log.error("Error creating user: {} - {}", user.getUsername(), e.getMessage());
             }
         }
-
-        log.info("Users processed: {} successful, {} failed", successCount, failCount);
+        log.info("Users processed: {} failed", failCount);
     }
+
 
     private String generateDeviceType() {
         List<String> deviceTypes = List.of("Desktop", "Mobile", "Tablet", "Smartwatch", "SmartTV");
