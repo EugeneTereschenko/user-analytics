@@ -12,6 +12,7 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/analytics/users")
+@CrossOrigin("*")
 public class AnalyticsController {
 
     private final AnalyticsService analyticsService;
