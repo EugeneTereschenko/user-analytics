@@ -1,3 +1,9 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/analytics_db
@@ -33,10 +39,9 @@ spring:
       repositories:
         enabled: true
 
-# Application-specific configuration
 app:
   init:
-    users-file: ${user.home}/IdeaProjects/demo/user-analytics/demo/src/main/resources/usersList.txt
+    users-file: usersList.txt
 
 # Logging
 logging:

@@ -1,17 +1,39 @@
-# Use Eclipse Temurin OpenJDK 21 as base image
-FROM eclipse-temurin:21-jre
-
-# Set working directory
+# Stage 1: Build
+FROM maven:3.9.5-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Copy the built jar file into the container
-COPY target/demo-*.jar app.jar
+# Copy parent POM (now relative to root context)
+COPY pom.xml ./parent-pom.xml
 
-# Expose port 8082
-EXPOSE 8082
+# Install parent POM directly without project scanning
+RUN mvn install:install-file \
+    -Dfile=parent-pom.xml \
+    -DgroupId=com.example \
+    -DartifactId=user-analytics \
+    -Dversion=1.0.0 \
+    -Dpackaging=pom \
+    -DgeneratePom=false
 
-# Set environment variables for Java
-ENV JAVA_OPTS=""
+# Now copy patientservice module files
+COPY demo/pom.xml ./pom.xml
+COPY demo/src ./src
 
-# Run the application
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar --server.port=8082"]
+
+# Download dependencies
+RUN mvn dependency:go-offline -B
+
+# Build the application
+RUN mvn clean package -DskipTests
+
+# Stage 2: Runtime
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+
+COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -58,13 +58,13 @@ services:
 
   analytics-service:
     build:
-      context: demo
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: demo/Dockerfile
     container_name: analytics-service
     ports:
-      - "8082:8082"
+      - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/analytics_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/analytics_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
     networks:
@@ -73,6 +73,7 @@ services:
       postgres:
         condition: service_healthy
     restart: on-failure
+
 
 
 volumes:
