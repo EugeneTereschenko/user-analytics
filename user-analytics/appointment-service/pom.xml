@@ -14,7 +14,7 @@
 
     <artifactId>appointmentservice</artifactId>
     <version>1.0.0</version>
-    <n>Appointment Service</n>
+    <name>Appointment Service</name>
     <description>Microservice for Appointment Management</description>
 
     <properties>
