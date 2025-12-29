@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class VitalSign {
+public class VitalSign {
     @Column(name = "vital_type")
     private String vitalType; // e.g., "Blood Pressure", "Heart Rate", "Temperature"
 
