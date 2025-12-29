@@ -1,0 +1,394 @@
+databaseChangeLog:
+  # Create medical_records table
+  - changeSet:
+      id: 1
+      author: healthcare-system
+      changes:
+        - createTable:
+            tableName: medical_records
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: patient_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: doctor_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: appointment_id
+                  type: BIGINT
+              - column:
+                  name: record_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: record_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(200)
+              - column:
+                  name: diagnosis
+                  type: TEXT
+              - column:
+                  name: symptoms
+                  type: TEXT
+              - column:
+                  name: treatment
+                  type: TEXT
+              - column:
+                  name: notes
+                  type: TEXT
+              - column:
+                  name: patient_name
+                  type: VARCHAR(200)
+              - column:
+                  name: doctor_name
+                  type: VARCHAR(200)
+              - column:
+                  name: is_confidential
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: DRAFT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: signed_at
+                  type: TIMESTAMP
+              - column:
+                  name: signed_by
+                  type: VARCHAR(200)
+
+        - createIndex:
+            indexName: idx_medical_records_patient_id
+            tableName: medical_records
+            columns:
+              - column:
+                  name: patient_id
+
+        - createIndex:
+            indexName: idx_medical_records_doctor_id
+            tableName: medical_records
+            columns:
+              - column:
+                  name: doctor_id
+
+        - createIndex:
+            indexName: idx_medical_records_appointment_id
+            tableName: medical_records
+            columns:
+              - column:
+                  name: appointment_id
+
+        - createIndex:
+            indexName: idx_medical_records_record_date
+            tableName: medical_records
+            columns:
+              - column:
+                  name: record_date
+
+        - createIndex:
+            indexName: idx_medical_records_status
+            tableName: medical_records
+            columns:
+              - column:
+                  name: status
+
+  # Create prescriptions table
+  - changeSet:
+      id: 2
+      author: healthcare-system
+      changes:
+        - createTable:
+            tableName: prescriptions
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: medical_record_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: medication_name
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: dosage
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: frequency
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: duration
+                  type: VARCHAR(100)
+              - column:
+                  name: quantity
+                  type: INTEGER
+              - column:
+                  name: refills
+                  type: INTEGER
+                  defaultValueNumeric: 0
+              - column:
+                  name: instructions
+                  type: TEXT
+              - column:
+                  name: start_date
+                  type: DATE
+              - column:
+                  name: end_date
+                  type: DATE
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: ACTIVE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: prescribed_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: prescriptions
+            baseColumnNames: medical_record_id
+            constraintName: fk_prescriptions_medical_record
+            referencedTableName: medical_records
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_prescriptions_medical_record_id
+            tableName: prescriptions
+            columns:
+              - column:
+                  name: medical_record_id
+
+  # Create lab_results table
+  - changeSet:
+      id: 3
+      author: healthcare-system
+      changes:
+        - createTable:
+            tableName: lab_results
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: medical_record_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: test_name
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: test_code
+                  type: VARCHAR(50)
+              - column:
+                  name: result_value
+                  type: VARCHAR(200)
+              - column:
+                  name: unit
+                  type: VARCHAR(50)
+              - column:
+                  name: reference_range
+                  type: VARCHAR(100)
+              - column:
+                  name: is_abnormal
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+              - column:
+                  name: interpretation
+                  type: TEXT
+              - column:
+                  name: test_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: result_date
+                  type: DATE
+              - column:
+                  name: laboratory_name
+                  type: VARCHAR(200)
+              - column:
+                  name: performed_by
+                  type: VARCHAR(200)
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: lab_results
+            baseColumnNames: medical_record_id
+            constraintName: fk_lab_results_medical_record
+            referencedTableName: medical_records
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_lab_results_medical_record_id
+            tableName: lab_results
+            columns:
+              - column:
+                  name: medical_record_id
+
+  # Create attachments table
+  - changeSet:
+      id: 4
+      author: healthcare-system
+      changes:
+        - createTable:
+            tableName: attachments
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: medical_record_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_path
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_type
+                  type: VARCHAR(100)
+              - column:
+                  name: file_size
+                  type: BIGINT
+              - column:
+                  name: attachment_type
+                  type: VARCHAR(50)
+              - column:
+                  name: description
+                  type: VARCHAR(500)
+              - column:
+                  name: uploaded_by
+                  type: VARCHAR(200)
+              - column:
+                  name: uploaded_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: attachments
+            baseColumnNames: medical_record_id
+            constraintName: fk_attachments_medical_record
+            referencedTableName: medical_records
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_attachments_medical_record_id
+            tableName: attachments
+            columns:
+              - column:
+                  name: medical_record_id
+
+  # Create vital_signs table
+  - changeSet:
+      id: 5
+      author: healthcare-system
+      changes:
+        - createTable:
+            tableName: vital_signs
+            columns:
+              - column:
+                  name: medical_record_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vital_type
+                  type: VARCHAR(100)
+              - column:
+                  name: value
+                  type: VARCHAR(100)
+              - column:
+                  name: unit
+                  type: VARCHAR(50)
+              - column:
+                  name: recorded_at
+                  type: TIMESTAMP
+
+        - addForeignKeyConstraint:
+            baseTableName: vital_signs
+            baseColumnNames: medical_record_id
+            constraintName: fk_vital_signs_medical_record
+            referencedTableName: medical_records
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_vital_signs_medical_record_id
+            tableName: vital_signs
+            columns:
+              - column:
+                  name: medical_record_id
