@@ -21,6 +21,10 @@ help:
 	@echo "  analytics-service-up Start only the analytics-service"
 	@echo "  analytics-service-down Stop only the analytics-service"
 	@echo "  start     Start all services in foreground"
+	@echo "  appointment-service        Build only the appointment-service"
+	@echo "  appointment-service-up     Start only the appointment-service"
+	@echo "  appointment-service-down   Stop only the appointment-service"
+
 
 
 up:
@@ -72,6 +76,16 @@ analytics-service-up:
 
 analytics-service-down:
 	docker-compose stop analytics-service
+
+appointment-service:
+	docker-compose build appointment-service
+
+appointment-service-up:
+	docker-compose up -d appointment-service
+
+appointment-service-down:
+	docker-compose stop appointment-service
+
 
 
 

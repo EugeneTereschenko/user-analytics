@@ -14,6 +14,7 @@ import com.healthcare.appointmentservice.exception.AppointmentNotFoundException;
 import com.healthcare.appointmentservice.exception.InvalidAppointmentException;
 import com.healthcare.appointmentservice.mapper.AppointmentMapper;
 import com.healthcare.appointmentservice.repository.AppointmentRepository;
+import com.healthcare.appointmentservice.service.impl.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,11 +30,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class AppointmentService {
+public class AppointmentServiceImpl implements AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final AppointmentMapper appointmentMapper;
 
+    @Override
     public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO) {
         log.info("Creating appointment for patient: {} with doctor: {}",
                 appointmentDTO.getPatientId(), appointmentDTO.getDoctorId());
@@ -59,6 +61,7 @@ public class AppointmentService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public AppointmentDTO getAppointmentById(Long id) {
         log.info("Fetching appointment with ID: {}", id);
 
@@ -70,6 +73,7 @@ public class AppointmentService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<AppointmentDTO> getAllAppointments(Pageable pageable) {
         log.info("Fetching all appointments with pagination");
         return appointmentRepository.findAll(pageable)
@@ -77,6 +81,7 @@ public class AppointmentService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<AppointmentDTO> getAppointmentsByPatient(Long patientId, Pageable pageable) {
         log.info("Fetching appointments for patient: {}", patientId);
         return appointmentRepository.findByPatientId(patientId, pageable)
@@ -84,6 +89,7 @@ public class AppointmentService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<AppointmentDTO> getAppointmentsByDoctor(Long doctorId, Pageable pageable) {
         log.info("Fetching appointments for doctor: {}", doctorId);
         return appointmentRepository.findByDoctorId(doctorId, pageable)
@@ -91,6 +97,7 @@ public class AppointmentService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<AppointmentDTO> getAppointmentsByStatus(
             AppointmentStatus status, Pageable pageable) {
         log.info("Fetching appointments with status: {}", status);
@@ -99,6 +106,7 @@ public class AppointmentService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<AppointmentDTO> getAppointmentsBetween(
             LocalDateTime startDate, LocalDateTime endDate) {
         log.info("Fetching appointments between {} and {}", startDate, endDate);
@@ -109,6 +117,7 @@ public class AppointmentService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<AppointmentDTO> getTodaysAppointments() {
         LocalDateTime today = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
         LocalDateTime tomorrow = today.plusDays(1);
@@ -120,6 +129,7 @@ public class AppointmentService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public AppointmentDTO updateAppointment(Long id, AppointmentDTO appointmentDTO) {
         log.info("Updating appointment with ID: {}", id);
 
@@ -138,6 +148,7 @@ public class AppointmentService {
         return appointmentMapper.toDTO(updatedAppointment);
     }
 
+    @Override
     public AppointmentDTO rescheduleAppointment(Long id, LocalDateTime newDateTime) {
         log.info("Rescheduling appointment {} to {}", id, newDateTime);
 
@@ -164,6 +175,7 @@ public class AppointmentService {
         return appointmentMapper.toDTO(updatedAppointment);
     }
 
+    @Override
     public AppointmentDTO cancelAppointment(Long id, String reason) {
         log.info("Cancelling appointment with ID: {}", id);
 
@@ -181,6 +193,7 @@ public class AppointmentService {
         return appointmentMapper.toDTO(cancelledAppointment);
     }
 
+    @Override
     public AppointmentDTO confirmAppointment(Long id) {
         log.info("Confirming appointment with ID: {}", id);
 
@@ -195,6 +208,7 @@ public class AppointmentService {
         return appointmentMapper.toDTO(confirmedAppointment);
     }
 
+    @Override
     public AppointmentDTO completeAppointment(Long id, String notes) {
         log.info("Completing appointment with ID: {}", id);
 
@@ -213,6 +227,7 @@ public class AppointmentService {
         return appointmentMapper.toDTO(completedAppointment);
     }
 
+    @Override
     public void deleteAppointment(Long id) {
         log.info("Deleting appointment with ID: {}", id);
 
