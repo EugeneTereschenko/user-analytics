@@ -1,5 +1,3 @@
-# Makefile
-
 .PHONY: up down build logs restart clean help
 
 help:
@@ -20,12 +18,13 @@ help:
 	@echo "  analytics-service Build only the analytics-service"
 	@echo "  analytics-service-up Start only the analytics-service"
 	@echo "  analytics-service-down Stop only the analytics-service"
-	@echo "  start     Start all services in foreground"
 	@echo "  appointment-service        Build only the appointment-service"
 	@echo "  appointment-service-up     Start only the appointment-service"
 	@echo "  appointment-service-down   Stop only the appointment-service"
-
-
+	@echo "  medicalrecordservice       Build only the medicalrecord-service"
+	@echo "  medicalrecordservice-up    Start only the medicalrecord-service"
+	@echo "  medicalrecordservice-down  Stop only the medicalrecord-service"
+	@echo "  start     Start all services in foreground"
 
 up:
 	docker-compose up -d
@@ -86,7 +85,11 @@ appointment-service-up:
 appointment-service-down:
 	docker-compose stop appointment-service
 
+medicalrecordservice:
+	docker-compose build medicalrecord-service
 
+medicalrecordservice-up:
+	docker-compose up -d medicalrecord-service
 
-
-
+medicalrecordservice-down:
+	docker-compose stop medicalrecord-service

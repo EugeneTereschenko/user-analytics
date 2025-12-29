@@ -95,6 +95,27 @@ services:
       - healthcare-network
     restart: on-failure
 
+  medicalrecord-service:
+    build:
+      context: .
+      dockerfile: medicalrecordservice/Dockerfile
+    container_name: medicalrecord-service
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/medical_record_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      postgres:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - healthcare-network
+    restart: on-failure
+
 
 
 
