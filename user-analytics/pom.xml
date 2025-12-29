@@ -23,6 +23,7 @@
         <module>patientservice</module>
         <module>eureka-server</module>
         <module>appointment-service</module>
+        <module>medicalrecordservice</module>
     </modules>
     <dependencyManagement>
         <dependencies>
