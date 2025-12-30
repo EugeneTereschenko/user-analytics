@@ -136,7 +136,7 @@ You should see:
 
 ### Base URL
 ```
-http://localhost:8082/appointment-service/api/v1/appointments
+http://localhost:8083/appointment-service/api/v1/appointments
 ```
 
 ### Available Endpoints
@@ -229,7 +229,7 @@ curl -X PATCH "http://localhost:8083/appointment-service/api/v1/appointments/1/r
 ### Test 6: Cancel Appointment
 
 ```bash
-curl -X PATCH "http://localhost:8082/appointment-service/api/v1/appointments/1/cancel?reason=Patient+illness"
+curl -X PATCH "http://localhost:8083/appointment-service/api/v1/appointments/1/cancel?reason=Patient+illness"
 ```
 
 ### Test 7: Confirm Appointment
@@ -322,7 +322,7 @@ Indexes:
 ### Port Already in Use
 
 ```bash
-# Check what's using port 8082
+# Check what's using port 8083
 lsof -i :8083
 
 # Kill the process
