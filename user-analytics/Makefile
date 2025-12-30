@@ -1,4 +1,5 @@
-.PHONY: up down build logs restart clean help
+.PHONY: up down build logs restart clean help \
+        doctorservice doctorservice-up doctorservice-down
 
 help:
 	@echo "Available commands:"
@@ -24,6 +25,9 @@ help:
 	@echo "  medicalrecordservice       Build only the medicalrecord-service"
 	@echo "  medicalrecordservice-up    Start only the medicalrecord-service"
 	@echo "  medicalrecordservice-down  Stop only the medicalrecord-service"
+	@echo "  doctorservice              Build only the doctor-service"
+	@echo "  doctorservice-up           Start only the doctor-service"
+	@echo "  doctorservice-down         Stop only the doctor-service"
 	@echo "  start     Start all services in foreground"
 
 up:
@@ -36,7 +40,7 @@ build:
 	docker-compose build
 
 logs:
-	docker-compose logs -f
+	docker-compose logs -f --tail=100
 
 restart:
 	docker-compose down
@@ -93,3 +97,12 @@ medicalrecordservice-up:
 
 medicalrecordservice-down:
 	docker-compose stop medicalrecord-service
+
+doctorservice:
+	docker-compose build doctor-service
+
+doctorservice-up:
+	docker-compose up -d doctor-service
+
+doctorservice-down:
+	docker-compose stop doctor-service
