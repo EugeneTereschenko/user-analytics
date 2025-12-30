@@ -438,7 +438,7 @@ mkdir -p ~/IdeaProjects/demo/user-analytics/medicalrecordservice/uploads/medical
 |---------|------|-----------------------|
 | Eureka Server | 8761 | http://localhost:8761 |
 | Patient Service | 8081 | http://localhost:8081 |
-| Appointment Service | 8082 | http://localhost:8083 |
+| Appointment Service | 8083 | http://localhost:8083 |
 | Medical Record Service | 8083 | http://localhost:8084 |
 
 Your healthcare microservices architecture is complete! 🎉
