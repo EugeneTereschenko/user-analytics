@@ -116,6 +116,28 @@ services:
       - healthcare-network
     restart: on-failure
 
+  doctor-service:
+    build:
+      context: .
+      dockerfile: doctorservice/Dockerfile
+    container_name: doctor-service
+    ports:
+      - "8085:8085"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/doctor_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      postgres:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - healthcare-network
+    restart: on-failure
+
+
 
 
 
