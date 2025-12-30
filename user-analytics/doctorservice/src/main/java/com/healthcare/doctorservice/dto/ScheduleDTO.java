@@ -16,7 +16,7 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class ScheduleDTO {
+public class ScheduleDTO {
 
     private Long id;
 

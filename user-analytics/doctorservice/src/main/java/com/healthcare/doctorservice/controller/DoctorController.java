@@ -1,7 +1,6 @@
 package com.healthcare.doctorservice.controller;
 
 import com.healthcare.doctorservice.dto.DoctorDTO;
-import com.healthcare.doctorservice.entity.Doctor;
 import com.healthcare.doctorservice.entity.DoctorStatus;
 import com.healthcare.doctorservice.service.impl.DoctorService;
 import jakarta.validation.Valid;
