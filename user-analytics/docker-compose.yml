@@ -137,6 +137,27 @@ services:
       - healthcare-network
     restart: on-failure
 
+  billing-service:
+    build:
+      context: .
+      dockerfile: billingservice/Dockerfile
+    container_name: billing-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/billing_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      postgres:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - healthcare-network
+    restart: on-failure
+
 
 
 
