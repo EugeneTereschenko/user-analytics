@@ -1,0 +1,54 @@
+/*
+ * © 2025 Yevhen Tereshchenko
+ * All rights reserved.
+ *
+ */
+
+package com.healthcare.billingservice.dto;
+
+import com.healthcare.billingservice.entity.PaymentMethod;
+import com.healthcare.billingservice.entity.PaymentStatus;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PaymentDTO {
+
+    private Long id;
+
+    private String paymentReference;
+
+    @NotNull(message = "Payment date is required")
+    private LocalDateTime paymentDate;
+
+    @NotNull(message = "Amount is required")
+    @Min(value = 0, message = "Amount cannot be negative")
+    private BigDecimal amount;
+
+    @NotNull(message = "Payment method is required")
+    private PaymentMethod paymentMethod;
+
+    private PaymentStatus status;
+
+    private String transactionId;
+
+    private String cardLastFour;
+
+    private String cardType;
+
+    private String receiptNumber;
+
+    private String notes;
+
+    private String processedBy;
+
+    private LocalDateTime createdAt;
+}

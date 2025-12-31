@@ -1,0 +1,298 @@
+databaseChangeLog:
+  # Create invoices table
+  - changeSet:
+      id: 1
+      author: healthcare-system
+      changes:
+        - createTable:
+            tableName: invoices
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: invoice_number
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: patient_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: appointment_id
+                  type: BIGINT
+              - column:
+                  name: doctor_id
+                  type: BIGINT
+              - column:
+                  name: invoice_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: due_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subtotal
+                  type: DECIMAL(10,2)
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tax_amount
+                  type: DECIMAL(10,2)
+                  defaultValueNumeric: 0
+              - column:
+                  name: discount_amount
+                  type: DECIMAL(10,2)
+                  defaultValueNumeric: 0
+              - column:
+                  name: total_amount
+                  type: DECIMAL(10,2)
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: paid_amount
+                  type: DECIMAL(10,2)
+                  defaultValueNumeric: 0
+              - column:
+                  name: balance_due
+                  type: DECIMAL(10,2)
+                  defaultValueNumeric: 0
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: patient_name
+                  type: VARCHAR(200)
+              - column:
+                  name: patient_email
+                  type: VARCHAR(100)
+              - column:
+                  name: patient_phone
+                  type: VARCHAR(20)
+              - column:
+                  name: insurance_provider
+                  type: VARCHAR(100)
+              - column:
+                  name: insurance_policy_number
+                  type: VARCHAR(50)
+              - column:
+                  name: insurance_claim_amount
+                  type: DECIMAL(10,2)
+                  defaultValueNumeric: 0
+              - column:
+                  name: notes
+                  type: TEXT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sent_at
+                  type: TIMESTAMP
+              - column:
+                  name: paid_at
+                  type: TIMESTAMP
+
+        - createIndex:
+            indexName: idx_invoices_patient_id
+            tableName: invoices
+            columns:
+              - column:
+                  name: patient_id
+
+        - createIndex:
+            indexName: idx_invoices_status
+            tableName: invoices
+            columns:
+              - column:
+                  name: status
+
+        - createIndex:
+            indexName: idx_invoices_invoice_date
+            tableName: invoices
+            columns:
+              - column:
+                  name: invoice_date
+
+  # Create invoice_items table
+  - changeSet:
+      id: 2
+      author: healthcare-system
+      changes:
+        - createTable:
+            tableName: invoice_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: invoice_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: item_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: INTEGER
+                  defaultValueNumeric: 1
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unit_price
+                  type: DECIMAL(10,2)
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_price
+                  type: DECIMAL(10,2)
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: service_code
+                  type: VARCHAR(50)
+              - column:
+                  name: medical_record_id
+                  type: BIGINT
+
+        - addForeignKeyConstraint:
+            baseTableName: invoice_items
+            baseColumnNames: invoice_id
+            constraintName: fk_invoice_items_invoice
+            referencedTableName: invoices
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_invoice_items_invoice_id
+            tableName: invoice_items
+            columns:
+              - column:
+                  name: invoice_id
+
+  # Create payments table
+  - changeSet:
+      id: 3
+      author: healthcare-system
+      changes:
+        - createTable:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: invoice_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_reference
+                  type: VARCHAR(100)
+                  constraints:
+                    unique: true
+              - column:
+                  name: payment_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_method
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: COMPLETED
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_id
+                  type: VARCHAR(100)
+              - column:
+                  name: card_last_four
+                  type: VARCHAR(4)
+              - column:
+                  name: card_type
+                  type: VARCHAR(20)
+              - column:
+                  name: receipt_number
+                  type: VARCHAR(50)
+              - column:
+                  name: notes
+                  type: TEXT
+              - column:
+                  name: processed_by
+                  type: VARCHAR(100)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: payments
+            baseColumnNames: invoice_id
+            constraintName: fk_payments_invoice
+            referencedTableName: invoices
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_payments_invoice_id
+            tableName: payments
+            columns:
+              - column:
+                  name: invoice_id
+
+        - createIndex:
+            indexName: idx_payments_payment_date
+            tableName: payments
+            columns:
+              - column:
+                  name: payment_date

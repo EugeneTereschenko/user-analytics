@@ -25,6 +25,7 @@
         <module>appointment-service</module>
         <module>medicalrecordservice</module>
         <module>doctorservice</module>
+        <module>billingservice</module>
     </modules>
     <dependencyManagement>
         <dependencies>
