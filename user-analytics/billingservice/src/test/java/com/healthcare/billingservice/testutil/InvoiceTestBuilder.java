@@ -27,7 +27,14 @@ public class InvoiceTestBuilder {
     private BigDecimal paidAmount = BigDecimal.ZERO;
     private BigDecimal balanceDue = BigDecimal.valueOf(105);
     private InvoiceStatus status = InvoiceStatus.PENDING;
-    private List<InvoiceItemDTO> items = new ArrayList<>();
+    private List<InvoiceItemDTO> items = List.of(
+            InvoiceItemDTOTestBuilder.anInvoiceItem()
+                    .withDescription("Consultation")
+                    .withQuantity(1)
+                    .withUnitPrice(new BigDecimal("100.00"))
+                    .withTotal(new BigDecimal("100.00"))
+                    .build()
+    );
     private List<Payment> payments = new ArrayList<>();
     private String patientName = "John Doe";
     private String patientEmail = "john@example.com";

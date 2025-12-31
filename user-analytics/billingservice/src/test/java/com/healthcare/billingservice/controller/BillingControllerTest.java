@@ -6,6 +6,7 @@ import com.healthcare.billingservice.dto.InvoiceDTO;
 import com.healthcare.billingservice.dto.InvoiceItemDTO;
 import com.healthcare.billingservice.dto.PaymentDTO;
 import com.healthcare.billingservice.entity.InvoiceStatus;
+import com.healthcare.billingservice.testutil.InvoiceItemDTOTestBuilder;
 import com.healthcare.billingservice.testutil.InvoiceTestBuilder;
 import com.healthcare.billingservice.testutil.PaymentTestBuilder;
 import com.healthcare.billingservice.testutil.TestcontainersConfiguration;
@@ -56,14 +57,22 @@ class BillingControllerTest {
                 .withInvoiceDate(LocalDate.now())
                 .withTotalAmount(new BigDecimal("100.00"))
                 .withStatus(InvoiceStatus.DRAFT)
-                .withItems(List.of(itemDTO)) // Ensure this is List<InvoiceItemDTO>
+                .withItems(List.of(
+                        InvoiceItemDTOTestBuilder.anInvoiceItem()
+                                .withDescription("Consultation")
+                                .withQuantity(1)
+                                .withUnitPrice(new BigDecimal("100.00"))
+                                .withTotal(new BigDecimal("100.00"))
+                                .build()
+                ))
+
                 .buildDTO();
 
 
         return invoiceDTO;
     }
 
-/*    @Test
+    @Test
     @DisplayName("POST /api/v1/billing/invoices - create invoice")
     void testCreateInvoice() throws Exception {
         InvoiceDTO invoiceDTO = getInvoiceDTO();
@@ -91,8 +100,9 @@ class BillingControllerTest {
 
         mockMvc.perform(get("/api/v1/billing/invoices/{id}", created.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.invoiceNumber", is("INV-2")));
+                .andExpect(jsonPath("$.invoiceNumber", is(created.getInvoiceNumber())));
     }
+
 
     @Test
     @DisplayName("POST /api/v1/billing/invoices/{invoiceId}/payments - add payment")
@@ -134,5 +144,5 @@ class BillingControllerTest {
 
         mockMvc.perform(delete("/api/v1/billing/invoices/{id}", created.getId()))
                 .andExpect(status().isNoContent());
-    }*/
+    }
 }

@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -51,14 +52,12 @@ public class BillingServiceImpl implements BillingService {
         String invoiceNumber = generateInvoiceNumber();
         invoiceDTO.setInvoiceNumber(invoiceNumber);
 
-        Invoice invoice = invoiceMapper.toEntity(invoiceDTO);
+        // Use the mapper method that handles items correctly
+        Invoice invoice = invoiceMapper.toEntitywithItems(invoiceDTO);
 
-        // Set bidirectional relationship
+        // Calculate totals for each item
         if (invoice.getItems() != null) {
-            invoice.getItems().forEach(item -> {
-                item.setInvoice(invoice);
-                item.calculateTotalPrice();
-            });
+            invoice.getItems().forEach(InvoiceItem::calculateTotalPrice);
         }
 
         invoice.calculateTotals();
