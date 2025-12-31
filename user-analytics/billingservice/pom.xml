@@ -14,7 +14,7 @@
 
     <artifactId>billingservice</artifactId>
     <version>1.0.0</version>
-    <n>Billing Service</n>
+    <name>Billing Service</name>
     <description>Microservice for Billing and Payment Management</description>
 
     <properties>
