@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class InvoiceItemDTO {
+public class InvoiceItemDTO {
 
     private Long id;
 
