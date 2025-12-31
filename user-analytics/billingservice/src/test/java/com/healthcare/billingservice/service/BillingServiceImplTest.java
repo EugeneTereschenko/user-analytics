@@ -9,6 +9,7 @@ import com.healthcare.billingservice.mapper.InvoiceMapper;
 import com.healthcare.billingservice.mapper.PaymentMapper;
 import com.healthcare.billingservice.repository.InvoiceRepository;
 import com.healthcare.billingservice.repository.PaymentRepository;
+import com.healthcare.billingservice.testutil.InvoiceItemDTOTestBuilder;
 import com.healthcare.billingservice.testutil.InvoiceTestBuilder;
 import com.healthcare.billingservice.testutil.PaymentTestBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,17 +43,40 @@ class BillingServiceImplTest {
 
     @Test
     void testCreateInvoice() {
-        InvoiceDTO invoiceDTO = new InvoiceDTO();
-        invoiceDTO.setPatientId(1L);
-
-        Invoice invoice = new InvoiceTestBuilder()
+        InvoiceDTO invoiceDTO = new InvoiceTestBuilder()
                 .withPatientId(1L)
                 .withInvoiceNumber("INV-1")
                 .withInvoiceDate(LocalDate.now())
                 .withTotalAmount(new BigDecimal("100.00"))
                 .withStatus(InvoiceStatus.DRAFT)
+                .withItems(List.of(
+                        InvoiceItemDTOTestBuilder.anInvoiceItem()
+                                .withDescription("Consultation")
+                                .withQuantity(1)
+                                .withUnitPrice(new BigDecimal("100.00"))
+                                .withTotal(new BigDecimal("100.00"))
+                                .build()
+                ))
+
+                .buildDTO();
+
+        Invoice invoice = new InvoiceTestBuilder()
+                .withPatientId(1L)
+                .withInvoiceNumber("INV-1")
+                .withInvoiceDate(LocalDate.now())
+                .withItems(List.of(
+                        InvoiceItemDTOTestBuilder.anInvoiceItem()
+                                .withDescription("Consultation")
+                                .withQuantity(1)
+                                .withUnitPrice(new BigDecimal("100.00"))
+                                .withTotal(new BigDecimal("100.00"))
+                                .build()
+                ))
+                .withTotalAmount(new BigDecimal("100.00"))
+                .withStatus(InvoiceStatus.DRAFT)
                 .build();
 
+        when(invoiceMapper.toEntitywithItems(any())).thenReturn(invoice);
         when(invoiceMapper.toEntity(any(InvoiceDTO.class))).thenReturn(invoice);
         when(invoiceRepository.save(any(Invoice.class))).thenReturn(invoice);
         when(invoiceMapper.toDTO(any(Invoice.class))).thenReturn(invoiceDTO);
@@ -62,6 +86,7 @@ class BillingServiceImplTest {
         assertNotNull(result);
         verify(invoiceRepository).save(any(Invoice.class));
     }
+
 
     @Test
     void testGetInvoiceById_found() {

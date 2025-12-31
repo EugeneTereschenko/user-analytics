@@ -1,5 +1,6 @@
 .PHONY: up down build logs restart clean help \
-        doctorservice doctorservice-up doctorservice-down
+        doctorservice doctorservice-up doctorservice-down \
+        billingservice billingservice-up billingservice-down
 
 help:
 	@echo "Available commands:"
@@ -28,6 +29,9 @@ help:
 	@echo "  doctorservice              Build only the doctor-service"
 	@echo "  doctorservice-up           Start only the doctor-service"
 	@echo "  doctorservice-down         Stop only the doctor-service"
+	@echo "  billingservice             Build only the billing-service"
+	@echo "  billingservice-up          Start only the billing-service"
+	@echo "  billingservice-down        Stop only the billing-service"
 	@echo "  start     Start all services in foreground"
 
 up:
@@ -106,3 +110,12 @@ doctorservice-up:
 
 doctorservice-down:
 	docker-compose stop doctor-service
+
+billingservice:
+	docker-compose build billing-service
+
+billingservice-up:
+	docker-compose up -d billing-service
+
+billingservice-down:
+	docker-compose stop billing-service
