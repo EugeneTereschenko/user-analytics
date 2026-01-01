@@ -158,6 +158,28 @@ services:
       - healthcare-network
     restart: on-failure
 
+  prescription-service:
+    build:
+      context: .
+      dockerfile: prescriptionservice/Dockerfile
+    container_name: prescription-service
+    ports:
+      - "8086:8086"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/prescription_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      postgres:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - healthcare-network
+    restart: on-failure
+
+
 
 
 
