@@ -1,7 +1,8 @@
 .PHONY: up down build logs restart clean help \
         doctorservice doctorservice-up doctorservice-down \
-        billingservice billingservice-up billingservice-down\
-		prescriptionservice prescriptionservice-up prescriptionservice-down
+        billingservice billingservice-up billingservice-down \
+        prescriptionservice prescriptionservice-up prescriptionservice-down \
+        auth-service auth-service-up auth-service-down
 
 help:
 	@echo "Available commands:"
@@ -37,6 +38,10 @@ help:
 	@echo "  prescriptionservice             Build only the prescription-service"
 	@echo "  prescriptionservice-up          Start only the prescription-service"
 	@echo "  prescriptionservice-down        Stop only the prescription-service"
+	@echo "  auth-service                   Build only the auth-service"
+	@echo "  auth-service-up                Start only the auth-service"
+	@echo "  auth-service-down              Stop only the auth-service"
+
 
 
 up:
@@ -133,4 +138,13 @@ prescriptionservice-up:
 
 prescriptionservice-down:
 	docker-compose stop prescription-service
+
+auth-service:
+	docker-compose build auth-service
+
+auth-service-up:
+	docker-compose up -d auth-service
+
+auth-service-down:
+	docker-compose stop auth-service
 
