@@ -1,0 +1,52 @@
+/*
+ * © 2026 Yevhen Tereshchenko
+ * All rights reserved.
+ *
+ */
+
+package com.example.authservice.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "permissions")
+@EntityListeners(AuditingEntityListener.class)
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(exclude = {"roles"})
+@ToString(exclude = {"roles"})
+public class Permission {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 100)
+    private String name;
+
+    @Column(length = 255)
+    private String description;
+
+    @Column(length = 50)
+    private String resource; // e.g., "PATIENT", "APPOINTMENT", "MEDICAL_RECORD"
+
+    @Column(length = 20)
+    private String action; // e.g., "CREATE", "READ", "UPDATE", "DELETE"
+
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @ManyToMany(mappedBy = "permissions")
+    @Builder.Default
+    private Set<Role> roles = new HashSet<>();
+}

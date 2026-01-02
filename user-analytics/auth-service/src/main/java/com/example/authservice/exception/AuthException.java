@@ -1,0 +1,17 @@
+/*
+ * © 2026 Yevhen Tereshchenko
+ * All rights reserved.
+ *
+ */
+
+package com.example.authservice.exception;
+
+public class AuthException extends RuntimeException {
+    public AuthException(String message) {
+        super(message);
+    }
+
+    public AuthException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}

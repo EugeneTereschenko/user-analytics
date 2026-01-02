@@ -1,0 +1,17 @@
+/*
+ * © 2026 Yevhen Tereshchenko
+ * All rights reserved.
+ *
+ */
+
+package com.example.authservice.exception;
+
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+
+    public ResourceNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
