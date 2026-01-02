@@ -9,7 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>user-analytics-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>user-analytics-java</name>
     <description>User Analytics Java for Spring Boot</description>

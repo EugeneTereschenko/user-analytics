@@ -19,7 +19,7 @@
 
 
     <modules>
-        <module>demo</module>
+        <module>user-analytics-service</module>
         <module>patientservice</module>
         <module>eureka-server</module>
         <module>appointment-service</module>
