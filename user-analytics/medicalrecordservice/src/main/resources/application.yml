@@ -80,3 +80,18 @@ management:
 medical-record:
   file-storage:
     location: ./uploads/medical-records
+# Auth Service Configuration
+auth:
+  service:
+    url: http://auth-service:8087
+
+# Feign Configuration
+feign:
+  circuitbreaker:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: BASIC
