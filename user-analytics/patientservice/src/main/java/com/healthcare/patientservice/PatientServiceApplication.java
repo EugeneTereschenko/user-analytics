@@ -13,12 +13,13 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-/*@EnableFeignClients(basePackages = {
+@EnableFeignClients(basePackages = {
         "com.example.common.security.client"
 })
 @ComponentScan(basePackages = {
-        "com.example.common.security"
-})*/
+        "com.example.common.security",
+        "com.healthcare.patientservice",
+})
 public class PatientServiceApplication {
 
     public static void main(String[] args) {

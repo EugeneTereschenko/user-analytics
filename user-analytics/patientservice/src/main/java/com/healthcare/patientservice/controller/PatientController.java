@@ -6,6 +6,8 @@
 
 package com.healthcare.patientservice.controller;
 
+import com.example.common.security.annotation.RequirePermission;
+import com.example.common.security.constants.PermissionConstants;
 import com.healthcare.patientservice.dto.PatientDTO;
 import com.healthcare.patientservice.entity.PatientStatus;
 import com.healthcare.patientservice.service.PatientServiceImpl;
@@ -33,7 +35,7 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-  //  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
+    @RequirePermission(PermissionConstants.PATIENT_READ)
     public ResponseEntity<PatientDTO> getPatientById(@PathVariable Long id) {
         PatientDTO patient = patientServiceImpl.getPatientById(id);
         return ResponseEntity.ok(patient);
