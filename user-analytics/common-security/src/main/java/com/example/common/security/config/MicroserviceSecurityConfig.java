@@ -53,7 +53,6 @@ public class MicroserviceSecurityConfig {
                                 "/api/public/**",
                                 "/error",
                                 "/health",
-                                "/patient-service/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
