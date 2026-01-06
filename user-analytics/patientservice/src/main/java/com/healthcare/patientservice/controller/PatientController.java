@@ -28,7 +28,8 @@ public class PatientController {
     private final PatientServiceImpl patientServiceImpl;
 
     @PostMapping
-  //  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
+   // @RequirePermission(PermissionConstants.PATIENT_CREATE)
     public ResponseEntity<PatientDTO> createPatient(@Valid @RequestBody PatientDTO patientDTO) {
         PatientDTO createdPatient = patientServiceImpl.createPatient(patientDTO);
         return new ResponseEntity<>(createdPatient, HttpStatus.CREATED);

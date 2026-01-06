@@ -6,6 +6,7 @@
 
 package com.healthcare.patientservice.repository;
 
+import com.example.common.security.client.AuthServiceClient;
 import com.healthcare.patientservice.PatientServiceApplication;
 import com.healthcare.patientservice.entity.Patient;
 import com.healthcare.patientservice.entity.PatientStatus;
@@ -16,8 +17,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -30,13 +34,18 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(classes = {PatientServiceApplication.class})
-@Import(TestcontainersConfiguration.class)
+@Import({TestcontainersConfiguration.class, FeignAutoConfiguration.class})
 class PatientRepositoryTest {
 
     @Autowired
     private PatientRepository patientRepository;
 
+    @MockBean
+    private AuthServiceClient authServiceClient;
+
+
     @Test
+    @WithMockUser
     @DisplayName("Should save and find patient by email")
     void testFindByEmail() {
         Patient patient = new PatientTestBuilder()
@@ -53,6 +62,7 @@ class PatientRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("Should check existence by email")
     void testExistsByEmail() {
         Patient patient = new PatientTestBuilder()
@@ -68,6 +78,7 @@ class PatientRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("Should find patients by status")
     void testFindByStatus() {
         Patient patient = new PatientTestBuilder()
@@ -83,6 +94,7 @@ class PatientRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("Should search patients by term")
     void testSearchPatients() {
         Patient patient = new PatientTestBuilder()
