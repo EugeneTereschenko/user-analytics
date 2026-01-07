@@ -8,6 +8,7 @@ package com.healthcare.appointmentservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healthcare.appointmentservice.AppointmentServiceApplication;
+import com.healthcare.appointmentservice.config.WithMockUserPrincipal;
 import com.healthcare.appointmentservice.dto.AppointmentDTO;
 import com.healthcare.appointmentservice.testutil.AppointmentTestBuilder;
 import com.healthcare.appointmentservice.testutil.TestcontainersConfiguration;
@@ -41,6 +42,11 @@ class AppointmentControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"APPOINTMENT_CREATE", "APPOINTMENT_READ"}
+    )
     @DisplayName("Should create appointment successfully")
     void createAppointment_success() throws Exception {
         AppointmentDTO appointmentDTO = AppointmentTestBuilder.defaultAppointmentDTO();

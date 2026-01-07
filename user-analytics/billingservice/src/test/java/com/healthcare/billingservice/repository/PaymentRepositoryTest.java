@@ -1,5 +1,6 @@
 package com.healthcare.billingservice.repository;
 
+import com.example.common.security.client.AuthServiceClient;
 import com.healthcare.billingservice.BillingServiceApplication;
 import com.healthcare.billingservice.entity.*;
 import com.healthcare.billingservice.testutil.InvoiceTestBuilder;
@@ -11,7 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -27,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(classes = {BillingServiceApplication.class})
-@Import(TestcontainersConfiguration.class)
+@Import({TestcontainersConfiguration.class,  FeignAutoConfiguration.class})
 class PaymentRepositoryTest {
 
     @Autowired
@@ -35,6 +39,9 @@ class PaymentRepositoryTest {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @MockBean
+    private AuthServiceClient authServiceClient;
 
     private Invoice persistInvoice(Long patientId) {
         Invoice invoice = new InvoiceTestBuilder()
@@ -52,6 +59,7 @@ class PaymentRepositoryTest {
 
 
     @Test
+    @WithMockUser
     void testFindByPaymentReference() {
         Invoice invoice = persistInvoice(1L);
         Payment payment = new PaymentTestBuilder()
@@ -66,6 +74,7 @@ class PaymentRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     void testFindByInvoiceId() {
         Invoice invoice = persistInvoice(2L);
         Payment payment = new PaymentTestBuilder()
@@ -79,6 +88,7 @@ class PaymentRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     void testFindByPatientId() {
         Invoice invoice = persistInvoice(3L);
         Payment payment = new PaymentTestBuilder()
@@ -93,6 +103,7 @@ class PaymentRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     void testGetTotalPaymentsBetween() {
         Invoice invoice = persistInvoice(4L);
         Payment payment = new PaymentTestBuilder()
@@ -112,6 +123,7 @@ class PaymentRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     void testFindPaymentsByMethodBetween() {
         Invoice invoice = persistInvoice(5L);
         Payment payment = new PaymentTestBuilder()

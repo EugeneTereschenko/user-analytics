@@ -6,6 +6,7 @@
 
 package com.healthcare.appointmentservice.repository;
 
+import com.example.common.security.client.AuthServiceClient;
 import com.healthcare.appointmentservice.AppointmentServiceApplication;
 import com.healthcare.appointmentservice.entity.Appointment;
 import com.healthcare.appointmentservice.testutil.AppointmentTestBuilder;
@@ -14,7 +15,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -27,13 +31,17 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(classes = {AppointmentServiceApplication.class})
-@Import(TestcontainersConfiguration.class)
+@Import({TestcontainersConfiguration.class, FeignAutoConfiguration.class})
 class AppointmentRepositoryTest {
 
     @Autowired
     private AppointmentRepository appointmentRepository;
 
+    @MockBean
+    private AuthServiceClient authServiceClient;
+
     @Test
+    @WithMockUser
     void testSaveAndFindById() {
         Appointment appointment = new AppointmentTestBuilder()
                 .withPatientName("John Doe")
@@ -47,6 +55,7 @@ class AppointmentRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     void testDelete() {
         Appointment appointment = new AppointmentTestBuilder()
                 .withPatientName("Jane Smith")
@@ -60,6 +69,7 @@ class AppointmentRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     void testFindAll() {
         Appointment appointment1 = new AppointmentTestBuilder()
                 .withPatientName("Alice")

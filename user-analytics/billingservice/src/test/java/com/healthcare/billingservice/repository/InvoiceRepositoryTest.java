@@ -1,5 +1,6 @@
 package com.healthcare.billingservice.repository;
 
+import com.example.common.security.client.AuthServiceClient;
 import com.healthcare.billingservice.BillingServiceApplication;
 import com.healthcare.billingservice.entity.Invoice;
 import com.healthcare.billingservice.entity.InvoiceStatus;
@@ -10,8 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -26,11 +30,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(classes = {BillingServiceApplication.class})
-@Import(TestcontainersConfiguration.class)
+@Import({TestcontainersConfiguration.class,  FeignAutoConfiguration.class})
 class InvoiceRepositoryTest {
 
     @Autowired
     private InvoiceRepository invoiceRepository;
+
+    @MockBean
+    private AuthServiceClient authServiceClient;
 
     private Invoice invoice1;
     private Invoice invoice2;
@@ -64,6 +71,7 @@ class InvoiceRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     void testFindByInvoiceNumber() {
         Optional<Invoice> found = invoiceRepository.findByInvoiceNumber("INV-001");
         assertTrue(found.isPresent());
@@ -71,18 +79,21 @@ class InvoiceRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     void testExistsByInvoiceNumber() {
         assertTrue(invoiceRepository.existsByInvoiceNumber("INV-001"));
         assertFalse(invoiceRepository.existsByInvoiceNumber("INV-999"));
     }
 
     @Test
+    @WithMockUser
     void testFindByPatientId() {
         var page = invoiceRepository.findByPatientId(1L, PageRequest.of(0, 10));
         assertEquals(2, page.getTotalElements());
     }
 
     @Test
+    @WithMockUser
     void testFindOverdueInvoices() {
         List<Invoice> overdue = invoiceRepository.findOverdueInvoices(InvoiceStatus.OVERDUE, LocalDate.now());
         assertFalse(overdue.isEmpty());
@@ -90,24 +101,28 @@ class InvoiceRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     void testGetTotalRevenueBetween() {
         BigDecimal revenue = invoiceRepository.getTotalRevenueBetween(LocalDate.now().minusDays(30), LocalDate.now());
         assertEquals(new BigDecimal("100.00"), revenue);
     }
 
     @Test
+    @WithMockUser
     void testGetTotalOutstanding() {
         BigDecimal outstanding = invoiceRepository.getTotalOutstanding();
         assertEquals(new BigDecimal("200.00"), outstanding);
     }
 
     @Test
+    @WithMockUser
     void testCountOverdueInvoices() {
         Long count = invoiceRepository.countOverdueInvoices();
         assertEquals(1L, count);
     }
 
     @Test
+    @WithMockUser
     void testFindPatientOutstandingInvoices() {
         List<Invoice> outstanding = invoiceRepository.findPatientOutstandingInvoices(1L);
         assertEquals(1, outstanding.size());
