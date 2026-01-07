@@ -2,6 +2,7 @@ package com.healthcare.billingservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healthcare.billingservice.BillingServiceApplication;
+import com.healthcare.billingservice.config.WithMockUserPrincipal;
 import com.healthcare.billingservice.dto.InvoiceDTO;
 import com.healthcare.billingservice.dto.InvoiceItemDTO;
 import com.healthcare.billingservice.dto.PaymentDTO;
@@ -35,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @Import(TestcontainersConfiguration.class)
 @Transactional
-class BillingControllerTest {
+class BillingControllerTest {//PermissionConstants.BILLING_READ
 
     @Autowired
     private MockMvc mockMvc;
@@ -73,6 +74,11 @@ class BillingControllerTest {
     }
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"BILLING_CREATE", "BILLING_READ"}
+    )
     @DisplayName("POST /api/v1/billing/invoices - create invoice")
     void testCreateInvoice() throws Exception {
         InvoiceDTO invoiceDTO = getInvoiceDTO();
@@ -86,6 +92,11 @@ class BillingControllerTest {
     }
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"BILLING_CREATE", "BILLING_READ"}
+    )
     @DisplayName("GET /api/v1/billing/invoices/{id} - get invoice by id")
     void testGetInvoiceById() throws Exception {
         InvoiceDTO invoiceDTO = getInvoiceDTO();
@@ -105,6 +116,11 @@ class BillingControllerTest {
 
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"BILLING_CREATE", "BILLING_READ"}
+    )
     @DisplayName("POST /api/v1/billing/invoices/{invoiceId}/payments - add payment")
     void testAddPayment() throws Exception {
         InvoiceDTO invoiceDTO = getInvoiceDTO();
@@ -130,6 +146,11 @@ class BillingControllerTest {
     }
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"BILLING_CREATE", "BILLING_READ"}
+    )
     @DisplayName("DELETE /api/v1/billing/invoices/{id} - delete invoice")
     void testDeleteInvoice() throws Exception {
         InvoiceDTO invoiceDTO = getInvoiceDTO();

@@ -2,6 +2,7 @@ package com.healthcare.doctorservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healthcare.doctorservice.DoctorServiceApplication;
+import com.healthcare.doctorservice.config.WithMockUserPrincipal;
 import com.healthcare.doctorservice.dto.StaffDTO;
 import com.healthcare.doctorservice.testutil.StaffDTOTestBuilder;
 import com.healthcare.doctorservice.testutil.TestcontainersConfiguration;
@@ -32,6 +33,11 @@ class StaffControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"BILLING_CREATE", "BILLING_READ"}
+    )
     void createStaff_shouldReturnCreatedStaff() throws Exception {
         StaffDTO staffDTO = StaffDTOTestBuilder.defaultStaff().build();
 
@@ -43,6 +49,11 @@ class StaffControllerTest {
     }
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"BILLING_CREATE", "BILLING_READ"}
+    )
     void getStaffById_shouldReturnStaff() throws Exception {
         StaffDTO staffDTO = StaffDTOTestBuilder.defaultStaff().build();
 

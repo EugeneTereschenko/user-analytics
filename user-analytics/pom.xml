@@ -28,6 +28,7 @@
         <module>billingservice</module>
         <module>prescriptionservice</module>
         <module>auth-service</module>
+        <module>common-security</module>
     </modules>
     <dependencyManagement>
         <dependencies>

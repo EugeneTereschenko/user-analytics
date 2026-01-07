@@ -1,5 +1,7 @@
 package com.healthcare.billingservice.controller;
 
+import com.example.common.security.annotation.RequirePermission;
+import com.example.common.security.constants.PermissionConstants;
 import com.healthcare.billingservice.dto.InvoiceDTO;
 import com.healthcare.billingservice.dto.PaymentDTO;
 import com.healthcare.billingservice.entity.Invoice;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -24,12 +27,15 @@ public class BillingController {
     private final BillingService billingService;
 
     @PostMapping("/invoices")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
+    //@RequirePermission(PermissionConstants.BILLING_CREATE)
     public ResponseEntity<InvoiceDTO> createInvoice(@Valid @RequestBody InvoiceDTO invoiceDTO) {
         InvoiceDTO created = billingService.createInvoice(invoiceDTO);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @GetMapping("/invoices/{id}")
+    @RequirePermission(PermissionConstants.BILLING_READ)
     public ResponseEntity<InvoiceDTO> getInvoiceById(@PathVariable Long id) {
         InvoiceDTO invoice = billingService.getInvoiceById(id);
         return ResponseEntity.ok(invoice);
@@ -113,12 +119,14 @@ public class BillingController {
     }
 
     @PatchMapping("/invoices/{id}/cancel")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<InvoiceDTO> cancelInvoice(@PathVariable Long id) {
         InvoiceDTO cancelled = billingService.cancelInvoice(id);
         return ResponseEntity.ok(cancelled);
     }
 
     @DeleteMapping("/invoices/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Void> deleteInvoice(@PathVariable Long id) {
         billingService.deleteInvoice(id);
         return ResponseEntity.noContent().build();

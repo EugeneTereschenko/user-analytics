@@ -1,5 +1,7 @@
 package com.healthcare.prescriptionservice.controller;
 
+import com.example.common.security.annotation.RequirePermission;
+import com.example.common.security.constants.PermissionConstants;
 import com.healthcare.prescriptionservice.dto.PrescriptionDTO;
 import com.healthcare.prescriptionservice.entity.PrescriptionStatus;
 import com.healthcare.prescriptionservice.service.impl.PrescriptionService;
@@ -9,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +24,8 @@ public class PrescriptionController {
     private final PrescriptionService prescriptionService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
+    //@RequirePermission(PermissionConstants.BILLING_CREATE)
     public ResponseEntity<PrescriptionDTO> createPrescription(
             @Valid @RequestBody PrescriptionDTO prescriptionDTO) {
         PrescriptionDTO created = prescriptionService.createPrescription(prescriptionDTO);
@@ -28,6 +33,7 @@ public class PrescriptionController {
     }
 
     @GetMapping("/{id}")
+    @RequirePermission(PermissionConstants.PRESCRIPTION_READ)
     public ResponseEntity<PrescriptionDTO> getPrescriptionById(@PathVariable Long id) {
         PrescriptionDTO prescription = prescriptionService.getPrescriptionById(id);
         return ResponseEntity.ok(prescription);
@@ -134,6 +140,7 @@ public class PrescriptionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Void> deletePrescription(@PathVariable Long id) {
         prescriptionService.deletePrescription(id);
         return ResponseEntity.noContent().build();

@@ -33,6 +33,11 @@ services:
       - healthcare-network
     environment:
       - SPRING_PROFILES_ACTIVE=default
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/eureka" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   # Patient Service
   patient-service:
@@ -195,17 +200,19 @@ services:
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - JWT_SECRET=${JWT_SECRET:-your-very-long-secret-key-that-is-at-least-256-bits-long-for-hs256-algorithm}
-    depends_on:
-      postgres:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8087/auth-service/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
+      - SERVER_PORT=8087
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      eureka-server:
+#        condition: service_started
+#    healthcheck:
+#      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8087/api/auth/health" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#      start_period: 60s
+#    restart: unless-stopped
 
 
 

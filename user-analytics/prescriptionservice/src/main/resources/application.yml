@@ -6,6 +6,8 @@ server:
 spring:
   application:
     name: prescription-service
+  main:
+    allow-bean-definition-overriding: true
 
   datasource:
     url: jdbc:postgresql://localhost:5432/prescription_db
@@ -68,3 +70,18 @@ management:
     export:
       prometheus:
         enabled: true
+# Auth Service Configuration
+auth:
+  service:
+    url: http://auth-service:8087
+
+# Feign Configuration
+feign:
+  circuitbreaker:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: BASIC

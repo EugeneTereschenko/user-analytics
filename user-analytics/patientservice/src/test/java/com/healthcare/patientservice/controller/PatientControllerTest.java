@@ -2,6 +2,7 @@ package com.healthcare.patientservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healthcare.patientservice.PatientServiceApplication;
+import com.healthcare.patientservice.config.WithMockUserPrincipal;
 import com.healthcare.patientservice.dto.PatientDTO;
 import com.healthcare.patientservice.entity.Gender;
 import com.healthcare.patientservice.entity.PatientStatus;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,11 @@ class PatientControllerTest {
 
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"PATIENT_CREATE", "PATIENT_READ"}
+    )
     @DisplayName("Should create a patient successfully")
     void createPatient_Success() throws Exception {
         PatientDTO patientDTO = new PatientDTO();
@@ -57,6 +64,11 @@ class PatientControllerTest {
     }
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"PATIENT_CREATE", "PATIENT_READ"}
+    )
     @DisplayName("Should get patient by id")
     void getPatientById_Success() throws Exception {
         PatientDTO patientDTO = new PatientDTO();
@@ -82,6 +94,11 @@ class PatientControllerTest {
     }
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"PATIENT_CREATE", "PATIENT_READ"}
+    )
     @DisplayName("Should delete patient by id")
     void deletePatient_Success() throws Exception {
         PatientDTO patientDTO = new PatientDTO();

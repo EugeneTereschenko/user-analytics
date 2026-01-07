@@ -1,14 +1,16 @@
 server:
-  port: 8083
+  port: 8082
   servlet:
-    context-path: /appointment-service
+    context-path: /billing-service
 
 spring:
   application:
-    name: appointment-service
+    name: billing-service
+  main:
+    allow-bean-definition-overriding: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/appointment_db
+    url: jdbc:postgresql://localhost:5432/billing_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -48,7 +50,7 @@ eureka:
 logging:
   level:
     root: INFO
-    com.healthcare.appointmentservice: DEBUG
+    com.healthcare.billingservice: DEBUG
     org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
     liquibase: INFO
@@ -68,3 +70,18 @@ management:
     export:
       prometheus:
         enabled: true
+# Auth Service Configuration
+auth:
+  service:
+    url: http://auth-service:8087
+
+# Feign Configuration
+feign:
+  circuitbreaker:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: BASIC
