@@ -6,6 +6,7 @@
 
 package com.healthcare.medicalrecordservice.repository;
 
+import com.example.common.security.client.AuthServiceClient;
 import com.healthcare.medicalrecordservice.MedicalRecordServiceApplication;
 import com.healthcare.medicalrecordservice.entity.MedicalRecord;
 import com.healthcare.medicalrecordservice.entity.RecordType;
@@ -15,25 +16,30 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(classes = {MedicalRecordServiceApplication.class})
-@Import(TestcontainersConfiguration.class)
+@Import({TestcontainersConfiguration.class, FeignAutoConfiguration.class})
 class MedicalRecordRepositoryTest {
 
 
     @Autowired
     private MedicalRecordRepository medicalRecordRepository;
+
+    @MockBean
+    private AuthServiceClient authServiceClient;
 
     @Test
     void shouldSaveAndFindByPatientId() {
@@ -50,6 +56,7 @@ class MedicalRecordRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     void shouldFindByDoctorId() {
         MedicalRecord record = new MedicalRecordTestBuilder()
                 .withPatientId(101L)
@@ -63,6 +70,7 @@ class MedicalRecordRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     void shouldFindByRecordType() {
         MedicalRecord record = new MedicalRecordTestBuilder()
                 .withRecordType(RecordType.LAB_RESULT)

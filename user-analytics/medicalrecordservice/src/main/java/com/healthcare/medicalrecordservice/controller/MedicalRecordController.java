@@ -6,6 +6,8 @@
 
 package com.healthcare.medicalrecordservice.controller;
 
+import com.example.common.security.annotation.RequirePermission;
+import com.example.common.security.constants.PermissionConstants;
 import com.healthcare.medicalrecordservice.dto.MedicalRecordDTO;
 import com.healthcare.medicalrecordservice.entity.RecordStatus;
 import com.healthcare.medicalrecordservice.entity.RecordType;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -30,6 +33,8 @@ public class MedicalRecordController {
     private final MedicalRecordService medicalRecordService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
+    //@RequirePermission(PermissionConstants.BILLING_CREATE)
     public ResponseEntity<MedicalRecordDTO> createMedicalRecord(
             @Valid @RequestBody MedicalRecordDTO recordDTO) {
         MedicalRecordDTO created = medicalRecordService.createMedicalRecord(recordDTO);
@@ -37,6 +42,7 @@ public class MedicalRecordController {
     }
 
     @GetMapping("/{id}")
+    @RequirePermission(PermissionConstants.MEDICAL_RECORD_READ)
     public ResponseEntity<MedicalRecordDTO> getMedicalRecordById(@PathVariable Long id) {
         MedicalRecordDTO record = medicalRecordService.getMedicalRecordById(id);
         return ResponseEntity.ok(record);
@@ -154,6 +160,7 @@ public class MedicalRecordController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Void> deleteMedicalRecord(@PathVariable Long id) {
         medicalRecordService.deleteMedicalRecord(id);
         return ResponseEntity.noContent().build();

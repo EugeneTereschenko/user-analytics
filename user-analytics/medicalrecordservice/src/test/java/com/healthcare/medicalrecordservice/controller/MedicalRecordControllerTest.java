@@ -8,6 +8,7 @@ package com.healthcare.medicalrecordservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healthcare.medicalrecordservice.MedicalRecordServiceApplication;
+import com.healthcare.medicalrecordservice.config.WithMockUserPrincipal;
 import com.healthcare.medicalrecordservice.dto.MedicalRecordDTO;
 import com.healthcare.medicalrecordservice.entity.RecordStatus;
 import com.healthcare.medicalrecordservice.entity.RecordType;
@@ -49,6 +50,11 @@ class MedicalRecordControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"MEDICAL_RECORD_CREATE", "MEDICAL_RECORD_READ"}
+    )
     @DisplayName("Should create a medical record")
     void shouldCreateMedicalRecord() throws Exception {
         MedicalRecordDTO dto = new MedicalRecordDTO();
@@ -68,6 +74,11 @@ class MedicalRecordControllerTest {
     }
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"MEDICAL_RECORD_CREATE", "MEDICAL_RECORD_READ"}
+    )
     @DisplayName("Should get medical record by id")
     void shouldGetMedicalRecordById() throws Exception {
         var entity = new MedicalRecordTestBuilder().withPatientId(10L).withDoctorId(20L).build();
@@ -80,6 +91,11 @@ class MedicalRecordControllerTest {
     }
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"MEDICAL_RECORD_CREATE", "MEDICAL_RECORD_READ"}
+    )
     @DisplayName("Should get all medical records")
     void shouldGetAllMedicalRecords() throws Exception {
         var entity = new MedicalRecordTestBuilder().withPatientId(11L).build();
@@ -91,6 +107,11 @@ class MedicalRecordControllerTest {
     }
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"MEDICAL_RECORD_CREATE", "MEDICAL_RECORD_READ"}
+    )
     @DisplayName("Should update a medical record")
     void shouldUpdateMedicalRecord() throws Exception {
         var entity = new MedicalRecordTestBuilder().withTitle("Old Title").build();
@@ -112,6 +133,11 @@ class MedicalRecordControllerTest {
 
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"MEDICAL_RECORD_CREATE", "MEDICAL_RECORD_READ"}
+    )
     @DisplayName("Should finalize a medical record")
     void shouldFinalizeMedicalRecord() throws Exception {
         var entity = new MedicalRecordTestBuilder().withStatus(RecordStatus.DRAFT).build();
@@ -123,6 +149,11 @@ class MedicalRecordControllerTest {
     }
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"MEDICAL_RECORD_CREATE", "MEDICAL_RECORD_READ"}
+    )
     @DisplayName("Should sign a medical record")
     void shouldSignMedicalRecord() throws Exception {
         var entity = new MedicalRecordTestBuilder().withStatus(RecordStatus.FINALIZED).build();
@@ -136,6 +167,11 @@ class MedicalRecordControllerTest {
     }
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"MEDICAL_RECORD_CREATE", "MEDICAL_RECORD_READ"}
+    )
     @DisplayName("Should archive a medical record")
     void shouldArchiveMedicalRecord() throws Exception {
         var entity = new MedicalRecordTestBuilder().withStatus(RecordStatus.SIGNED).build();
@@ -147,6 +183,11 @@ class MedicalRecordControllerTest {
     }
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"MEDICAL_RECORD_CREATE", "MEDICAL_RECORD_READ"}
+    )
     @DisplayName("Should delete a medical record")
     void shouldDeleteMedicalRecord() throws Exception {
         var entity = new MedicalRecordTestBuilder().build();
