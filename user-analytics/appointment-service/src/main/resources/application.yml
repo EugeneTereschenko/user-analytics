@@ -6,6 +6,8 @@ server:
 spring:
   application:
     name: appointment-service
+  main:
+    allow-bean-definition-overriding: true
 
   datasource:
     url: jdbc:postgresql://localhost:5432/appointment_db

@@ -6,6 +6,8 @@
 
 package com.healthcare.appointmentservice.controller;
 
+import com.example.common.security.annotation.RequirePermission;
+import com.example.common.security.constants.PermissionConstants;
 import com.healthcare.appointmentservice.dto.AppointmentDTO;
 import com.healthcare.appointmentservice.entity.AppointmentStatus;
 import com.healthcare.appointmentservice.service.AppointmentServiceImpl;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -29,6 +32,8 @@ public class AppointmentController {
     private final AppointmentServiceImpl appointmentServiceImpl;
 
     @PostMapping
+    //@RequirePermission(PermissionConstants.APPOINTMENT_CREATE)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<AppointmentDTO> createAppointment(
             @Valid @RequestBody AppointmentDTO appointmentDTO) {
         AppointmentDTO created = appointmentServiceImpl.createAppointment(appointmentDTO);
@@ -36,6 +41,7 @@ public class AppointmentController {
     }
 
     @GetMapping("/{id}")
+    @RequirePermission(PermissionConstants.APPOINTMENT_READ)
     public ResponseEntity<AppointmentDTO> getAppointmentById(@PathVariable Long id) {
         AppointmentDTO appointment = appointmentServiceImpl.getAppointmentById(id);
         return ResponseEntity.ok(appointment);
@@ -131,6 +137,7 @@ public class AppointmentController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
         appointmentServiceImpl.deleteAppointment(id);
         return ResponseEntity.noContent().build();
