@@ -42,6 +42,7 @@ class MedicalRecordRepositoryTest {
     private AuthServiceClient authServiceClient;
 
     @Test
+    @WithMockUser
     void shouldSaveAndFindByPatientId() {
         MedicalRecord record = new MedicalRecordTestBuilder()
                 .withPatientId(100L)

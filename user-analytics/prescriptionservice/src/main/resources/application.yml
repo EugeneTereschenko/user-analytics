@@ -6,6 +6,8 @@ server:
 spring:
   application:
     name: prescription-service
+  main:
+    allow-bean-definition-overriding: true
 
   datasource:
     url: jdbc:postgresql://localhost:5432/prescription_db

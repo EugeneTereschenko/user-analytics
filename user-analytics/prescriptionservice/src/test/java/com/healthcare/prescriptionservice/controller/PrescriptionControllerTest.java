@@ -9,6 +9,7 @@ package com.healthcare.prescriptionservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healthcare.prescriptionservice.PrescriptionServiceApplication;
+import com.healthcare.prescriptionservice.config.WithMockUserPrincipal;
 import com.healthcare.prescriptionservice.dto.MedicationDTO;
 import com.healthcare.prescriptionservice.dto.PrescriptionDTO;
 import com.healthcare.prescriptionservice.entity.Prescription;
@@ -47,6 +48,11 @@ class PrescriptionControllerTest {
 
 
     @Test
+    @WithMockUserPrincipal(
+            username = "admin",
+            roles = {"ROLE_ADMIN"},
+            permissions = {"PRESCRIPTION_CREATE", "PRESCRIPTION_READ"}
+    )
     @DisplayName("Should create prescription via POST /prescriptions")
     void shouldCreatePrescription() throws Exception {
         // Build test data

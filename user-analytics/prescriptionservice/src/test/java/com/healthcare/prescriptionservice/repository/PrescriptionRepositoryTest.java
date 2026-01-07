@@ -6,6 +6,7 @@
 
 package com.healthcare.prescriptionservice.repository;
 
+import com.example.common.security.client.AuthServiceClient;
 import com.healthcare.prescriptionservice.PrescriptionServiceApplication;
 import com.healthcare.prescriptionservice.entity.Prescription;
 import com.healthcare.prescriptionservice.entity.PrescriptionStatus;
@@ -17,7 +18,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -31,13 +35,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(classes = {PrescriptionServiceApplication.class})
-@Import(TestcontainersConfiguration.class)
+@Import({TestcontainersConfiguration.class, FeignAutoConfiguration.class})
 class PrescriptionRepositoryTest {
 
     @Autowired
     private PrescriptionRepository prescriptionRepository;
 
+    @MockBean
+    private AuthServiceClient authServiceClient;
+
     @Test
+    @WithMockUser
     @DisplayName("Should find prescription by prescription number")
     void shouldFindByPrescriptionNumber() {
         Prescription prescription = PrescriptionTestBuilder.defaultBuilder()
@@ -52,6 +60,7 @@ class PrescriptionRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("Should check existence by prescription number")
     void shouldCheckExistsByPrescriptionNumber() {
         Prescription prescription = PrescriptionTestBuilder.defaultBuilder()
@@ -65,6 +74,7 @@ class PrescriptionRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("Should find expired prescriptions")
     void shouldFindExpiredPrescriptions() {
 
