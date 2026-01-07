@@ -1,5 +1,6 @@
 package com.healthcare.doctorservice.repository;
 
+import com.example.common.security.client.AuthServiceClient;
 import com.healthcare.doctorservice.DoctorServiceApplication;
 import com.healthcare.doctorservice.entity.Doctor;
 import com.healthcare.doctorservice.entity.DoctorStatus;
@@ -10,7 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -23,13 +27,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(classes = {DoctorServiceApplication.class})
-@Import(TestcontainersConfiguration.class)
+@Import({TestcontainersConfiguration.class, FeignAutoConfiguration.class})
 class DoctorRepositoryTest {
 
     @Autowired
     private DoctorRepository doctorRepository;
 
+    @MockBean
+    private AuthServiceClient authServiceClient;
+
     @Test
+    @WithMockUser
     @DisplayName("Should find doctor by email")
     void shouldFindByEmail() {
         Doctor doctor = DoctorTestBuilder.aDoctor().withEmail("test@example.com").build();
@@ -41,6 +49,7 @@ class DoctorRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("Should check existence by license number")
     void shouldCheckExistsByLicenseNumber() {
         Doctor doctor = DoctorTestBuilder.aDoctor().withLicenseNumber("LIC123").build();
@@ -51,6 +60,7 @@ class DoctorRepositoryTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("Should find all active doctors")
     void shouldFindAllActiveDoctors() {
         Doctor activeDoctor = DoctorTestBuilder.aDoctor()

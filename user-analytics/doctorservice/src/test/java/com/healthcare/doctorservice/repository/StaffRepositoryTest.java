@@ -1,5 +1,6 @@
 package com.healthcare.doctorservice.repository;
 
+import com.example.common.security.client.AuthServiceClient;
 import com.healthcare.doctorservice.DoctorServiceApplication;
 import com.healthcare.doctorservice.entity.*;
 import com.healthcare.doctorservice.testutil.StaffTestBuilder;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -25,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(classes = {DoctorServiceApplication.class})
-@Import(TestcontainersConfiguration.class)
+@Import({TestcontainersConfiguration.class, FeignAutoConfiguration.class})
 class StaffRepositoryTest {
 
     @Autowired
@@ -33,6 +36,9 @@ class StaffRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
+
+    @MockBean
+    private AuthServiceClient authServiceClient;
 
     @Test
     @DisplayName("Should save and find staff by email")

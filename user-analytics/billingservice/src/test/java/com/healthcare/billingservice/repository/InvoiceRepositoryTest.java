@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(classes = {BillingServiceApplication.class})
-@Import({TestcontainersConfiguration.class,  FeignAutoConfiguration.class})
+@Import({TestcontainersConfiguration.class, FeignAutoConfiguration.class})
 class InvoiceRepositoryTest {
 
     @Autowired

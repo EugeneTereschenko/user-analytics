@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,12 +23,14 @@ public class StaffController {
     private final StaffService staffService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<StaffDTO> createStaff(@Valid @RequestBody StaffDTO staffDTO) {
         StaffDTO created = staffService.createStaff(staffDTO);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<StaffDTO> getStaffById(@PathVariable Long id) {
         StaffDTO staff = staffService.getStaffById(id);
         return ResponseEntity.ok(staff);
@@ -100,6 +103,7 @@ public class StaffController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Void> deleteStaff(@PathVariable Long id) {
         staffService.deleteStaff(id);
         return ResponseEntity.noContent().build();

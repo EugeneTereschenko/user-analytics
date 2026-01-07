@@ -1,5 +1,7 @@
 package com.healthcare.doctorservice.controller;
 
+import com.example.common.security.annotation.RequirePermission;
+import com.example.common.security.constants.PermissionConstants;
 import com.healthcare.doctorservice.dto.DoctorDTO;
 import com.healthcare.doctorservice.entity.DoctorStatus;
 import com.healthcare.doctorservice.service.impl.DoctorService;
@@ -9,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,12 +24,14 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR')")
     public ResponseEntity<DoctorDTO> createDoctor(@Valid @RequestBody DoctorDTO doctorDTO) {
         DoctorDTO created = doctorService.createDoctor(doctorDTO);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<DoctorDTO> getDoctorById(@PathVariable Long id) {
         DoctorDTO doctor = doctorService.getDoctorById(id);
         return ResponseEntity.ok(doctor);
@@ -117,6 +122,7 @@ public class DoctorController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
         doctorService.deleteDoctor(id);
         return ResponseEntity.noContent().build();
