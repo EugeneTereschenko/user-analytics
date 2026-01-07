@@ -14,6 +14,16 @@ RUN mvn install:install-file \
     -Dpackaging=pom \
     -DgeneratePom=false
 
+# Copy common-security JAR and POM
+COPY common-security/target/common-security-1.0.0.jar ./common-security-1.0.0.jar
+COPY common-security/pom.xml ./common-security-1.0.0.pom
+
+# Install common-security into local Maven repo
+RUN mvn install:install-file \
+    -Dfile=common-security-1.0.0.jar \
+    -DpomFile=common-security-1.0.0.pom
+
+
 # Now copy appointment-service module files
 COPY appointment-service/pom.xml ./pom.xml
 COPY appointment-service/src ./src
