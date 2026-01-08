@@ -1,0 +1,22 @@
+databaseChangeLog:
+  # Add user_id column to appointments table
+  - changeSet:
+      id: 2
+      author: healthcare-system
+      changes:
+        - addColumn:
+            tableName: appointments
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+
+        # Create index for better query performance
+        - createIndex:
+            indexName: idx_appointments_user_id
+            tableName: appointments
+            columns:
+              - column:
+                  name: user_id
