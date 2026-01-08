@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
       file: db/changelog/changelog-v1.0-appointment-tables.yaml
+  - include:
+      file: db/changelog/changelog-v1.1-add-user-id.yaml

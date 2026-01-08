@@ -23,6 +23,7 @@ public class AppointmentMapper {
         dto.setId(appointment.getId());
         dto.setPatientId(appointment.getPatientId());
         dto.setDoctorId(appointment.getDoctorId());
+        dto.setUserId(appointment.getUserId());
         dto.setAppointmentDateTime(appointment.getAppointmentDateTime());
         dto.setDurationMinutes(appointment.getDurationMinutes());
         dto.setStatus(appointment.getStatus());
@@ -51,6 +52,7 @@ public class AppointmentMapper {
         appointment.setId(dto.getId());
         appointment.setPatientId(dto.getPatientId());
         appointment.setDoctorId(dto.getDoctorId());
+        appointment.setUserId(dto.getUserId());
         appointment.setAppointmentDateTime(dto.getAppointmentDateTime());
         appointment.setDurationMinutes(dto.getDurationMinutes());
         appointment.setStatus(dto.getStatus() != null ? dto.getStatus() : AppointmentStatus.SCHEDULED);
