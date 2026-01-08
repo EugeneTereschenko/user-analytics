@@ -32,8 +32,7 @@ public class AppointmentController {
     private final AppointmentServiceImpl appointmentServiceImpl;
 
     @PostMapping
-    //@RequirePermission(PermissionConstants.APPOINTMENT_CREATE)
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
+    @RequirePermission(PermissionConstants.APPOINTMENT_CREATE)
     public ResponseEntity<AppointmentDTO> createAppointment(
             @Valid @RequestBody AppointmentDTO appointmentDTO) {
         AppointmentDTO created = appointmentServiceImpl.createAppointment(appointmentDTO);
@@ -48,12 +47,14 @@ public class AppointmentController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<AppointmentDTO>> getAllAppointments(Pageable pageable) {
         Page<AppointmentDTO> appointments = appointmentServiceImpl.getAllAppointments(pageable);
         return ResponseEntity.ok(appointments);
     }
 
     @GetMapping("/patient/{patientId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<AppointmentDTO>> getAppointmentsByPatient(
             @PathVariable Long patientId,
             Pageable pageable) {
@@ -63,6 +64,7 @@ public class AppointmentController {
     }
 
     @GetMapping("/doctor/{doctorId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<AppointmentDTO>> getAppointmentsByDoctor(
             @PathVariable Long doctorId,
             Pageable pageable) {
@@ -72,6 +74,7 @@ public class AppointmentController {
     }
 
     @GetMapping("/status/{status}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<AppointmentDTO>> getAppointmentsByStatus(
             @PathVariable AppointmentStatus status,
             Pageable pageable) {
@@ -81,6 +84,7 @@ public class AppointmentController {
     }
 
     @GetMapping("/between")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<AppointmentDTO>> getAppointmentsBetween(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime startDate,
@@ -92,12 +96,14 @@ public class AppointmentController {
     }
 
     @GetMapping("/today")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<AppointmentDTO>> getTodaysAppointments() {
         List<AppointmentDTO> appointments = appointmentServiceImpl.getTodaysAppointments();
         return ResponseEntity.ok(appointments);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<AppointmentDTO> updateAppointment(
             @PathVariable Long id,
             @Valid @RequestBody AppointmentDTO appointmentDTO) {
@@ -106,6 +112,7 @@ public class AppointmentController {
     }
 
     @PatchMapping("/{id}/reschedule")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<AppointmentDTO> rescheduleAppointment(
             @PathVariable Long id,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -115,6 +122,7 @@ public class AppointmentController {
     }
 
     @PatchMapping("/{id}/cancel")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<AppointmentDTO> cancelAppointment(
             @PathVariable Long id,
             @RequestParam(required = false) String reason) {
@@ -123,12 +131,14 @@ public class AppointmentController {
     }
 
     @PatchMapping("/{id}/confirm")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<AppointmentDTO> confirmAppointment(@PathVariable Long id) {
         AppointmentDTO confirmed = appointmentServiceImpl.confirmAppointment(id);
         return ResponseEntity.ok(confirmed);
     }
 
     @PatchMapping("/{id}/complete")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<AppointmentDTO> completeAppointment(
             @PathVariable Long id,
             @RequestParam(required = false) String notes) {

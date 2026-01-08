@@ -11,6 +11,7 @@ public class AppointmentTestBuilder {
     private Long id;
     private Long patientId = 1L;
     private Long doctorId = 1L;
+    private Long userId = 1L;
     private LocalDateTime appointmentDateTime = LocalDateTime.now().plusDays(1);
     private Integer durationMinutes = 30;
     private AppointmentStatus status = AppointmentStatus.SCHEDULED;
@@ -39,6 +40,11 @@ public class AppointmentTestBuilder {
 
     public AppointmentTestBuilder withDoctorId(Long doctorId) {
         this.doctorId = doctorId;
+        return this;
+    }
+
+    public AppointmentTestBuilder withUserId(Long userId) {
+        this.userId = userId;
         return this;
     }
 
@@ -122,6 +128,7 @@ public class AppointmentTestBuilder {
                 id,
                 patientId,
                 doctorId,
+                userId,
                 appointmentDateTime,
                 durationMinutes,
                 status,
@@ -145,6 +152,7 @@ public class AppointmentTestBuilder {
                 null, // id
                 1L, // patientId
                 1L, // doctorId
+                1L, // userId
                 LocalDateTime.now().plusDays(1),
                 30,
                 AppointmentStatus.SCHEDULED,

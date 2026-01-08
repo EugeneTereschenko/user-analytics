@@ -31,6 +31,9 @@ public class Appointment {
     @Column(name = "doctor_id", nullable = false)
     private Long doctorId;
 
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
     @Column(name = "appointment_date_time", nullable = false)
     private LocalDateTime appointmentDateTime;
 

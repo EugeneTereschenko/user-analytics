@@ -53,6 +53,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                     "Doctor already has an appointment at this time");
         }
 
+        appointmentDTO.checkUserId();
+
         Appointment appointment = appointmentMapper.toEntity(appointmentDTO);
         Appointment savedAppointment = appointmentRepository.save(appointment);
 

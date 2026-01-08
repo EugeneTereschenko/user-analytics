@@ -6,9 +6,10 @@
 
 package com.healthcare.appointmentservice.dto;
 
-import com.healthcare.appointmentservice.entity.Appointment;
+import com.example.common.security.util.SecurityUtils;
 import com.healthcare.appointmentservice.entity.AppointmentStatus;
 import com.healthcare.appointmentservice.entity.AppointmentType;
+import com.healthcare.appointmentservice.exception.UnauthorizedException;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,8 @@ public class AppointmentDTO {
 
     @NotNull(message = "Doctor ID is required")
     private Long doctorId;
+
+    private Long userId;
 
     @NotNull(message = "Appointment date and time is required")
     @Future(message = "Appointment date must be in the future")
@@ -66,4 +69,12 @@ public class AppointmentDTO {
     private LocalDateTime cancelledAt;
 
     private String cancellationReason;
+
+    public void checkUserId() {
+        if (this.userId == null) {
+            Long currentUserId = SecurityUtils.getCurrentUserId()
+                    .orElseThrow(() -> new UnauthorizedException("User not authenticated"));
+            this.userId = currentUserId;
+        }
+    }
 }
