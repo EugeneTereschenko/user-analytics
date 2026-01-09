@@ -29,6 +29,7 @@ public class StaffDTOTestBuilder {
     private String emergencyContactName = "Bob Smith";
     private String emergencyContactPhone = "+10987654321";
     private String profileImageUrl = "http://example.com/profile.jpg";
+    private Long userId = 20L;
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
 
@@ -55,6 +56,7 @@ public class StaffDTOTestBuilder {
     public StaffDTOTestBuilder emergencyContactName(String emergencyContactName) { this.emergencyContactName = emergencyContactName; return this; }
     public StaffDTOTestBuilder emergencyContactPhone(String emergencyContactPhone) { this.emergencyContactPhone = emergencyContactPhone; return this; }
     public StaffDTOTestBuilder profileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; return this; }
+    public StaffDTOTestBuilder userId(Long userId) { this.userId = userId; return this; }
     public StaffDTOTestBuilder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
     public StaffDTOTestBuilder updatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; return this; }
 
@@ -62,7 +64,7 @@ public class StaffDTOTestBuilder {
         return new StaffDTO(
                 id, firstName, lastName, email, phoneNumber, dateOfBirth, gender, employeeId,
                 role, department, shift, salary, joinedDate, address, status, supervisorId,
-                emergencyContactName, emergencyContactPhone, profileImageUrl, createdAt, updatedAt
+                emergencyContactName, emergencyContactPhone, profileImageUrl, userId, createdAt, updatedAt
         );
     }
 }

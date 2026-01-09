@@ -1,5 +1,7 @@
 package com.healthcare.doctorservice.service;
 
+import com.example.common.security.util.SecurityUtils;
+import com.healthcare.doctorservice.config.WithMockUserPrincipal;
 import com.healthcare.doctorservice.dto.DoctorDTO;
 import com.healthcare.doctorservice.entity.Doctor;
 import com.healthcare.doctorservice.entity.DoctorStatus;
@@ -15,9 +17,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,6 +48,11 @@ class DoctorServiceImplTest {
 
     @BeforeEach
     void setUp() {
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("admin", null, List.of())
+        );
+
         doctorDTO = new DoctorDTO();
         doctorDTO.setEmail("test@doc.com");
         doctorDTO.setLicenseNumber("LIC123");
@@ -57,17 +68,20 @@ class DoctorServiceImplTest {
 
     @Test
     void createDoctor_success() {
-        when(doctorRepository.existsByEmail(anyString())).thenReturn(false);
-        when(doctorRepository.existsByLicenseNumber(anyString())).thenReturn(false);
-        when(doctorMapper.toEntity(any(DoctorDTO.class))).thenReturn(doctor);
-        when(doctorRepository.save(any(Doctor.class))).thenReturn(doctor);
-        when(doctorMapper.toDTO(any(Doctor.class))).thenReturn(doctorDTO);
+        try (MockedStatic<SecurityUtils> mockedSecurityUtils = mockStatic(SecurityUtils.class)) {
+            mockedSecurityUtils.when(SecurityUtils::getCurrentUserId).thenReturn(Optional.of(1L));
+            when(doctorRepository.existsByEmail(anyString())).thenReturn(false);
+            when(doctorRepository.existsByLicenseNumber(anyString())).thenReturn(false);
+            when(doctorMapper.toEntity(any(DoctorDTO.class))).thenReturn(doctor);
+            when(doctorRepository.save(any(Doctor.class))).thenReturn(doctor);
+            when(doctorMapper.toDTO(any(Doctor.class))).thenReturn(doctorDTO);
 
-        DoctorDTO result = doctorService.createDoctor(doctorDTO);
+            DoctorDTO result = doctorService.createDoctor(doctorDTO);
 
-        assertNotNull(result);
-        assertEquals(doctorDTO.getEmail(), result.getEmail());
-        verify(doctorRepository).save(any(Doctor.class));
+            assertNotNull(result);
+            assertEquals(doctorDTO.getEmail(), result.getEmail());
+            verify(doctorRepository).save(any(Doctor.class));
+        }
     }
 
     @Test

@@ -121,6 +121,9 @@ databaseChangeLog:
                   name: emergency_contact_phone
                   type: VARCHAR(20)
               - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
                   name: created_at
                   type: TIMESTAMP
                   constraints:
@@ -368,6 +371,9 @@ databaseChangeLog:
               - column:
                   name: profile_image_url
                   type: VARCHAR(500)
+              - column:
+                  name: user_id
+                  type: BIGINT
               - column:
                   name: created_at
                   type: TIMESTAMP

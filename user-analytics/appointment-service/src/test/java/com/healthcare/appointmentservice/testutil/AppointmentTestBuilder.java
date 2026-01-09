@@ -12,7 +12,7 @@ public class AppointmentTestBuilder {
     private Long patientId = 1L;
     private Long doctorId = 1L;
     private Long userId = 1L;
-    private LocalDateTime appointmentDateTime = LocalDateTime.now().plusDays(1);
+    private LocalDateTime appointmentDateTime = LocalDateTime.of(2025, 6, 2, 10, 0);
     private Integer durationMinutes = 30;
     private AppointmentStatus status = AppointmentStatus.SCHEDULED;
     private AppointmentType appointmentType = AppointmentType.CONSULTATION;
@@ -153,7 +153,7 @@ public class AppointmentTestBuilder {
                 1L, // patientId
                 1L, // doctorId
                 1L, // userId
-                LocalDateTime.now().plusDays(1),
+                LocalDateTime.of(2026, 6, 2, 10, 0),
                 30,
                 AppointmentStatus.SCHEDULED,
                 AppointmentType.CONSULTATION,

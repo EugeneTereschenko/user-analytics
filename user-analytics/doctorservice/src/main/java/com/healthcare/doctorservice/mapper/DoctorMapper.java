@@ -33,6 +33,7 @@ public class DoctorMapper {
         dto.setRoomNumber(doctor.getRoomNumber());
         dto.setEmergencyContactName(doctor.getEmergencyContactName());
         dto.setEmergencyContactPhone(doctor.getEmergencyContactPhone());
+        dto.setUserId(doctor.getUserId());
         dto.setCreatedAt(doctor.getCreatedAt());
         dto.setUpdatedAt(doctor.getUpdatedAt());
         return dto;
@@ -63,6 +64,7 @@ public class DoctorMapper {
         doctor.setRoomNumber(dto.getRoomNumber());
         doctor.setEmergencyContactName(dto.getEmergencyContactName());
         doctor.setEmergencyContactPhone(dto.getEmergencyContactPhone());
+        doctor.setUserId(dto.getUserId());
         return doctor;
     }
 
@@ -83,5 +85,6 @@ public class DoctorMapper {
         if (dto.getStatus() != null) doctor.setStatus(dto.getStatus());
         if (dto.getDepartment() != null) doctor.setDepartment(dto.getDepartment());
         if (dto.getRoomNumber() != null) doctor.setRoomNumber(dto.getRoomNumber());
+        if (dto.getUserId() != null) doctor.setUserId(dto.getUserId());
     }
 }

@@ -27,6 +27,7 @@ public class DoctorTestBuilder {
     private String profileImageUrl = null;
     private String department = "Cardiology";
     private String roomNumber = "101";
+    private Long userId = 1L;
     private String emergencyContactName = "Jane Doe";
     private String emergencyContactPhone = "0987654321";
 
@@ -51,6 +52,7 @@ public class DoctorTestBuilder {
     public DoctorTestBuilder withProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; return this; }
     public DoctorTestBuilder withDepartment(String department) { this.department = department; return this; }
     public DoctorTestBuilder withRoomNumber(String roomNumber) { this.roomNumber = roomNumber; return this; }
+    public DoctorTestBuilder withUserId(Long userId) { this.userId = userId; return this; }
     public DoctorTestBuilder withEmergencyContactName(String name) { this.emergencyContactName = name; return this; }
     public DoctorTestBuilder withEmergencyContactPhone(String phone) { this.emergencyContactPhone = phone; return this; }
 
@@ -59,7 +61,7 @@ public class DoctorTestBuilder {
                 id, firstName, lastName, email, phoneNumber, dateOfBirth, gender, licenseNumber,
                 specialization, qualifications, languages, yearsOfExperience, consultationFee, biography,
                 address, schedules, status, joinedDate, profileImageUrl, department, roomNumber,
-                emergencyContactName, emergencyContactPhone, null, null
+                emergencyContactName, emergencyContactPhone, userId, null, null
         );
     }
 

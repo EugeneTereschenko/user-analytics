@@ -25,6 +25,7 @@ public class StaffTestBuilder {
     private String emergencyContactName = "Bob Smith";
     private String emergencyContactPhone = "5559876543";
     private String profileImageUrl = null;
+    private Long userId = 1L;
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
 
@@ -51,6 +52,7 @@ public class StaffTestBuilder {
     public StaffTestBuilder withEmergencyContactName(String name) { this.emergencyContactName = name; return this; }
     public StaffTestBuilder withEmergencyContactPhone(String phone) { this.emergencyContactPhone = phone; return this; }
     public StaffTestBuilder withProfileImageUrl(String url) { this.profileImageUrl = url; return this; }
+    public StaffTestBuilder withUserId(Long userId) { this.userId = userId; return this; }
     public StaffTestBuilder withCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
     public StaffTestBuilder withUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; return this; }
 
@@ -58,7 +60,7 @@ public class StaffTestBuilder {
         return new Staff(
                 id, firstName, lastName, email, phoneNumber, dateOfBirth, gender, employeeId, role,
                 department, shift, salary, joinedDate, address, status, supervisorId,
-                emergencyContactName, emergencyContactPhone, profileImageUrl, createdAt, updatedAt
+                emergencyContactName, emergencyContactPhone, profileImageUrl, userId, createdAt, updatedAt
         );
     }
 }
