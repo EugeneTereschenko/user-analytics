@@ -6,9 +6,11 @@
 
 package com.healthcare.doctorservice.dto;
 
+import com.example.common.security.util.SecurityUtils;
 import com.healthcare.doctorservice.entity.Gender;
 import com.healthcare.doctorservice.entity.StaffRole;
 import com.healthcare.doctorservice.entity.StaffStatus;
+import com.healthcare.doctorservice.exception.UnauthorizedException;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -74,7 +76,17 @@ public class StaffDTO {
 
     private String profileImageUrl;
 
+    private Long userId;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    public void checkUserId() {
+        if (this.userId == null) {
+            Long currentUserId = SecurityUtils.getCurrentUserId()
+                    .orElseThrow(() -> new UnauthorizedException("User not authenticated"));
+            this.userId = currentUserId;
+        }
+    }
 }

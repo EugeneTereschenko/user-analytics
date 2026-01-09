@@ -32,6 +32,7 @@ public class DoctorDTOTestBuilder {
     private String roomNumber = "101";
     private String emergencyContactName = "Jane Doe";
     private String emergencyContactPhone = "+10987654321";
+    private Long userId = 10L;
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
 
@@ -62,6 +63,7 @@ public class DoctorDTOTestBuilder {
     public DoctorDTOTestBuilder roomNumber(String roomNumber) { this.roomNumber = roomNumber; return this; }
     public DoctorDTOTestBuilder emergencyContactName(String emergencyContactName) { this.emergencyContactName = emergencyContactName; return this; }
     public DoctorDTOTestBuilder emergencyContactPhone(String emergencyContactPhone) { this.emergencyContactPhone = emergencyContactPhone; return this; }
+    public DoctorDTOTestBuilder userId(Long userId) { this.userId = userId; return this; }
     public DoctorDTOTestBuilder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
     public DoctorDTOTestBuilder updatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; return this; }
 
@@ -70,7 +72,7 @@ public class DoctorDTOTestBuilder {
                 id, firstName, lastName, email, phoneNumber, dateOfBirth, gender, licenseNumber,
                 specialization, qualifications, languages, yearsOfExperience, consultationFee,
                 biography, address, schedules, status, joinedDate, profileImageUrl, department,
-                roomNumber, emergencyContactName, emergencyContactPhone, createdAt, updatedAt
+                roomNumber, emergencyContactName, emergencyContactPhone, userId, createdAt, updatedAt
         );
     }
 

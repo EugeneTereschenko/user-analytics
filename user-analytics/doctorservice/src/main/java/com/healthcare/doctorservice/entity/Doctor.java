@@ -101,6 +101,9 @@ public class Doctor {
     @Column(name = "emergency_contact_phone", length = 20)
     private String emergencyContactPhone;
 
+    @Column(name = "user_id")
+    private Long userId;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

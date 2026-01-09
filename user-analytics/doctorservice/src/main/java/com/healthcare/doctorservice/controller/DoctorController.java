@@ -1,7 +1,4 @@
 package com.healthcare.doctorservice.controller;
-
-import com.example.common.security.annotation.RequirePermission;
-import com.example.common.security.constants.PermissionConstants;
 import com.healthcare.doctorservice.dto.DoctorDTO;
 import com.healthcare.doctorservice.entity.DoctorStatus;
 import com.healthcare.doctorservice.service.impl.DoctorService;
@@ -24,7 +21,7 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<DoctorDTO> createDoctor(@Valid @RequestBody DoctorDTO doctorDTO) {
         DoctorDTO created = doctorService.createDoctor(doctorDTO);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
@@ -38,24 +35,28 @@ public class DoctorController {
     }
 
     @GetMapping("/email/{email}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<DoctorDTO> getDoctorByEmail(@PathVariable String email) {
         DoctorDTO doctor = doctorService.getDoctorByEmail(email);
         return ResponseEntity.ok(doctor);
     }
 
     @GetMapping("/license/{licenseNumber}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<DoctorDTO> getDoctorByLicenseNumber(@PathVariable String licenseNumber) {
         DoctorDTO doctor = doctorService.getDoctorByLicenseNumber(licenseNumber);
         return ResponseEntity.ok(doctor);
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<DoctorDTO>> getAllDoctors(Pageable pageable) {
         Page<DoctorDTO> doctors = doctorService.getAllDoctors(pageable);
         return ResponseEntity.ok(doctors);
     }
 
     @GetMapping("/specialization/{specialization}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<DoctorDTO>> getDoctorsBySpecialization(
             @PathVariable String specialization,
             Pageable pageable) {
@@ -64,6 +65,7 @@ public class DoctorController {
     }
 
     @GetMapping("/status/{status}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<DoctorDTO>> getDoctorsByStatus(
             @PathVariable DoctorStatus status,
             Pageable pageable) {
@@ -72,6 +74,7 @@ public class DoctorController {
     }
 
     @GetMapping("/department/{department}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<DoctorDTO>> getDoctorsByDepartment(
             @PathVariable String department,
             Pageable pageable) {
@@ -80,12 +83,14 @@ public class DoctorController {
     }
 
     @GetMapping("/active")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<DoctorDTO>> getActiveDoctors() {
         List<DoctorDTO> doctors = doctorService.getActiveDoctors();
         return ResponseEntity.ok(doctors);
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<DoctorDTO>> searchDoctors(
             @RequestParam String query,
             Pageable pageable) {
@@ -94,18 +99,21 @@ public class DoctorController {
     }
 
     @GetMapping("/specializations")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<String>> getAllSpecializations() {
         List<String> specializations = doctorService.getAllSpecializations();
         return ResponseEntity.ok(specializations);
     }
 
     @GetMapping("/departments")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<String>> getAllDepartments() {
         List<String> departments = doctorService.getAllDepartments();
         return ResponseEntity.ok(departments);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<DoctorDTO> updateDoctor(
             @PathVariable Long id,
             @Valid @RequestBody DoctorDTO doctorDTO) {
@@ -114,6 +122,7 @@ public class DoctorController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<DoctorDTO> updateDoctorStatus(
             @PathVariable Long id,
             @RequestParam DoctorStatus status) {

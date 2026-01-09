@@ -48,6 +48,8 @@ public class StaffServiceImpl implements StaffService {
                     "Staff with employee ID " + staffDTO.getEmployeeId() + " already exists");
         }
 
+        staffDTO.checkUserId();
+
         Staff staff = staffMapper.toEntity(staffDTO);
         Staff savedStaff = staffRepository.save(staff);
 

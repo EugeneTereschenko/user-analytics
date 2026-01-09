@@ -30,6 +30,7 @@ public class StaffMapper {
         dto.setEmergencyContactName(staff.getEmergencyContactName());
         dto.setEmergencyContactPhone(staff.getEmergencyContactPhone());
         dto.setProfileImageUrl(staff.getProfileImageUrl());
+        dto.setUserId(staff.getUserId());
         dto.setCreatedAt(staff.getCreatedAt());
         dto.setUpdatedAt(staff.getUpdatedAt());
         return dto;
@@ -57,6 +58,7 @@ public class StaffMapper {
         staff.setEmergencyContactName(dto.getEmergencyContactName());
         staff.setEmergencyContactPhone(dto.getEmergencyContactPhone());
         staff.setProfileImageUrl(dto.getProfileImageUrl());
+        staff.setUserId(dto.getUserId());
         return staff;
     }
 
@@ -74,5 +76,6 @@ public class StaffMapper {
         if (dto.getSalary() != null) staff.setSalary(dto.getSalary());
         if (dto.getStatus() != null) staff.setStatus(dto.getStatus());
         if (dto.getSupervisorId() != null) staff.setSupervisorId(dto.getSupervisorId());
+        if (dto.getUserId() != null) staff.setUserId(dto.getUserId());
     }
 }

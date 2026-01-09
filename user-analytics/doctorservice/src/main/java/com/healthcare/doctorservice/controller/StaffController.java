@@ -23,7 +23,7 @@ public class StaffController {
     private final StaffService staffService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<StaffDTO> createStaff(@Valid @RequestBody StaffDTO staffDTO) {
         StaffDTO created = staffService.createStaff(staffDTO);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
@@ -37,18 +37,21 @@ public class StaffController {
     }
 
     @GetMapping("/email/{email}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<StaffDTO> getStaffByEmail(@PathVariable String email) {
         StaffDTO staff = staffService.getStaffByEmail(email);
         return ResponseEntity.ok(staff);
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<StaffDTO>> getAllStaff(Pageable pageable) {
         Page<StaffDTO> staff = staffService.getAllStaff(pageable);
         return ResponseEntity.ok(staff);
     }
 
     @GetMapping("/role/{role}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<StaffDTO>> getStaffByRole(
             @PathVariable StaffRole role,
             Pageable pageable) {
@@ -57,6 +60,7 @@ public class StaffController {
     }
 
     @GetMapping("/status/{status}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<StaffDTO>> getStaffByStatus(
             @PathVariable StaffStatus status,
             Pageable pageable) {
@@ -65,6 +69,7 @@ public class StaffController {
     }
 
     @GetMapping("/department/{department}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<StaffDTO>> getStaffByDepartment(
             @PathVariable String department,
             Pageable pageable) {
@@ -73,12 +78,14 @@ public class StaffController {
     }
 
     @GetMapping("/active")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<StaffDTO>> getActiveStaff() {
         List<StaffDTO> staff = staffService.getActiveStaff();
         return ResponseEntity.ok(staff);
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<StaffDTO>> searchStaff(
             @RequestParam String query,
             Pageable pageable) {
@@ -87,6 +94,7 @@ public class StaffController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<StaffDTO> updateStaff(
             @PathVariable Long id,
             @Valid @RequestBody StaffDTO staffDTO) {
@@ -95,6 +103,7 @@ public class StaffController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
     public ResponseEntity<StaffDTO> updateStaffStatus(
             @PathVariable Long id,
             @RequestParam StaffStatus status) {
@@ -103,7 +112,7 @@ public class StaffController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteStaff(@PathVariable Long id) {
         staffService.deleteStaff(id);
         return ResponseEntity.noContent().build();

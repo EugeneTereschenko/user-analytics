@@ -41,6 +41,8 @@ public class DoctorServiceImpl implements DoctorService {
                     "Doctor with license number " + doctorDTO.getLicenseNumber() + " already exists");
         }
 
+        doctorDTO.checkUserId();
+
         Doctor doctor = doctorMapper.toEntity(doctorDTO);
         Doctor savedDoctor = doctorRepository.save(doctor);
 
