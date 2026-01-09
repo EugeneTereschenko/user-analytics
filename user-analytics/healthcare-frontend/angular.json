@@ -60,6 +60,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json",
+            "port": 3000
+          },
           "configurations": {
             "production": {
               "buildTarget": "healthcare-frontend:build:production"
