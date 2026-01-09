@@ -6,6 +6,7 @@
 
 package com.healthcare.appointmentservice.service;
 
+import com.example.common.security.util.SecurityUtils;
 import com.healthcare.appointmentservice.dto.AppointmentDTO;
 import com.healthcare.appointmentservice.entity.Appointment;
 import com.healthcare.appointmentservice.exception.AppointmentConflictException;
@@ -19,7 +20,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -50,18 +54,23 @@ class AppointmentServiceImplTest {
     @Test
     @DisplayName("Should create appointment successfully")
     void createAppointment_success() {
-        when(appointmentRepository.existsDoctorConflict(
-                anyLong(), any(), any())).thenReturn(false);
-        when(appointmentMapper.toEntity(appointmentDTO)).thenReturn(appointment);
-        when(appointmentRepository.save(appointment)).thenReturn(savedAppointment);
-        when(appointmentMapper.toDTO(savedAppointment)).thenReturn(appointmentDTO);
+        try (MockedStatic<SecurityUtils> mockedSecurityUtils = mockStatic(SecurityUtils.class)) {
+            mockedSecurityUtils.when(SecurityUtils::getCurrentUserId).thenReturn(Optional.of(1L));
 
-        AppointmentDTO result = appointmentService.createAppointment(appointmentDTO);
+            when(appointmentRepository.existsDoctorConflict(anyLong(), any(), any())).thenReturn(false);
+            when(appointmentMapper.toEntity(appointmentDTO)).thenReturn(appointment);
+            when(appointmentRepository.save(appointment)).thenReturn(savedAppointment);
+            when(appointmentMapper.toDTO(savedAppointment)).thenReturn(appointmentDTO);
 
-        assertNotNull(result);
-        verify(appointmentRepository).save(appointment);
-        verify(appointmentMapper).toDTO(savedAppointment);
+            AppointmentDTO result = appointmentService.createAppointment(appointmentDTO);
+
+            assertNotNull(result);
+            verify(appointmentRepository).save(appointment);
+            verify(appointmentMapper).toDTO(savedAppointment);
+        }
     }
+
+
 
     @Test
     @DisplayName("Should throw conflict exception if doctor has appointment")

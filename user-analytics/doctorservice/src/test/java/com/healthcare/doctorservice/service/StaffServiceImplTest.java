@@ -1,5 +1,7 @@
 package com.healthcare.doctorservice.service;
 
+import com.example.common.security.util.SecurityUtils;
+import com.healthcare.doctorservice.config.WithMockUserPrincipal;
 import com.healthcare.doctorservice.dto.StaffDTO;
 import com.healthcare.doctorservice.entity.Staff;
 import com.healthcare.doctorservice.entity.StaffRole;
@@ -15,8 +17,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,6 +47,10 @@ class StaffServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("admin", null, List.of())
+        );
+
         staffDTO = new StaffDTO();
         staffDTO.setEmail("staff@health.com");
         staffDTO.setEmployeeId("EMP001");
@@ -57,17 +67,20 @@ class StaffServiceImplTest {
 
     @Test
     void createStaff_success() {
-        when(staffRepository.existsByEmail(anyString())).thenReturn(false);
-        when(staffRepository.existsByEmployeeId(anyString())).thenReturn(false);
-        when(staffMapper.toEntity(any(StaffDTO.class))).thenReturn(staff);
-        when(staffRepository.save(any(Staff.class))).thenReturn(staff);
-        when(staffMapper.toDTO(any(Staff.class))).thenReturn(staffDTO);
+        try (MockedStatic<SecurityUtils> mockedSecurityUtils = mockStatic(SecurityUtils.class)) {
+            mockedSecurityUtils.when(SecurityUtils::getCurrentUserId).thenReturn(Optional.of(1L));
+            when(staffRepository.existsByEmail(anyString())).thenReturn(false);
+            when(staffRepository.existsByEmployeeId(anyString())).thenReturn(false);
+            when(staffMapper.toEntity(any(StaffDTO.class))).thenReturn(staff);
+            when(staffRepository.save(any(Staff.class))).thenReturn(staff);
+            when(staffMapper.toDTO(any(Staff.class))).thenReturn(staffDTO);
 
-        StaffDTO result = staffService.createStaff(staffDTO);
+            StaffDTO result = staffService.createStaff(staffDTO);
 
-        assertNotNull(result);
-        assertEquals(staffDTO.getEmail(), result.getEmail());
-        verify(staffRepository).save(any(Staff.class));
+            assertNotNull(result);
+            assertEquals(staffDTO.getEmail(), result.getEmail());
+            verify(staffRepository).save(any(Staff.class));
+        }
     }
 
     @Test
