@@ -7,7 +7,7 @@ import { Staff, StaffRole, StaffStatus, PageResponse } from '../models/staff.mod
   providedIn: 'root'
 })
 export class StaffService {
-  private readonly API_URL = 'http://localhost:8080/api/v1/staff';
+  private readonly API_URL = 'http://localhost:8085/doctor-service/api/v1/staff';
   private http = inject(HttpClient);
 
   private getHeaders(): HttpHeaders {
