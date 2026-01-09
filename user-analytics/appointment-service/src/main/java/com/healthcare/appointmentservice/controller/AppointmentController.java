@@ -47,14 +47,14 @@ public class AppointmentController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
+    @RequirePermission(PermissionConstants.APPOINTMENT_READ)
     public ResponseEntity<Page<AppointmentDTO>> getAllAppointments(Pageable pageable) {
         Page<AppointmentDTO> appointments = appointmentServiceImpl.getAllAppointments(pageable);
         return ResponseEntity.ok(appointments);
     }
 
     @GetMapping("/patient/{patientId}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
+    @RequirePermission(PermissionConstants.APPOINTMENT_READ)
     public ResponseEntity<Page<AppointmentDTO>> getAppointmentsByPatient(
             @PathVariable Long patientId,
             Pageable pageable) {
