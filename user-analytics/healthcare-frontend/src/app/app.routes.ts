@@ -5,6 +5,12 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AppointmentListComponent } from './components/appointments/appointment-list/appointment-list.component';
 import { AppointmentFormComponent } from './components/appointments/appointment-form/appointment-form.component';
 import { AppointmentDetailComponent } from './components/appointments/appointment-detail/appointment-detail.component';
+import { DoctorListComponent } from './components/doctors/doctor-list/doctor-list.component';
+import { DoctorFormComponent } from './components/doctors/doctor-form/doctor-form.component';
+import { DoctorDetailComponent } from './components/doctors/doctor-detail/doctor-detail.component';
+import { StaffListComponent } from './components/staff/staff-list/staff-list.component';
+import { StaffFormComponent } from './components/staff/staff-form/staff-form.component';
+import { StaffDetailComponent } from './components/staff/staff-detail/staff-detail.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -20,6 +26,26 @@ export const routes: Routes = [
       { path: 'new', component: AppointmentFormComponent },
       { path: ':id', component: AppointmentDetailComponent },
       { path: ':id/edit', component: AppointmentFormComponent }
+    ]
+  },
+  {
+    path: 'doctors',
+    canActivate: [authGuard],
+    children: [
+      { path: '', component: DoctorListComponent },
+      { path: 'new', component: DoctorFormComponent },
+      { path: ':id', component: DoctorDetailComponent },
+      { path: ':id/edit', component: DoctorFormComponent }
+    ]
+  },
+  {
+    path: 'staff',
+    canActivate: [authGuard],
+    children: [
+      { path: '', component: StaffListComponent },
+      { path: 'new', component: StaffFormComponent },
+      { path: ':id', component: StaffDetailComponent },
+      { path: ':id/edit', component: StaffFormComponent }
     ]
   },
   { path: '**', redirectTo: '/login' }
