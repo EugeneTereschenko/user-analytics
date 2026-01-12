@@ -1,0 +1,304 @@
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex align-items-center">
+        <button class="btn btn-outline-secondary me-3" (click)="onCancel()">
+          <i class="bi bi-arrow-left"></i>
+        </button>
+        <h1 class="h2 mb-0">{{ isEditMode ? 'Edit Patient' : 'Create New Patient' }}</h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form *ngIf="!isLoading" [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+    <!-- Personal Information -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-white">
+        <h5 class="mb-0">
+          <i class="bi bi-person-circle me-2 text-primary"></i>
+          Personal Information
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              id="firstName"
+              class="form-control"
+              formControlName="firstName"
+              [class.is-invalid]="isFieldInvalid('firstName')"
+            />
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('firstName')">
+              First name is required
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              id="lastName"
+              class="form-control"
+              formControlName="lastName"
+              [class.is-invalid]="isFieldInvalid('lastName')"
+            />
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('lastName')">
+              Last name is required
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+            <input
+              type="email"
+              id="email"
+              class="form-control"
+              formControlName="email"
+              [class.is-invalid]="isFieldInvalid('email')"
+            />
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+              Valid email is required
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="phoneNumber" class="form-label">Phone Number <span class="text-danger">*</span></label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              class="form-control"
+              formControlName="phoneNumber"
+              [class.is-invalid]="isFieldInvalid('phoneNumber')"
+            />
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('phoneNumber')">
+              Phone number is required
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="dateOfBirth" class="form-label">Date of Birth <span class="text-danger">*</span></label>
+            <input
+              type="date"
+              id="dateOfBirth"
+              class="form-control"
+              formControlName="dateOfBirth"
+              [class.is-invalid]="isFieldInvalid('dateOfBirth')"
+            />
+            <div class="invalid-feedback" *ngIf="isFieldInvalid('dateOfBirth')">
+              Date of birth is required
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="gender" class="form-label">Gender <span class="text-danger">*</span></label>
+            <select id="gender" class="form-select" formControlName="gender">
+              <option [value]="Gender.MALE">Male</option>
+              <option [value]="Gender.FEMALE">Female</option>
+              <option [value]="Gender.OTHER">Other</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label for="bloodGroup" class="form-label">Blood Group</label>
+            <input
+              type="text"
+              id="bloodGroup"
+              class="form-control"
+              formControlName="bloodGroup"
+              placeholder="e.g., A+, O-, B+"
+            />
+          </div>
+
+          <div class="col-md-12">
+            <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+            <select id="status" class="form-select" formControlName="status">
+              <option [value]="PatientStatus.ACTIVE">Active</option>
+              <option [value]="PatientStatus.INACTIVE">Inactive</option>
+              <option [value]="PatientStatus.DECEASED">Deceased</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-white">
+        <h5 class="mb-0">
+          <i class="bi bi-geo-alt me-2 text-primary"></i>
+          Address
+        </h5>
+      </div>
+      <div class="card-body">
+        <div formGroupName="address">
+          <div class="row g-3">
+            <div class="col-md-12">
+              <label for="street" class="form-label">Street</label>
+              <input
+                type="text"
+                id="street"
+                class="form-control"
+                formControlName="street"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label for="city" class="form-label">City</label>
+              <input
+                type="text"
+                id="city"
+                class="form-control"
+                formControlName="city"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label for="state" class="form-label">State</label>
+              <input
+                type="text"
+                id="state"
+                class="form-control"
+                formControlName="state"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label for="zipCode" class="form-label">Zip Code</label>
+              <input
+                type="text"
+                id="zipCode"
+                class="form-control"
+                formControlName="zipCode"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <label for="country" class="form-label">Country</label>
+              <input
+                type="text"
+                id="country"
+                class="form-control"
+                formControlName="country"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Emergency Contacts -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          <i class="bi bi-telephone-plus me-2 text-primary"></i>
+          Emergency Contacts
+        </h5>
+        <button type="button" class="btn btn-sm btn-outline-primary" (click)="addEmergencyContact()">
+          <i class="bi bi-plus-lg me-1"></i>
+          Add Contact
+        </button>
+      </div>
+      <div class="card-body">
+        <div formArrayName="emergencyContacts">
+          <div *ngFor="let contact of emergencyContacts.controls; let i = index" class="mb-3 p-3 border rounded position-relative">
+            <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-2" (click)="removeEmergencyContact(i)">
+              <i class="bi bi-trash"></i>
+            </button>
+            <div [formGroupName]="i">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Name</label>
+                  <input type="text" class="form-control" formControlName="name" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Relationship</label>
+                  <input type="text" class="form-control" formControlName="relationship" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Phone Number</label>
+                  <input type="tel" class="form-control" formControlName="phoneNumber" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" formControlName="email" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="emergencyContacts.length === 0" class="text-muted text-center py-3">
+            No emergency contacts added yet
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Allergies -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          <i class="bi bi-exclamation-triangle me-2 text-warning"></i>
+          Allergies
+        </h5>
+        <button type="button" class="btn btn-sm btn-outline-primary" (click)="addAllergy()">
+          <i class="bi bi-plus-lg me-1"></i>
+          Add Allergy
+        </button>
+      </div>
+      <div class="card-body">
+        <div formArrayName="allergies" class="d-flex flex-wrap gap-2">
+          <span *ngFor="let allergy of allergies.controls; let i = index" class="badge bg-danger bg-opacity-10 text-danger d-inline-flex align-items-center px-3 py-2">
+            {{ allergy.value }}
+            <button type="button" class="btn-close btn-close-sm ms-2" (click)="removeAllergy(i)" style="font-size: 0.7rem;"></button>
+          </span>
+        </div>
+        <div *ngIf="allergies.length === 0" class="text-muted text-center py-3">
+          No allergies recorded
+        </div>
+      </div>
+    </div>
+
+    <!-- Medical Notes -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-white">
+        <h5 class="mb-0">
+          <i class="bi bi-file-medical me-2 text-primary"></i>
+          Medical Notes
+        </h5>
+      </div>
+      <div class="card-body">
+        <textarea
+          class="form-control"
+          formControlName="medicalNotes"
+          rows="4"
+          placeholder="Enter any relevant medical notes, conditions, or history..."
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-outline-secondary" (click)="onCancel()" [disabled]="isSubmitting">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || patientForm.invalid">
+            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+            {{ isEditMode ? 'Update Patient' : 'Create Patient' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

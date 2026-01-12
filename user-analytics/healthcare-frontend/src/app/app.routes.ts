@@ -11,6 +11,9 @@ import { DoctorDetailComponent } from './components/doctors/doctor-detail/doctor
 import { StaffListComponent } from './components/staff/staff-list/staff-list.component';
 import { StaffFormComponent } from './components/staff/staff-form/staff-form.component';
 import { StaffDetailComponent } from './components/staff/staff-detail/staff-detail.component';
+import { PatientListComponent } from './components/patients/patient-list/patient-list.component';
+import { PatientFormComponent } from './components/patients/patient-form/patient-form.component';
+import { PatientDetailComponent } from './components/patients/patient-detail/patient-detail.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -46,6 +49,16 @@ export const routes: Routes = [
       { path: 'new', component: StaffFormComponent },
       { path: ':id', component: StaffDetailComponent },
       { path: ':id/edit', component: StaffFormComponent }
+    ]
+  },
+  {
+    path: 'patients',
+    canActivate: [authGuard],
+    children: [
+      { path: '', component: PatientListComponent },
+      { path: 'new', component: PatientFormComponent },
+      { path: ':id', component: PatientDetailComponent },
+      { path: ':id/edit', component: PatientFormComponent }
     ]
   },
   { path: '**', redirectTo: '/login' }
