@@ -6,9 +6,10 @@
 
 package com.healthcare.patientservice.dto;
 
+import com.example.common.security.util.SecurityUtils;
 import com.healthcare.patientservice.entity.Gender;
-import com.healthcare.patientservice.entity.Patient;
 import com.healthcare.patientservice.entity.PatientStatus;
+import com.healthcare.patientservice.exception.UnauthorizedException;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -61,7 +62,17 @@ public class PatientDTO {
 
     private PatientStatus status;
 
+    private Long userId;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    public void checkUserId() {
+        if (this.userId == null) {
+            Long currentUserId = SecurityUtils.getCurrentUserId()
+                    .orElseThrow(() -> new UnauthorizedException("User not authenticated"));
+            this.userId = currentUserId;
+        }
+    }
 }

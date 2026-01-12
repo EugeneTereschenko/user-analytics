@@ -91,6 +91,9 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
                   name: created_at
                   type: TIMESTAMP
                   constraints:

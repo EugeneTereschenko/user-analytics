@@ -6,6 +6,7 @@
 
 package com.healthcare.patientservice.service;
 
+import com.example.common.security.util.SecurityUtils;
 import com.healthcare.patientservice.dto.PatientDTO;
 import com.healthcare.patientservice.entity.Patient;
 import com.healthcare.patientservice.exception.PatientAlreadyExistsException;
@@ -18,7 +19,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -52,16 +56,19 @@ class PatientServiceImplTest {
     @Test
     @DisplayName("Should create patient successfully")
     void createPatient_Success() {
-        when(patientRepository.existsByEmail(patientDTO.getEmail())).thenReturn(false);
-        when(patientMapper.toEntity(patientDTO)).thenReturn(patient);
-        when(patientRepository.save(patient)).thenReturn(patient);
-        when(patientMapper.toDTO(patient)).thenReturn(patientDTO);
+        try (MockedStatic<SecurityUtils> mockedSecurityUtils = mockStatic(SecurityUtils.class)) {
+            mockedSecurityUtils.when(SecurityUtils::getCurrentUserId).thenReturn(Optional.of(1L));
+            when(patientRepository.existsByEmail(patientDTO.getEmail())).thenReturn(false);
+            when(patientMapper.toEntity(patientDTO)).thenReturn(patient);
+            when(patientRepository.save(patient)).thenReturn(patient);
+            when(patientMapper.toDTO(patient)).thenReturn(patientDTO);
 
-        PatientDTO result = patientService.createPatient(patientDTO);
+            PatientDTO result = patientService.createPatient(patientDTO);
 
-        assertNotNull(result);
-        assertEquals(patientDTO.getEmail(), result.getEmail());
-        verify(patientRepository).save(patient);
+            assertNotNull(result);
+            assertEquals(patientDTO.getEmail(), result.getEmail());
+            verify(patientRepository).save(patient);
+        }
     }
 
     @Test

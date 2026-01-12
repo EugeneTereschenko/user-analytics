@@ -30,6 +30,7 @@ public class PatientMapper {
         dto.setBloodGroup(patient.getBloodGroup());
         dto.setMedicalNotes(patient.getMedicalNotes());
         dto.setStatus(patient.getStatus());
+        dto.setUserId(patient.getUserId());
         dto.setCreatedAt(patient.getCreatedAt());
         dto.setUpdatedAt(patient.getUpdatedAt());
         dto.setAllergies(patient.getAllergies());
@@ -55,6 +56,7 @@ public class PatientMapper {
         patient.setBloodGroup(dto.getBloodGroup());
         patient.setMedicalNotes(dto.getMedicalNotes());
         patient.setStatus(dto.getStatus() != null ? dto.getStatus() : PatientStatus.ACTIVE);
+        patient.setUserId(dto.getUserId());
         patient.setAllergies(dto.getAllergies());
 
         // Map address and emergency contacts as needed
@@ -72,6 +74,7 @@ public class PatientMapper {
         if (dto.getBloodGroup() != null) patient.setBloodGroup(dto.getBloodGroup());
         if (dto.getMedicalNotes() != null) patient.setMedicalNotes(dto.getMedicalNotes());
         if (dto.getStatus() != null) patient.setStatus(dto.getStatus());
+        if (dto.getUserId() != null) patient.setUserId(dto.getUserId());
         if (dto.getAllergies() != null) patient.setAllergies(dto.getAllergies());
     }
 }
