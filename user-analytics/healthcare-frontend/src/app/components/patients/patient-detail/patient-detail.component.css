@@ -1,0 +1,11 @@
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.badge {
+  font-size: 0.85rem;
+}
+
+.card-header h5 {
+  font-weight: 600;
+}

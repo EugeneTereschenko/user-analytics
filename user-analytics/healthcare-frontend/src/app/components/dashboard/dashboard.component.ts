@@ -72,6 +72,12 @@ import { User } from '../../models/user.model';
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link" routerLink="/patients" routerLinkActive="active">
+                  <i class="bi bi-heart-pulse me-2"></i>
+                  Patients
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" href="#">
                   <i class="bi bi-file-medical me-2"></i>
                   Medical Records
@@ -193,6 +199,12 @@ import { User } from '../../models/user.model';
                       <a routerLink="/staff" class="btn btn-outline-info w-100 py-3">
                         <i class="bi bi-people fs-3 d-block mb-2"></i>
                         <span>Manage Staff</span>
+                      </a>
+                    </div>
+                    <div class="col-md-4">
+                      <a routerLink="/patients" class="btn btn-outline-danger w-100 py-3">
+                        <i class="bi bi-heart-pulse fs-3 d-block mb-2"></i>
+                        <span>Manage Patients</span>
                       </a>
                     </div>
                   </div>
