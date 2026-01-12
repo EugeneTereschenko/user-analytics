@@ -23,6 +23,7 @@ export class PatientListComponent implements OnInit {
   isLoading: boolean = false;
 
   PatientStatus = PatientStatus;
+  Math = Math;
 
   constructor(
     private patientService: PatientService,
