@@ -38,6 +38,8 @@ public class PatientServiceImpl implements PatientService {
             throw new PatientAlreadyExistsException("Patient with email " + patientDTO.getEmail() + " already exists");
         }
 
+        patientDTO.checkUserId();
+
         Patient patient = patientMapper.toEntity(patientDTO);
         Patient savedPatient = patientRepository.save(patient);
 

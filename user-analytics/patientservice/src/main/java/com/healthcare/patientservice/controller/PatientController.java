@@ -29,13 +29,14 @@ public class PatientController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
-   // @RequirePermission(PermissionConstants.PATIENT_CREATE)
+    @RequirePermission(PermissionConstants.PATIENT_CREATE)
     public ResponseEntity<PatientDTO> createPatient(@Valid @RequestBody PatientDTO patientDTO) {
         PatientDTO createdPatient = patientServiceImpl.createPatient(patientDTO);
         return new ResponseEntity<>(createdPatient, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     @RequirePermission(PermissionConstants.PATIENT_READ)
     public ResponseEntity<PatientDTO> getPatientById(@PathVariable Long id) {
         PatientDTO patient = patientServiceImpl.getPatientById(id);
@@ -43,18 +44,21 @@ public class PatientController {
     }
 
     @GetMapping("/email/{email}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<PatientDTO> getPatientByEmail(@PathVariable String email) {
         PatientDTO patient = patientServiceImpl.getPatientByEmail(email);
         return ResponseEntity.ok(patient);
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<PatientDTO>> getAllPatients(Pageable pageable) {
         Page<PatientDTO> patients = patientServiceImpl.getAllPatients(pageable);
         return ResponseEntity.ok(patients);
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<PatientDTO>> searchPatients(
             @RequestParam String query,
             Pageable pageable) {
@@ -63,6 +67,7 @@ public class PatientController {
     }
 
     @GetMapping("/status/{status}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<PatientDTO>> getPatientsByStatus(
             @PathVariable PatientStatus status,
             Pageable pageable) {
@@ -71,6 +76,7 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<PatientDTO> updatePatient(
             @PathVariable Long id,
             @Valid @RequestBody PatientDTO patientDTO) {
@@ -86,6 +92,7 @@ public class PatientController {
     }
 
     @PatchMapping("/{id}/deactivate")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<PatientDTO> deactivatePatient(@PathVariable Long id) {
         PatientDTO deactivatedPatient = patientServiceImpl.deactivatePatient(id);
         return ResponseEntity.ok(deactivatedPatient);

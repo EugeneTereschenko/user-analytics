@@ -68,6 +68,9 @@ public class Patient {
     @Column(nullable = false)
     private PatientStatus status = PatientStatus.ACTIVE;
 
+    @Column(name = "user_id")
+    private Long userId;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
