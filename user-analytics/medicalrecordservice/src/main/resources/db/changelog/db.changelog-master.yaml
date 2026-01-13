@@ -84,6 +84,9 @@ databaseChangeLog:
               - column:
                   name: signed_by
                   type: VARCHAR(200)
+              - column:
+                  name: user_id
+                  type: BIGINT
 
         - createIndex:
             indexName: idx_medical_records_patient_id

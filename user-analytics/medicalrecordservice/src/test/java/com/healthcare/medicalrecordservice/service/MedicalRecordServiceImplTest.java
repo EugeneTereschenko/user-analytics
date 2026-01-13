@@ -6,6 +6,7 @@
 
 package com.healthcare.medicalrecordservice.service;
 
+import com.example.common.security.util.SecurityUtils;
 import com.healthcare.medicalrecordservice.dto.MedicalRecordDTO;
 import com.healthcare.medicalrecordservice.entity.MedicalRecord;
 import com.healthcare.medicalrecordservice.testutil.MedicalRecordTestBuilder;
@@ -54,14 +55,17 @@ class MedicalRecordServiceImplTest {
 
     @Test
     void shouldCreateMedicalRecord() {
-        when(medicalRecordMapper.toEntity(recordDTO)).thenReturn(record);
-        when(medicalRecordRepository.save(record)).thenReturn(record);
-        when(medicalRecordMapper.toDTO(record)).thenReturn(recordDTO);
+        try (MockedStatic<SecurityUtils> mockedSecurityUtils = mockStatic(SecurityUtils.class)) {
+            mockedSecurityUtils.when(SecurityUtils::getCurrentUserId).thenReturn(Optional.of(1L));
+            when(medicalRecordMapper.toEntity(recordDTO)).thenReturn(record);
+            when(medicalRecordRepository.save(record)).thenReturn(record);
+            when(medicalRecordMapper.toDTO(record)).thenReturn(recordDTO);
 
-        MedicalRecordDTO result = medicalRecordService.createMedicalRecord(recordDTO);
+            MedicalRecordDTO result = medicalRecordService.createMedicalRecord(recordDTO);
 
-        assertThat(result).isEqualTo(recordDTO);
-        verify(medicalRecordRepository).save(record);
+            assertThat(result).isEqualTo(recordDTO);
+            verify(medicalRecordRepository).save(record);
+        }
     }
 
     @Test

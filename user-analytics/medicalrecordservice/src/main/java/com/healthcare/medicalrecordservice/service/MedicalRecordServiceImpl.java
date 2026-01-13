@@ -42,6 +42,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     public MedicalRecordDTO createMedicalRecord(MedicalRecordDTO recordDTO) {
         log.info("Creating medical record for patient: {}", recordDTO.getPatientId());
 
+        recordDTO.checkUserId();
         MedicalRecord record = medicalRecordMapper.toEntity(recordDTO);
         MedicalRecord savedRecord = medicalRecordRepository.save(record);
 

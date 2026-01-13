@@ -39,6 +39,7 @@ public class MedicalRecordMapper {
         dto.setUpdatedAt(record.getUpdatedAt());
         dto.setSignedAt(record.getSignedAt());
         dto.setSignedBy(record.getSignedBy());
+        dto.setUserId(record.getUserId());
 
         // Map nested collections if needed
         // dto.setPrescriptions(...);
@@ -70,6 +71,7 @@ public class MedicalRecordMapper {
         record.setDoctorName(dto.getDoctorName());
         record.setIsConfidential(dto.getIsConfidential());
         record.setStatus(dto.getStatus() != null ? dto.getStatus() : RecordStatus.DRAFT);
+        record.setUserId(dto.getUserId());
 
         return record;
     }
@@ -86,5 +88,6 @@ public class MedicalRecordMapper {
         if (dto.getDoctorName() != null) record.setDoctorName(dto.getDoctorName());
         if (dto.getIsConfidential() != null) record.setIsConfidential(dto.getIsConfidential());
         if (dto.getStatus() != null) record.setStatus(dto.getStatus());
+        if (dto.getUserId() != null) record.setUserId(dto.getUserId());
     }
 }
