@@ -37,6 +37,7 @@ public class MedicalRecordTestBuilder {
     private LocalDateTime updatedAt = LocalDateTime.now();
     private LocalDateTime signedAt = null;
     private String signedBy = null;
+    private Long userId = null;
 
     public MedicalRecordTestBuilder withId(Long id) {
         this.id = id;
@@ -153,6 +154,11 @@ public class MedicalRecordTestBuilder {
         return this;
     }
 
+    public MedicalRecordTestBuilder withUserId(Long userId) {
+        this.userId = userId;
+        return this;
+    }
+
     public MedicalRecord build() {
         return new MedicalRecord(
                 id,
@@ -177,7 +183,8 @@ public class MedicalRecordTestBuilder {
                 createdAt,
                 updatedAt,
                 signedAt,
-                signedBy
+                signedBy,
+                userId
         );
     }
 }

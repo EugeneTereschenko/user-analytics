@@ -34,7 +34,7 @@ public class MedicalRecordController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
-    //@RequirePermission(PermissionConstants.BILLING_CREATE)
+    @RequirePermission(PermissionConstants.MEDICAL_RECORD_CREATE)
     public ResponseEntity<MedicalRecordDTO> createMedicalRecord(
             @Valid @RequestBody MedicalRecordDTO recordDTO) {
         MedicalRecordDTO created = medicalRecordService.createMedicalRecord(recordDTO);
@@ -42,6 +42,7 @@ public class MedicalRecordController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     @RequirePermission(PermissionConstants.MEDICAL_RECORD_READ)
     public ResponseEntity<MedicalRecordDTO> getMedicalRecordById(@PathVariable Long id) {
         MedicalRecordDTO record = medicalRecordService.getMedicalRecordById(id);
@@ -49,12 +50,14 @@ public class MedicalRecordController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<MedicalRecordDTO>> getAllMedicalRecords(Pageable pageable) {
         Page<MedicalRecordDTO> records = medicalRecordService.getAllMedicalRecords(pageable);
         return ResponseEntity.ok(records);
     }
 
     @GetMapping("/patient/{patientId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<MedicalRecordDTO>> getMedicalRecordsByPatient(
             @PathVariable Long patientId,
             Pageable pageable) {
@@ -64,6 +67,7 @@ public class MedicalRecordController {
     }
 
     @GetMapping("/doctor/{doctorId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<MedicalRecordDTO>> getMedicalRecordsByDoctor(
             @PathVariable Long doctorId,
             Pageable pageable) {
@@ -73,6 +77,7 @@ public class MedicalRecordController {
     }
 
     @GetMapping("/type/{recordType}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<MedicalRecordDTO>> getMedicalRecordsByType(
             @PathVariable RecordType recordType,
             Pageable pageable) {
@@ -82,6 +87,7 @@ public class MedicalRecordController {
     }
 
     @GetMapping("/status/{status}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<MedicalRecordDTO>> getMedicalRecordsByStatus(
             @PathVariable RecordStatus status,
             Pageable pageable) {
@@ -91,6 +97,7 @@ public class MedicalRecordController {
     }
 
     @GetMapping("/appointment/{appointmentId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<MedicalRecordDTO>> getMedicalRecordsByAppointment(
             @PathVariable Long appointmentId) {
         List<MedicalRecordDTO> records = medicalRecordService
@@ -99,6 +106,7 @@ public class MedicalRecordController {
     }
 
     @GetMapping("/patient/{patientId}/between")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<MedicalRecordDTO>> getPatientRecordsBetween(
             @PathVariable Long patientId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -109,6 +117,7 @@ public class MedicalRecordController {
     }
 
     @GetMapping("/patient/{patientId}/non-confidential")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<MedicalRecordDTO>> getNonConfidentialRecords(
             @PathVariable Long patientId) {
         List<MedicalRecordDTO> records = medicalRecordService
@@ -117,12 +126,14 @@ public class MedicalRecordController {
     }
 
     @GetMapping("/patient/{patientId}/count")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Long> getRecordCount(@PathVariable Long patientId) {
         Long count = medicalRecordService.getRecordCountByPatient(patientId);
         return ResponseEntity.ok(count);
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<MedicalRecordDTO>> searchMedicalRecords(
             @RequestParam String query,
             Pageable pageable) {
@@ -132,6 +143,7 @@ public class MedicalRecordController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<MedicalRecordDTO> updateMedicalRecord(
             @PathVariable Long id,
             @Valid @RequestBody MedicalRecordDTO recordDTO) {
@@ -140,12 +152,14 @@ public class MedicalRecordController {
     }
 
     @PatchMapping("/{id}/finalize")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<MedicalRecordDTO> finalizeMedicalRecord(@PathVariable Long id) {
         MedicalRecordDTO finalized = medicalRecordService.finalizeMedicalRecord(id);
         return ResponseEntity.ok(finalized);
     }
 
     @PatchMapping("/{id}/sign")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<MedicalRecordDTO> signMedicalRecord(
             @PathVariable Long id,
             @RequestParam String signedBy) {
@@ -154,6 +168,7 @@ public class MedicalRecordController {
     }
 
     @PatchMapping("/{id}/archive")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<MedicalRecordDTO> archiveMedicalRecord(@PathVariable Long id) {
         MedicalRecordDTO archived = medicalRecordService.archiveMedicalRecord(id);
         return ResponseEntity.ok(archived);

@@ -5,8 +5,10 @@
  */
 
 package com.healthcare.medicalrecordservice.dto;
+import com.example.common.security.util.SecurityUtils;
 import com.healthcare.medicalrecordservice.entity.RecordStatus;
 import com.healthcare.medicalrecordservice.entity.RecordType;
+import com.healthcare.medicalrecordservice.exception.UnauthorizedException;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -72,4 +74,14 @@ public class MedicalRecordDTO {
     private LocalDateTime signedAt;
 
     private String signedBy;
+
+    private Long userId;
+
+    public void checkUserId() {
+        if (this.userId == null) {
+            Long currentUserId = SecurityUtils.getCurrentUserId()
+                    .orElseThrow(() -> new UnauthorizedException("User not authenticated"));
+            this.userId = currentUserId;
+        }
+    }
 }

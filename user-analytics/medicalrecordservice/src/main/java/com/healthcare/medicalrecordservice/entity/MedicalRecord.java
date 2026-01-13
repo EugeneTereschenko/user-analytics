@@ -98,4 +98,7 @@ public class MedicalRecord {
 
     @Column(name = "signed_by")
     private String signedBy;
+
+    @Column(name = "user_id")
+    private Long userId;
 }
