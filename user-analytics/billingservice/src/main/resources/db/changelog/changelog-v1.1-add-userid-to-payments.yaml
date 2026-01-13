@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: healthcare-system
+      changes:
+        - addColumn:
+            tableName: payments
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT

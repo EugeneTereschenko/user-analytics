@@ -24,6 +24,7 @@ public class PaymentTestBuilder {
     private String notes = "Test payment";
     private String processedBy = "admin";
     private LocalDateTime createdAt = LocalDateTime.now();
+    private Long userId = 1L;
 
     public PaymentTestBuilder withId(Long id) {
         this.id = id;
@@ -95,6 +96,11 @@ public class PaymentTestBuilder {
         return this;
     }
 
+    public PaymentTestBuilder withUserId(Long userId) {
+        this.userId = userId;
+        return this;
+    }
+
     public Payment build() {
         return new Payment(
                 id,
@@ -110,8 +116,8 @@ public class PaymentTestBuilder {
                 receiptNumber,
                 notes,
                 processedBy,
-                createdAt
-        );
+                createdAt,
+                userId);
     }
 
     public PaymentDTO buildDTO() {
@@ -129,8 +135,8 @@ public class PaymentTestBuilder {
         dto.setNotes(notes);
         dto.setProcessedBy(processedBy);
         dto.setCreatedAt(createdAt);
+        dto.setUserId(userId);
         return dto;
     }
 
 }
-
