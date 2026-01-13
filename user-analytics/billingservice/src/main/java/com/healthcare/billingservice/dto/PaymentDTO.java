@@ -6,8 +6,11 @@
 
 package com.healthcare.billingservice.dto;
 
+import com.example.common.security.util.SecurityUtils;
 import com.healthcare.billingservice.entity.PaymentMethod;
 import com.healthcare.billingservice.entity.PaymentStatus;
+import com.healthcare.billingservice.exception.UnauthorizedException;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -51,4 +54,14 @@ public class PaymentDTO {
     private String processedBy;
 
     private LocalDateTime createdAt;
+
+    private Long userId;
+
+    public void checkUserId() {
+        if (this.userId == null) {
+            Long currentUserId = SecurityUtils.getCurrentUserId()
+                    .orElseThrow(() -> new UnauthorizedException("User not authenticated"));
+            this.userId = currentUserId;
+        }
+    }
 }
