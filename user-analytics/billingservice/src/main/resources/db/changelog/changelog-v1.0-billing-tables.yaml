@@ -113,6 +113,9 @@ databaseChangeLog:
               - column:
                   name: paid_at
                   type: TIMESTAMP
+              - column:
+                  name: user_id
+                  type: BIGINT
 
         - createIndex:
             indexName: idx_invoices_patient_id
