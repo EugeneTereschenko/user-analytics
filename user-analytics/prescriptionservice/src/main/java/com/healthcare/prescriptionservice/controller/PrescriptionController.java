@@ -25,7 +25,7 @@ public class PrescriptionController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
-    //@RequirePermission(PermissionConstants.BILLING_CREATE)
+    @RequirePermission(PermissionConstants.PRESCRIPTION_CREATE)
     public ResponseEntity<PrescriptionDTO> createPrescription(
             @Valid @RequestBody PrescriptionDTO prescriptionDTO) {
         PrescriptionDTO created = prescriptionService.createPrescription(prescriptionDTO);
@@ -33,6 +33,7 @@ public class PrescriptionController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     @RequirePermission(PermissionConstants.PRESCRIPTION_READ)
     public ResponseEntity<PrescriptionDTO> getPrescriptionById(@PathVariable Long id) {
         PrescriptionDTO prescription = prescriptionService.getPrescriptionById(id);
@@ -40,6 +41,7 @@ public class PrescriptionController {
     }
 
     @GetMapping("/number/{prescriptionNumber}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<PrescriptionDTO> getPrescriptionByNumber(
             @PathVariable String prescriptionNumber) {
         PrescriptionDTO prescription = prescriptionService
@@ -48,12 +50,14 @@ public class PrescriptionController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<PrescriptionDTO>> getAllPrescriptions(Pageable pageable) {
         Page<PrescriptionDTO> prescriptions = prescriptionService.getAllPrescriptions(pageable);
         return ResponseEntity.ok(prescriptions);
     }
 
     @GetMapping("/patient/{patientId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<PrescriptionDTO>> getPrescriptionsByPatient(
             @PathVariable Long patientId,
             Pageable pageable) {
@@ -63,6 +67,7 @@ public class PrescriptionController {
     }
 
     @GetMapping("/doctor/{doctorId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<PrescriptionDTO>> getPrescriptionsByDoctor(
             @PathVariable Long doctorId,
             Pageable pageable) {
@@ -72,6 +77,7 @@ public class PrescriptionController {
     }
 
     @GetMapping("/status/{status}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<PrescriptionDTO>> getPrescriptionsByStatus(
             @PathVariable PrescriptionStatus status,
             Pageable pageable) {
@@ -81,6 +87,7 @@ public class PrescriptionController {
     }
 
     @GetMapping("/patient/{patientId}/refillable")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<PrescriptionDTO>> getRefillablePrescriptions(
             @PathVariable Long patientId) {
         List<PrescriptionDTO> prescriptions = prescriptionService
@@ -89,12 +96,14 @@ public class PrescriptionController {
     }
 
     @GetMapping("/expired")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<PrescriptionDTO>> getExpiredPrescriptions() {
         List<PrescriptionDTO> prescriptions = prescriptionService.getExpiredPrescriptions();
         return ResponseEntity.ok(prescriptions);
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<PrescriptionDTO>> searchPrescriptions(
             @RequestParam String query,
             Pageable pageable) {
@@ -104,6 +113,7 @@ public class PrescriptionController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<PrescriptionDTO> updatePrescription(
             @PathVariable Long id,
             @Valid @RequestBody PrescriptionDTO prescriptionDTO) {
@@ -112,6 +122,7 @@ public class PrescriptionController {
     }
 
     @PatchMapping("/{id}/dispense")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<PrescriptionDTO> dispensePrescription(
             @PathVariable Long id,
             @RequestParam String dispensedBy) {
@@ -120,12 +131,14 @@ public class PrescriptionController {
     }
 
     @PatchMapping("/{id}/refill")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<PrescriptionDTO> refillPrescription(@PathVariable Long id) {
         PrescriptionDTO refilled = prescriptionService.refillPrescription(id);
         return ResponseEntity.ok(refilled);
     }
 
     @PatchMapping("/{id}/cancel")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<PrescriptionDTO> cancelPrescription(
             @PathVariable Long id,
             @RequestParam(required = false) String reason) {
@@ -134,6 +147,7 @@ public class PrescriptionController {
     }
 
     @PostMapping("/mark-expired")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Void> markExpiredPrescriptions() {
         prescriptionService.markExpiredPrescriptions();
         return ResponseEntity.ok().build();
