@@ -1,4 +1,14 @@
 <div class="container-fluid py-4">
+  <div class="row mb-3">
+    <div class="col">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/dashboard" class="text-decoration-none"><i class="bi bi-house-door me-1"></i>Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Prescriptions</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
   <div class="row mb-4">
     <div class="col">
       <h2 class="mb-0">
@@ -117,7 +127,7 @@
               </td>
               <td>
                 <span class="badge bg-primary">
-                  {{ prescription.medications?.length || 0 }} med(s)
+                  {{ prescription.medications.length || 0 }} med(s)
                 </span>
               </td>
               <td>
