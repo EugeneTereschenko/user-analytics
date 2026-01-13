@@ -107,4 +107,7 @@ public class Prescription {
 
     @Column(name = "cancellation_reason", length = 500)
     private String cancellationReason;
+
+    @Column(name = "user_id")
+    private Long userId;
 }

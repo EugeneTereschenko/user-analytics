@@ -108,6 +108,9 @@ databaseChangeLog:
               - column:
                   name: cancellation_reason
                   type: VARCHAR(500)
+              - column:
+                  name: user_id
+                  type: BIGINT
 
         - createIndex:
             indexName: idx_prescriptions_patient_id

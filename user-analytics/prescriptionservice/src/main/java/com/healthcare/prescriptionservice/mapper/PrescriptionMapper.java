@@ -48,6 +48,7 @@ public class PrescriptionMapper {
         dto.setUpdatedAt(prescription.getUpdatedAt());
         dto.setCancelledAt(prescription.getCancelledAt());
         dto.setCancellationReason(prescription.getCancellationReason());
+        dto.setUserId(prescription.getUserId());
 
         if (prescription.getMedications() != null) {
             dto.setMedications(prescription.getMedications().stream()
@@ -82,6 +83,7 @@ public class PrescriptionMapper {
         prescription.setIsRefillable(dto.getIsRefillable());
         prescription.setRefillsAllowed(dto.getRefillsAllowed());
         prescription.setRefillsRemaining(dto.getRefillsRemaining());
+        prescription.setUserId(dto.getUserId());
 
         if (dto.getMedications() != null) {
             prescription.setMedications(dto.getMedications().stream()
@@ -98,6 +100,7 @@ public class PrescriptionMapper {
         if (dto.getNotes() != null) prescription.setNotes(dto.getNotes());
         if (dto.getPharmacyName() != null) prescription.setPharmacyName(dto.getPharmacyName());
         if (dto.getPharmacyAddress() != null) prescription.setPharmacyAddress(dto.getPharmacyAddress());
+        if (dto.getUserId() != null) prescription.setUserId(dto.getUserId());
     }
 
     private MedicationDTO medicationToDTO(Medication medication) {

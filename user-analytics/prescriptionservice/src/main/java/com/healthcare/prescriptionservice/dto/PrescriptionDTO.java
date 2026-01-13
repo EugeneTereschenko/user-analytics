@@ -6,8 +6,9 @@
 
 package com.healthcare.prescriptionservice.dto;
 
-import com.healthcare.prescriptionservice.entity.Prescription;
+import com.example.common.security.util.SecurityUtils;
 import com.healthcare.prescriptionservice.entity.PrescriptionStatus;
+import com.healthcare.prescriptionservice.exception.UnauthorizedException;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -83,4 +84,14 @@ public class PrescriptionDTO {
     private LocalDateTime cancelledAt;
 
     private String cancellationReason;
+
+    private Long userId;
+
+    public void checkUserId() {
+        if (this.userId == null) {
+            Long currentUserId = SecurityUtils.getCurrentUserId()
+                    .orElseThrow(() -> new UnauthorizedException("User not authenticated"));
+            this.userId = currentUserId;
+        }
+    }
 }

@@ -42,6 +42,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         String prescriptionNumber = generatePrescriptionNumber();
         prescriptionDTO.setPrescriptionNumber(prescriptionNumber);
 
+        prescriptionDTO.getUserId();
         Prescription prescription = prescriptionMapper.toEntity(prescriptionDTO);
 
         // Set bidirectional relationship
