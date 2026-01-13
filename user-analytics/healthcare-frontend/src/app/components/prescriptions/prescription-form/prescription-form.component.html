@@ -1,0 +1,447 @@
+<div class="container-fluid py-4">
+  <div class="row mb-3">
+    <div class="col">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/dashboard" class="text-decoration-none"><i class="bi bi-house-door me-1"></i>Dashboard</a></li>
+          <li class="breadcrumb-item"><a routerLink="/prescriptions" class="text-decoration-none">Prescriptions</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ isEditMode ? 'Edit' : 'Create' }}</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col">
+      <h2>
+        <i class="bi bi-file-medical me-2"></i>
+        {{ isEditMode ? 'Edit Prescription' : 'Create New Prescription' }}
+      </h2>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+    <button type="button" class="btn-close" (click)="error = null"></button>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" #prescriptionForm="ngForm">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Basic Information</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Patient ID <span class="text-danger">*</span></label>
+            <input 
+              type="number" 
+              class="form-control" 
+              [(ngModel)]="prescription.patientId"
+              name="patientId"
+              required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Doctor ID <span class="text-danger">*</span></label>
+            <input 
+              type="number" 
+              class="form-control" 
+              [(ngModel)]="prescription.doctorId"
+              name="doctorId"
+              required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Patient Name</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="prescription.patientName"
+              name="patientName">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Patient Date of Birth</label>
+            <input 
+              type="date" 
+              class="form-control" 
+              [(ngModel)]="prescription.patientDateOfBirth"
+              name="patientDateOfBirth">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Doctor Name</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="prescription.doctorName"
+              name="doctorName">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Doctor License</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="prescription.doctorLicense"
+              name="doctorLicense">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Prescription Date <span class="text-danger">*</span></label>
+            <input 
+              type="date" 
+              class="form-control" 
+              [(ngModel)]="prescription.prescriptionDate"
+              name="prescriptionDate"
+              required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Valid Until</label>
+            <input 
+              type="date" 
+              class="form-control" 
+              [(ngModel)]="prescription.validUntil"
+              name="validUntil">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Status <span class="text-danger">*</span></label>
+            <select 
+              class="form-select" 
+              [(ngModel)]="prescription.status"
+              name="status"
+              required>
+              <option *ngFor="let status of prescriptionStatuses" [value]="status">
+                {{ status }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Medical Record ID</label>
+            <input 
+              type="number" 
+              class="form-control" 
+              [(ngModel)]="prescription.medicalRecordId"
+              name="medicalRecordId">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Appointment ID</label>
+            <input 
+              type="number" 
+              class="form-control" 
+              [(ngModel)]="prescription.appointmentId"
+              name="appointmentId">
+          </div>
+          <div class="col-md-12">
+            <label class="form-label">Diagnosis</label>
+            <textarea 
+              class="form-control" 
+              rows="2"
+              [(ngModel)]="prescription.diagnosis"
+              name="diagnosis"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Pharmacy Information</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Pharmacy Name</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="prescription.pharmacyName"
+              name="pharmacyName">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Pharmacy Address</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="prescription.pharmacyAddress"
+              name="pharmacyAddress">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Medications</h5>
+        <button 
+          type="button" 
+          class="btn btn-light btn-sm"
+          (click)="addMedication()">
+          <i class="bi bi-plus-circle me-1"></i>Add Medication
+        </button>
+      </div>
+      <div class="card-body">
+        <div *ngIf="prescription.medications.length === 0" class="text-center text-muted py-4">
+          <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+          No medications added yet. Click "Add Medication" to get started.
+        </div>
+
+        <div *ngFor="let med of prescription.medications; let i = index" class="border rounded p-3 mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="mb-0">Medication {{ i + 1 }}</h6>
+            <button 
+              type="button" 
+              class="btn btn-danger btn-sm"
+              (click)="removeMedication(i)">
+              <i class="bi bi-trash"></i> Remove
+            </button>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Medication Name <span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="med.medicationName"
+                [name]="'medName' + i"
+                required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Generic Name</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="med.genericName"
+                [name]="'genericName' + i">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Drug Code</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="med.drugCode"
+                [name]="'drugCode' + i">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Dosage <span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="med.dosage"
+                [name]="'dosage' + i"
+                placeholder="e.g., 500mg"
+                required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Strength</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="med.strength"
+                [name]="'strength' + i"
+                placeholder="e.g., 500mg">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Dosage Form</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="med.dosageForm"
+                [name]="'dosageForm' + i"
+                placeholder="e.g., Tablet">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Frequency <span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="med.frequency"
+                [name]="'frequency' + i"
+                placeholder="e.g., Twice daily"
+                required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Duration</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="med.duration"
+                [name]="'duration' + i"
+                placeholder="e.g., 7 days">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Quantity</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="med.quantity"
+                [name]="'quantity' + i">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Unit</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="med.unit"
+                [name]="'unit' + i"
+                placeholder="e.g., tablets">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Route</label>
+              <select 
+                class="form-select" 
+                [(ngModel)]="med.route"
+                [name]="'route' + i">
+                <option *ngFor="let route of routes" [value]="route">
+                  {{ route }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Priority</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="med.priority"
+                [name]="'priority' + i"
+                min="1">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Start Date</label>
+              <input 
+                type="date" 
+                class="form-control" 
+                [(ngModel)]="med.startDate"
+                [name]="'startDate' + i">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">End Date</label>
+              <input 
+                type="date" 
+                class="form-control" 
+                [(ngModel)]="med.endDate"
+                [name]="'endDate' + i">
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">Instructions</label>
+              <textarea 
+                class="form-control" 
+                rows="2"
+                [(ngModel)]="med.instructions"
+                [name]="'instructions' + i"
+                placeholder="Special instructions for taking this medication"></textarea>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">Warnings</label>
+              <textarea 
+                class="form-control" 
+                rows="2"
+                [(ngModel)]="med.warnings"
+                [name]="'warnings' + i"
+                placeholder="Warnings and precautions"></textarea>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">Side Effects</label>
+              <textarea 
+                class="form-control" 
+                rows="2"
+                [(ngModel)]="med.sideEffects"
+                [name]="'sideEffects' + i"
+                placeholder="Possible side effects"></textarea>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  [(ngModel)]="med.isGenericAllowed"
+                  [name]="'genericAllowed' + i"
+                  [id]="'genericAllowed' + i">
+                <label class="form-check-label" [for]="'genericAllowed' + i">
+                  Generic Allowed
+                </label>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  [(ngModel)]="med.isControlledSubstance"
+                  [name]="'controlled' + i"
+                  [id]="'controlled' + i">
+                <label class="form-check-label" [for]="'controlled' + i">
+                  Controlled Substance
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Refill Information</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="form-check">
+              <input 
+                class="form-check-input" 
+                type="checkbox" 
+                [(ngModel)]="prescription.isRefillable"
+                name="isRefillable"
+                id="isRefillable">
+              <label class="form-check-label" for="isRefillable">
+                Refillable
+              </label>
+            </div>
+          </div>
+          <div class="col-md-4" *ngIf="prescription.isRefillable">
+            <label class="form-label">Refills Allowed</label>
+            <input 
+              type="number" 
+              class="form-control" 
+              [(ngModel)]="prescription.refillsAllowed"
+              name="refillsAllowed"
+              min="0">
+          </div>
+          <div class="col-md-4" *ngIf="prescription.isRefillable">
+            <label class="form-label">Refills Remaining</label>
+            <input 
+              type="number" 
+              class="form-control" 
+              [(ngModel)]="prescription.refillsRemaining"
+              name="refillsRemaining"
+              min="0">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Additional Notes</h5>
+      </div>
+      <div class="card-body">
+        <textarea 
+          class="form-control" 
+          rows="4"
+          [(ngModel)]="prescription.notes"
+          name="notes"
+          placeholder="Any additional notes or special instructions"></textarea>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2">
+      <button type="button" class="btn btn-secondary" (click)="cancel()">
+        <i class="bi bi-x-circle me-2"></i>Cancel
+      </button>
+      <button 
+        type="submit" 
+        class="btn btn-primary"
+        [disabled]="!prescriptionForm.form.valid || isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+        <i *ngIf="!isLoading" class="bi bi-check-circle me-2"></i>
+        {{ isEditMode ? 'Update' : 'Create' }} Prescription
+      </button>
+    </div>
+  </form>
+</div>

@@ -79,3 +79,30 @@ body {
   padding: 0.35rem 0.75rem;
   border-radius: 50rem;
 }
+
+/* Prescription Management Styles */
+.accordion-button:not(.collapsed) {
+  background-color: #e7f1ff;
+  color: #0c63e4;
+}
+
+.table th {
+  font-weight: 600;
+}
+
+.btn-group-sm > .btn {
+  padding: 0.25rem 0.5rem;
+}
+
+.modal-xl {
+  max-width: 1200px;
+}
+
+@media print {
+  .modal-header,
+  .modal-footer,
+  .btn,
+  nav {
+    display: none !important;
+  }
+}

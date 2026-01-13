@@ -14,6 +14,8 @@ import { StaffDetailComponent } from './components/staff/staff-detail/staff-deta
 import { PatientListComponent } from './components/patients/patient-list/patient-list.component';
 import { PatientFormComponent } from './components/patients/patient-form/patient-form.component';
 import { PatientDetailComponent } from './components/patients/patient-detail/patient-detail.component';
+import { PrescriptionListComponent } from './components/prescriptions/prescription-list/prescription-list.component';
+import { PrescriptionFormComponent } from './components/prescriptions/prescription-form/prescription-form.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -59,6 +61,15 @@ export const routes: Routes = [
       { path: 'new', component: PatientFormComponent },
       { path: ':id', component: PatientDetailComponent },
       { path: ':id/edit', component: PatientFormComponent }
+    ]
+  },
+  {
+    path: 'prescriptions',
+    canActivate: [authGuard],
+    children: [
+      { path: '', component: PrescriptionListComponent },
+      { path: 'create', component: PrescriptionFormComponent },
+      { path: 'edit/:id', component: PrescriptionFormComponent }
     ]
   },
   { path: '**', redirectTo: '/login' }
