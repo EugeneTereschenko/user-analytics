@@ -43,6 +43,7 @@ public class PrescriptionTestBuilder {
     private LocalDateTime updatedAt = LocalDateTime.now();
     private LocalDateTime cancelledAt = null;
     private String cancellationReason = null;
+    private Long userId = null;
 
     public PrescriptionTestBuilder withId(Long id) {
         this.id = id;
@@ -79,6 +80,11 @@ public class PrescriptionTestBuilder {
         return this;
     }
 
+    public PrescriptionTestBuilder withUserId(Long userId) {
+        this.userId = userId;
+        return this;
+    }
+
     // Add similar withX methods for other fields as needed...
 
     public Prescription build() {
@@ -109,7 +115,8 @@ public class PrescriptionTestBuilder {
                 createdAt,
                 updatedAt,
                 cancelledAt,
-                cancellationReason
+                cancellationReason,
+                userId
         );
         if (medications != null) {
             for (Medication med : medications) {
