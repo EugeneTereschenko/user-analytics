@@ -47,6 +47,7 @@ public class InvoiceTestBuilder {
     private LocalDateTime updatedAt = LocalDateTime.now();
     private LocalDateTime sentAt = null;
     private LocalDateTime paidAt = null;
+    private Long userId = null;
 
     public InvoiceTestBuilder withId(Long id) { this.id = id; return this; }
     public InvoiceTestBuilder withInvoiceNumber(String invoiceNumber) { this.invoiceNumber = invoiceNumber; return this; }
@@ -75,6 +76,7 @@ public class InvoiceTestBuilder {
     public InvoiceTestBuilder withUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; return this; }
     public InvoiceTestBuilder withSentAt(LocalDateTime sentAt) { this.sentAt = sentAt; return this; }
     public InvoiceTestBuilder withPaidAt(LocalDateTime paidAt) { this.paidAt = paidAt; return this; }
+    public InvoiceTestBuilder withUserId(Long userId) { this.userId = userId; return this; }
 
     public Invoice build() {
         // This method still uses entities for domain model
@@ -83,7 +85,7 @@ public class InvoiceTestBuilder {
                 subtotal, taxAmount, discountAmount, totalAmount, paidAmount, balanceDue, status,
                 new ArrayList<>(), // items as entities if needed
                 payments, patientName, patientEmail, patientPhone, insuranceProvider,
-                insurancePolicyNumber, insuranceClaimAmount, notes, createdAt, updatedAt, sentAt, paidAt
+                insurancePolicyNumber, insuranceClaimAmount, notes, createdAt, updatedAt, sentAt, paidAt, userId
         );
     }
 
@@ -120,6 +122,7 @@ public class InvoiceTestBuilder {
         dto.setUpdatedAt(updatedAt);
         dto.setSentAt(sentAt);
         dto.setPaidAt(paidAt);
+        dto.setUserId(userId);
         return dto;
     }
 }

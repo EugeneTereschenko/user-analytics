@@ -1,5 +1,6 @@
 package com.healthcare.billingservice.service;
 
+import com.example.common.security.util.SecurityUtils;
 import com.healthcare.billingservice.dto.InvoiceDTO;
 import com.healthcare.billingservice.dto.PaymentDTO;
 import com.healthcare.billingservice.entity.*;
@@ -43,48 +44,51 @@ class BillingServiceImplTest {
 
     @Test
     void testCreateInvoice() {
-        InvoiceDTO invoiceDTO = new InvoiceTestBuilder()
-                .withPatientId(1L)
-                .withInvoiceNumber("INV-1")
-                .withInvoiceDate(LocalDate.now())
-                .withTotalAmount(new BigDecimal("100.00"))
-                .withStatus(InvoiceStatus.DRAFT)
-                .withItems(List.of(
-                        InvoiceItemDTOTestBuilder.anInvoiceItem()
-                                .withDescription("Consultation")
-                                .withQuantity(1)
-                                .withUnitPrice(new BigDecimal("100.00"))
-                                .withTotal(new BigDecimal("100.00"))
-                                .build()
-                ))
+        try (MockedStatic<SecurityUtils> mockedSecurityUtils = mockStatic(SecurityUtils.class)) {
+            mockedSecurityUtils.when(SecurityUtils::getCurrentUserId).thenReturn(Optional.of(1L));
+            InvoiceDTO invoiceDTO = new InvoiceTestBuilder()
+                    .withPatientId(1L)
+                    .withInvoiceNumber("INV-1")
+                    .withInvoiceDate(LocalDate.now())
+                    .withTotalAmount(new BigDecimal("100.00"))
+                    .withStatus(InvoiceStatus.DRAFT)
+                    .withItems(List.of(
+                            InvoiceItemDTOTestBuilder.anInvoiceItem()
+                                    .withDescription("Consultation")
+                                    .withQuantity(1)
+                                    .withUnitPrice(new BigDecimal("100.00"))
+                                    .withTotal(new BigDecimal("100.00"))
+                                    .build()
+                    ))
 
-                .buildDTO();
+                    .buildDTO();
 
-        Invoice invoice = new InvoiceTestBuilder()
-                .withPatientId(1L)
-                .withInvoiceNumber("INV-1")
-                .withInvoiceDate(LocalDate.now())
-                .withItems(List.of(
-                        InvoiceItemDTOTestBuilder.anInvoiceItem()
-                                .withDescription("Consultation")
-                                .withQuantity(1)
-                                .withUnitPrice(new BigDecimal("100.00"))
-                                .withTotal(new BigDecimal("100.00"))
-                                .build()
-                ))
-                .withTotalAmount(new BigDecimal("100.00"))
-                .withStatus(InvoiceStatus.DRAFT)
-                .build();
+            Invoice invoice = new InvoiceTestBuilder()
+                    .withPatientId(1L)
+                    .withInvoiceNumber("INV-1")
+                    .withInvoiceDate(LocalDate.now())
+                    .withItems(List.of(
+                            InvoiceItemDTOTestBuilder.anInvoiceItem()
+                                    .withDescription("Consultation")
+                                    .withQuantity(1)
+                                    .withUnitPrice(new BigDecimal("100.00"))
+                                    .withTotal(new BigDecimal("100.00"))
+                                    .build()
+                    ))
+                    .withTotalAmount(new BigDecimal("100.00"))
+                    .withStatus(InvoiceStatus.DRAFT)
+                    .build();
 
-        when(invoiceMapper.toEntitywithItems(any())).thenReturn(invoice);
-        when(invoiceMapper.toEntity(any(InvoiceDTO.class))).thenReturn(invoice);
-        when(invoiceRepository.save(any(Invoice.class))).thenReturn(invoice);
-        when(invoiceMapper.toDTO(any(Invoice.class))).thenReturn(invoiceDTO);
+            when(invoiceMapper.toEntitywithItems(any())).thenReturn(invoice);
+            when(invoiceMapper.toEntity(any(InvoiceDTO.class))).thenReturn(invoice);
+            when(invoiceRepository.save(any(Invoice.class))).thenReturn(invoice);
+            when(invoiceMapper.toDTO(any(Invoice.class))).thenReturn(invoiceDTO);
 
-        InvoiceDTO result = billingService.createInvoice(invoiceDTO);
+            InvoiceDTO result = billingService.createInvoice(invoiceDTO);
 
-        assertNotNull(result);
-        verify(invoiceRepository).save(any(Invoice.class));
+            assertNotNull(result);
+            verify(invoiceRepository).save(any(Invoice.class));
+        }
     }
 
 

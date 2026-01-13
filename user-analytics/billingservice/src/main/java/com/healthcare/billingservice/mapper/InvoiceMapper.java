@@ -42,6 +42,7 @@ public class InvoiceMapper {
         dto.setUpdatedAt(invoice.getUpdatedAt());
         dto.setSentAt(invoice.getSentAt());
         dto.setPaidAt(invoice.getPaidAt());
+        dto.setUserId(invoice.getUserId());
         return dto;
     }
 
@@ -66,6 +67,7 @@ public class InvoiceMapper {
         invoice.setInsurancePolicyNumber(dto.getInsurancePolicyNumber());
         invoice.setInsuranceClaimAmount(dto.getInsuranceClaimAmount());
         invoice.setNotes(dto.getNotes());
+        invoice.setUserId(dto.getUserId());
         return invoice;
     }
 
@@ -116,6 +118,7 @@ public class InvoiceMapper {
         invoice.setInsurancePolicyNumber(dto.getInsurancePolicyNumber());
         invoice.setInsuranceClaimAmount(dto.getInsuranceClaimAmount());
         invoice.setNotes(dto.getNotes());
+        invoice.setUserId(dto.getUserId());
         return invoice;
     }
 
@@ -128,5 +131,6 @@ public class InvoiceMapper {
         if (dto.getPatientEmail() != null) invoice.setPatientEmail(dto.getPatientEmail());
         if (dto.getPatientPhone() != null) invoice.setPatientPhone(dto.getPatientPhone());
         if (dto.getNotes() != null) invoice.setNotes(dto.getNotes());
+        if (dto.getUserId() != null) invoice.setUserId(dto.getUserId());
     }
 }

@@ -104,6 +104,8 @@ public class Invoice {
     @Column(name = "paid_at")
     private LocalDateTime paidAt;
 
+    @Column(name = "user_id")
+    private Long userId;
 
     public void calculateTotals() {
         this.subtotal = items.stream()

@@ -6,8 +6,9 @@
 
 package com.healthcare.billingservice.dto;
 
-import com.healthcare.billingservice.entity.Invoice;
+import com.example.common.security.util.SecurityUtils;
 import com.healthcare.billingservice.entity.InvoiceStatus;
+import com.healthcare.billingservice.exception.UnauthorizedException;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -84,4 +85,14 @@ public class InvoiceDTO {
     private LocalDateTime sentAt;
 
     private LocalDateTime paidAt;
+
+    private Long userId;
+
+    public void checkUserId() {
+        if (this.userId == null) {
+            Long currentUserId = SecurityUtils.getCurrentUserId()
+                    .orElseThrow(() -> new UnauthorizedException("User not authenticated"));
+            this.userId = currentUserId;
+        }
+    }
 }

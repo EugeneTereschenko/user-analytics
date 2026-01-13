@@ -52,6 +52,7 @@ public class BillingServiceImpl implements BillingService {
         String invoiceNumber = generateInvoiceNumber();
         invoiceDTO.setInvoiceNumber(invoiceNumber);
 
+        invoiceDTO.checkUserId();
         // Use the mapper method that handles items correctly
         Invoice invoice = invoiceMapper.toEntitywithItems(invoiceDTO);
 

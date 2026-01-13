@@ -4,7 +4,6 @@ import com.example.common.security.annotation.RequirePermission;
 import com.example.common.security.constants.PermissionConstants;
 import com.healthcare.billingservice.dto.InvoiceDTO;
 import com.healthcare.billingservice.dto.PaymentDTO;
-import com.healthcare.billingservice.entity.Invoice;
 import com.healthcare.billingservice.entity.InvoiceStatus;
 import com.healthcare.billingservice.service.impl.BillingService;
 import jakarta.validation.Valid;
@@ -28,13 +27,14 @@ public class BillingController {
 
     @PostMapping("/invoices")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
-    //@RequirePermission(PermissionConstants.BILLING_CREATE)
+    @RequirePermission(PermissionConstants.BILLING_CREATE)
     public ResponseEntity<InvoiceDTO> createInvoice(@Valid @RequestBody InvoiceDTO invoiceDTO) {
         InvoiceDTO created = billingService.createInvoice(invoiceDTO);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @GetMapping("/invoices/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     @RequirePermission(PermissionConstants.BILLING_READ)
     public ResponseEntity<InvoiceDTO> getInvoiceById(@PathVariable Long id) {
         InvoiceDTO invoice = billingService.getInvoiceById(id);
@@ -42,18 +42,21 @@ public class BillingController {
     }
 
     @GetMapping("/invoices/number/{invoiceNumber}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<InvoiceDTO> getInvoiceByNumber(@PathVariable String invoiceNumber) {
         InvoiceDTO invoice = billingService.getInvoiceByNumber(invoiceNumber);
         return ResponseEntity.ok(invoice);
     }
 
     @GetMapping("/invoices")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<InvoiceDTO>> getAllInvoices(Pageable pageable) {
         Page<InvoiceDTO> invoices = billingService.getAllInvoices(pageable);
         return ResponseEntity.ok(invoices);
     }
 
     @GetMapping("/invoices/patient/{patientId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<InvoiceDTO>> getInvoicesByPatient(
             @PathVariable Long patientId,
             Pageable pageable) {
@@ -62,6 +65,7 @@ public class BillingController {
     }
 
     @GetMapping("/invoices/status/{status}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<InvoiceDTO>> getInvoicesByStatus(
             @PathVariable InvoiceStatus status,
             Pageable pageable) {
@@ -70,12 +74,14 @@ public class BillingController {
     }
 
     @GetMapping("/invoices/overdue")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<InvoiceDTO>> getOverdueInvoices() {
         List<InvoiceDTO> invoices = billingService.getOverdueInvoices();
         return ResponseEntity.ok(invoices);
     }
 
     @GetMapping("/invoices/patient/{patientId}/outstanding")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<InvoiceDTO>> getPatientOutstandingInvoices(
             @PathVariable Long patientId) {
         List<InvoiceDTO> invoices = billingService.getPatientOutstandingInvoices(patientId);
@@ -83,12 +89,14 @@ public class BillingController {
     }
 
     @GetMapping("/invoices/outstanding/total")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<BigDecimal> getTotalOutstanding() {
         BigDecimal total = billingService.getTotalOutstanding();
         return ResponseEntity.ok(total);
     }
 
     @GetMapping("/invoices/search")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Page<InvoiceDTO>> searchInvoices(
             @RequestParam String query,
             Pageable pageable) {
@@ -97,6 +105,7 @@ public class BillingController {
     }
 
     @PutMapping("/invoices/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<InvoiceDTO> updateInvoice(
             @PathVariable Long id,
             @Valid @RequestBody InvoiceDTO invoiceDTO) {
@@ -105,12 +114,14 @@ public class BillingController {
     }
 
     @PatchMapping("/invoices/{id}/send")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<InvoiceDTO> sendInvoice(@PathVariable Long id) {
         InvoiceDTO sent = billingService.sendInvoice(id);
         return ResponseEntity.ok(sent);
     }
 
     @PostMapping("/invoices/{invoiceId}/payments")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<PaymentDTO> addPayment(
             @PathVariable Long invoiceId,
             @Valid @RequestBody PaymentDTO paymentDTO) {
