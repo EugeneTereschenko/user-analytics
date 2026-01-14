@@ -1,0 +1,11 @@
+.bg-opacity-10 {
+  --bs-bg-opacity: 0.1;
+}
+
+.list-group-item-action {
+  cursor: pointer;
+}
+
+.card {
+  transition: box-shadow 0.3s ease;
+}

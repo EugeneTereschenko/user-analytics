@@ -1,0 +1,146 @@
+<form (ngSubmit)="onSubmit()" #paymentForm="ngForm">
+  <div *ngIf="error" class="alert alert-danger">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+  </div>
+
+  <div *ngIf="invoice" class="alert alert-info">
+    <strong>Balance Due:</strong> ${{ invoice.balanceDue | number:'1.2-2' }}
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Payment Amount <span class="text-danger">*</span></label>
+    <div class="input-group">
+      <span class="input-group-text">$</span>
+      <input 
+        type="number" 
+        class="form-control" 
+        [(ngModel)]="payment.amount"
+        name="amount"
+        step="0.01"
+        min="0"
+        [max]="invoice?.balanceDue"
+        required>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Payment Date <span class="text-danger">*</span></label>
+    <input 
+      type="datetime-local" 
+      class="form-control" 
+      [(ngModel)]="payment.paymentDate"
+      name="paymentDate"
+      required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Payment Method <span class="text-danger">*</span></label>
+    <select 
+      class="form-select" 
+      [(ngModel)]="payment.paymentMethod"
+      name="paymentMethod"
+      required>
+      <option *ngFor="let method of paymentMethods" [value]="method">
+        {{ method.replace('_', ' ') | titlecase }}
+      </option>
+    </select>
+  </div>
+
+  <div class="mb-3" *ngIf="payment.paymentMethod === 'CREDIT_CARD' || payment.paymentMethod === 'DEBIT_CARD'">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Card Type</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          [(ngModel)]="payment.cardType"
+          name="cardType"
+          placeholder="e.g., Visa, MasterCard">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Last 4 Digits</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          [(ngModel)]="payment.cardLastFour"
+          name="cardLastFour"
+          maxlength="4"
+          placeholder="1234">
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Transaction ID</label>
+    <input 
+      type="text" 
+      class="form-control" 
+      [(ngModel)]="payment.transactionId"
+      name="transactionId"
+      placeholder="Transaction identifier">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Payment Reference</label>
+    <input 
+      type="text" 
+      class="form-control" 
+      [(ngModel)]="payment.paymentReference"
+      name="paymentReference"
+      placeholder="Internal reference">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Receipt Number</label>
+    <input 
+      type="text" 
+      class="form-control" 
+      [(ngModel)]="payment.receiptNumber"
+      name="receiptNumber"
+      placeholder="Receipt number">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Processed By</label>
+    <input 
+      type="text" 
+      class="form-control" 
+      [(ngModel)]="payment.processedBy"
+      name="processedBy"
+      placeholder="Name of processor">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Status <span class="text-danger">*</span></label>
+    <select 
+      class="form-select" 
+      [(ngModel)]="payment.status"
+      name="status"
+      required>
+      <option *ngFor="let status of paymentStatuses" [value]="status">
+        {{ status | titlecase }}
+      </option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Notes</label>
+    <textarea 
+      class="form-control" 
+      rows="3"
+      [(ngModel)]="payment.notes"
+      name="notes"
+      placeholder="Additional notes"></textarea>
+  </div>
+
+  <div class="d-grid">
+    <button 
+      type="submit" 
+      class="btn btn-success"
+      [disabled]="!paymentForm.form.valid || isSubmitting">
+      <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+      <i *ngIf="!isSubmitting" class="bi bi-check-circle me-2"></i>
+      Add Payment
+    </button>
+  </div>
+</form>

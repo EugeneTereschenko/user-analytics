@@ -16,6 +16,9 @@ import { PatientFormComponent } from './components/patients/patient-form/patient
 import { PatientDetailComponent } from './components/patients/patient-detail/patient-detail.component';
 import { PrescriptionListComponent } from './components/prescriptions/prescription-list/prescription-list.component';
 import { PrescriptionFormComponent } from './components/prescriptions/prescription-form/prescription-form.component';
+import { InvoiceListComponent } from './components/billing/invoice-list/invoice-list.component';
+import { InvoiceFormComponent } from './components/billing/invoice-form/invoice-form.component';
+import { BillingDashboardComponent } from './components/billing/billing-dashboard/billing-dashboard.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -70,6 +73,17 @@ export const routes: Routes = [
       { path: '', component: PrescriptionListComponent },
       { path: 'create', component: PrescriptionFormComponent },
       { path: 'edit/:id', component: PrescriptionFormComponent }
+    ]
+  },
+  {
+    path: 'billing',
+    canActivate: [authGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: BillingDashboardComponent },
+      { path: 'invoices', component: InvoiceListComponent },
+      { path: 'invoices/create', component: InvoiceFormComponent },
+      { path: 'invoices/edit/:id', component: InvoiceFormComponent }
     ]
   },
   { path: '**', redirectTo: '/login' }

@@ -1,0 +1,349 @@
+<div class="container-fluid py-4">
+  <div class="row mb-4">
+    <div class="col">
+      <h2>
+        <i class="bi bi-receipt me-2"></i>
+        {{ isEditMode ? 'Edit Invoice' : 'Create New Invoice' }}
+      </h2>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+    <button type="button" class="btn-close" (click)="error = null"></button>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" #invoiceForm="ngForm">
+    <!-- Basic Information -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Basic Information</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Patient ID <span class="text-danger">*</span></label>
+            <input 
+              type="number" 
+              class="form-control" 
+              [(ngModel)]="invoice.patientId"
+              name="patientId"
+              required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Patient Name</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="invoice.patientName"
+              name="patientName">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Status <span class="text-danger">*</span></label>
+            <select 
+              class="form-select" 
+              [(ngModel)]="invoice.status"
+              name="status"
+              required>
+              <option *ngFor="let status of invoiceStatuses" [value]="status">
+                {{ status.replace('_', ' ') | titlecase }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Patient Email</label>
+            <input 
+              type="email" 
+              class="form-control" 
+              [(ngModel)]="invoice.patientEmail"
+              name="patientEmail">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Patient Phone</label>
+            <input 
+              type="tel" 
+              class="form-control" 
+              [(ngModel)]="invoice.patientPhone"
+              name="patientPhone">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Invoice Date <span class="text-danger">*</span></label>
+            <input 
+              type="date" 
+              class="form-control" 
+              [(ngModel)]="invoice.invoiceDate"
+              name="invoiceDate"
+              required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Due Date <span class="text-danger">*</span></label>
+            <input 
+              type="date" 
+              class="form-control" 
+              [(ngModel)]="invoice.dueDate"
+              name="dueDate"
+              required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Doctor ID</label>
+            <input 
+              type="number" 
+              class="form-control" 
+              [(ngModel)]="invoice.doctorId"
+              name="doctorId">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Appointment ID</label>
+            <input 
+              type="number" 
+              class="form-control" 
+              [(ngModel)]="invoice.appointmentId"
+              name="appointmentId">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insurance Information -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Insurance Information</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Insurance Provider</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="invoice.insuranceProvider"
+              name="insuranceProvider">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Policy Number</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              [(ngModel)]="invoice.insurancePolicyNumber"
+              name="insurancePolicyNumber">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Claim Amount</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="invoice.insuranceClaimAmount"
+                name="insuranceClaimAmount"
+                step="0.01"
+                min="0">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Invoice Items -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Invoice Items</h5>
+        <button 
+          type="button" 
+          class="btn btn-light btn-sm"
+          (click)="addItem()">
+          <i class="bi bi-plus-circle me-1"></i>Add Item
+        </button>
+      </div>
+      <div class="card-body">
+        <div *ngIf="invoice.items.length === 0" class="text-center text-muted py-4">
+          <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+          No items added yet. Click "Add Item" to get started.
+        </div>
+
+        <div *ngFor="let item of invoice.items; let i = index" class="border rounded p-3 mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="mb-0">Item {{ i + 1 }}</h6>
+            <button 
+              type="button" 
+              class="btn btn-danger btn-sm"
+              (click)="removeItem(i)">
+              <i class="bi bi-trash"></i> Remove
+            </button>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label">Type <span class="text-danger">*</span></label>
+              <select 
+                class="form-select" 
+                [(ngModel)]="item.itemType"
+                [name]="'itemType' + i"
+                required>
+                <option *ngFor="let type of itemTypes" [value]="type">
+                  {{ type.replace('_', ' ') | titlecase }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Description <span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="item.description"
+                [name]="'description' + i"
+                required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Service Code</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="item.serviceCode"
+                [name]="'serviceCode' + i">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Quantity <span class="text-danger">*</span></label>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="item.quantity"
+                [name]="'quantity' + i"
+                (ngModelChange)="calculateItemTotal(item)"
+                min="1"
+                required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Unit Price <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  [(ngModel)]="item.unitPrice"
+                  [name]="'unitPrice' + i"
+                  (ngModelChange)="calculateItemTotal(item)"
+                  step="0.01"
+                  min="0"
+                  required>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Total Price</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  [value]="item.totalPrice"
+                  readonly
+                  step="0.01">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Medical Record ID</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="item.medicalRecordId"
+                [name]="'medicalRecordId' + i">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Totals -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Totals</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-12">
+            <table class="table">
+              <tr>
+                <th width="70%" class="text-end">Subtotal:</th>
+                <td><strong>${{ invoice.subtotal | number:'1.2-2' }}</strong></td>
+              </tr>
+              <tr>
+                <th class="text-end">Tax Amount:</th>
+                <td>
+                  <div class="input-group" style="max-width: 200px;">
+                    <span class="input-group-text">$</span>
+                    <input 
+                      type="number" 
+                      class="form-control" 
+                      [(ngModel)]="invoice.taxAmount"
+                      name="taxAmount"
+                      (ngModelChange)="onTaxChange()"
+                      step="0.01"
+                      min="0">
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th class="text-end">Discount Amount:</th>
+                <td>
+                  <div class="input-group" style="max-width: 200px;">
+                    <span class="input-group-text">$</span>
+                    <input 
+                      type="number" 
+                      class="form-control" 
+                      [(ngModel)]="invoice.discountAmount"
+                      name="discountAmount"
+                      (ngModelChange)="onDiscountChange()"
+                      step="0.01"
+                      min="0">
+                  </div>
+                </td>
+              </tr>
+              <tr class="table-primary">
+                <th class="text-end">Total Amount:</th>
+                <td><strong>${{ invoice.totalAmount | number:'1.2-2' }}</strong></td>
+              </tr>
+              <tr class="table-success">
+                <th class="text-end">Paid Amount:</th>
+                <td><strong>${{ invoice.paidAmount | number:'1.2-2' }}</strong></td>
+              </tr>
+              <tr class="table-warning">
+                <th class="text-end">Balance Due:</th>
+                <td><strong>${{ invoice.balanceDue | number:'1.2-2' }}</strong></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Notes -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Additional Notes</h5>
+      </div>
+      <div class="card-body">
+        <textarea 
+          class="form-control" 
+          rows="4"
+          [(ngModel)]="invoice.notes"
+          name="notes"
+          placeholder="Any additional notes or special instructions"></textarea>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="d-flex justify-content-end gap-2 mb-4">
+      <button type="button" class="btn btn-secondary" (click)="cancel()">
+        <i class="bi bi-x-circle me-2"></i>Cancel
+      </button>
+      <button 
+        type="submit" 
+        class="btn btn-primary"
+        [disabled]="!invoiceForm.form.valid || isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+        <i *ngIf="!isLoading" class="bi bi-check-circle me-2"></i>
+        {{ isEditMode ? 'Update' : 'Create' }} Invoice
+      </button>
+    </div>
+  </form>
+</div>
