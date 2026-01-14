@@ -1,0 +1,12 @@
+/* Invoice Form Styles */
+.border {
+  border: 1px solid #dee2e6 !important;
+}
+
+.rounded {
+  border-radius: 0.25rem !important;
+}
+
+.table th {
+  font-weight: 600;
+}

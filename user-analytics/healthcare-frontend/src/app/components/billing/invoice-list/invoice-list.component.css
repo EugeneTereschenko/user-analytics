@@ -1,0 +1,27 @@
+.table-danger {
+  background-color: #f8d7da !important;
+}
+
+.bg-opacity-10 {
+  --bs-bg-opacity: 0.1;
+}
+
+.btn-group-sm > .btn {
+  padding: 0.25rem 0.5rem;
+}
+
+.modal-xl {
+  max-width: 1200px;
+}
+
+.page-link {
+  cursor: pointer;
+}
+
+.card {
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
