@@ -1,4 +1,14 @@
 <div class="container-fluid py-4">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+      <li class="breadcrumb-item"><a routerLink="/billing/dashboard">Billing</a></li>
+      <li class="breadcrumb-item"><a routerLink="/billing/invoices">Invoices</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ isEditMode ? 'Edit' : 'Create' }}</li>
+    </ol>
+  </nav>
+
   <div class="row mb-4">
     <div class="col">
       <h2>
@@ -13,9 +23,11 @@
     <button type="button" class="btn-close" (click)="error = null"></button>
   </div>
 
-  <form (ngSubmit)="onSubmit()" #invoiceForm="ngForm">
-    <!-- Basic Information -->
-    <div class="card shadow-sm mb-4">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <form (ngSubmit)="onSubmit()" #invoiceForm="ngForm">
+        <!-- Basic Information -->
+        <div class="card shadow-sm mb-4">
       <div class="card-header bg-primary text-white">
         <h5 class="mb-0">Basic Information</h5>
       </div>
@@ -345,5 +357,7 @@
         {{ isEditMode ? 'Update' : 'Create' }} Invoice
       </button>
     </div>
-  </form>
+      </form>
+    </div>
+  </div>
 </div>

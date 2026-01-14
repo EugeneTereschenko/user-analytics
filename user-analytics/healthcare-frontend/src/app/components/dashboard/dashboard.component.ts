@@ -84,6 +84,12 @@ import { User } from '../../models/user.model';
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link" routerLink="/billing/dashboard" routerLinkActive="active">
+                  <i class="bi bi-receipt me-2"></i>
+                  Billing
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" href="#">
                   <i class="bi bi-file-medical me-2"></i>
                   Medical Records
