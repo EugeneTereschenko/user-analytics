@@ -3,9 +3,11 @@ package com.example.demo.service;
 import com.example.activity.dto.ActivityDTO;
 import com.example.activity.service.ActivityService;
 import com.example.demo.dto.UserDetailDTO;
+import com.example.demo.dto.UserEventDTO;
 import com.example.demo.dto.UserRequestDTO;
 import com.example.demo.dto.UserResponseDTO;
 import com.example.activity.model.ActivityType;
+import com.example.demo.event.UserEventPublisher;
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
 import com.example.demo.security.JwtUtil;
@@ -44,62 +46,9 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final ActivityService activityService; // ADD THIS
     private final HttpServletRequest request; // ADD THIS for IP tracking
+    private final UserEventPublisher userEventPublisher;
 
     private static final SecureRandom secureRandom = new SecureRandom();
-
-    public UserResponseDTO loginUser(UserRequestDTO userDTO) {
-        log.info("=== LOGIN ATTEMPT START ===");
-        log.info("Email: {}", userDTO.getEmail());
-
-        try {
-            Optional<User> userOptional = userRepository.findByEmail(userDTO.getEmail());
-            if (userOptional.isEmpty()) {
-                log.warn("Login attempt for non-existent email");
-                // Log failed login attempt
-                logActivity(null, null, ActivityType.LOGIN,
-                        "Failed login attempt for email: " + userDTO.getEmail());
-                return createUserResponseDTO("", "", "Login failed: Invalid credentials", "false");
-            }
-
-            User user = userOptional.get();
-            log.info("User found in DB: {}", user.getUsername());
-
-            String plainPassword = userDTO.getPassword();
-            String storedHash = user.getPassword();
-
-            boolean matches = passwordEncoder.matches(plainPassword, storedHash);
-
-            if (!matches) {
-                log.warn("Password mismatch for user: {}", user.getUsername());
-                // Log failed login attempt
-                logActivity(user.getId(), user.getUsername(), ActivityType.LOGIN,
-                        "Failed login attempt - incorrect password");
-                return createUserResponseDTO("", "", "Login failed: Invalid credentials", "false");
-            }
-
-            log.info("Password matched successfully!");
-
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getUsername());
-            if (userDetails == null) {
-                return createUserResponseDTO("", "", "Login failed: Invalid credentials", "false");
-            }
-
-            String token = jwtUtil.generateToken(userDetails.getUsername());
-            updateUserSignInDate(user);
-
-            // Log successful login
-            logActivity(user.getId(), user.getUsername(), ActivityType.LOGIN,
-                    "User logged in successfully");
-
-            log.info("Login successful for user: {}", user.getUsername());
-            log.info("=== LOGIN ATTEMPT END ===");
-
-            return createUserResponseDTO(String.valueOf(user.getId()), token, "Login successful", "true");
-        } catch (Exception e) {
-            log.error("Failed to login: {}", e.getMessage(), e);
-            return createUserResponseDTO("", "", "Login failed: Invalid credentials", "false");
-        }
-    }
 
     @Transactional
     public UserResponseDTO createUser(UserRequestDTO userDTO) {
@@ -151,6 +100,9 @@ public class UserService {
             logActivity(savedUser.getId(), savedUser.getUsername(), ActivityType.CREATE,
                     "New user account created");
 
+            // *** PUBLISH EVENT TO KAFKA ***
+            publishUserCreatedEvent(savedUser);
+
             log.info("Signup successful for user: {}", savedUser.getUsername());
             log.info("=== SIGNUP ATTEMPT END ===");
 
@@ -159,6 +111,100 @@ public class UserService {
         } catch (Exception e) {
             log.error("Failed to create user: {}", e.getMessage(), e);
             return createUserResponseDTO("", "", "Signup failed: An error occurred", "false");
+        }
+    }
+
+    public UserResponseDTO loginUser(UserRequestDTO userDTO) {
+        log.info("=== LOGIN ATTEMPT START ===");
+        log.info("Email: {}", userDTO.getEmail());
+
+        try {
+            Optional<User> userOptional = userRepository.findByEmail(userDTO.getEmail());
+            if (userOptional.isEmpty()) {
+                log.warn("Login attempt for non-existent email");
+                logActivity(null, null, ActivityType.LOGIN,
+                        "Failed login attempt for email: " + userDTO.getEmail());
+                return createUserResponseDTO("", "", "Login failed: Invalid credentials", "false");
+            }
+
+            User user = userOptional.get();
+            log.info("User found in DB: {}", user.getUsername());
+
+            String plainPassword = userDTO.getPassword();
+            String storedHash = user.getPassword();
+
+            boolean matches = passwordEncoder.matches(plainPassword, storedHash);
+
+            if (!matches) {
+                log.warn("Password mismatch for user: {}", user.getUsername());
+                logActivity(user.getId(), user.getUsername(), ActivityType.LOGIN,
+                        "Failed login attempt - incorrect password");
+                return createUserResponseDTO("", "", "Login failed: Invalid credentials", "false");
+            }
+
+            log.info("Password matched successfully!");
+
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(user.getUsername());
+            if (userDetails == null) {
+                return createUserResponseDTO("", "", "Login failed: Invalid credentials", "false");
+            }
+
+            String token = jwtUtil.generateToken(userDetails.getUsername());
+            updateUserSignInDate(user);
+
+            // Log successful login
+            logActivity(user.getId(), user.getUsername(), ActivityType.LOGIN,
+                    "User logged in successfully");
+
+            // *** PUBLISH LOGIN EVENT TO KAFKA ***
+            publishLoginEvent(user);
+
+            log.info("Login successful for user: {}", user.getUsername());
+            log.info("=== LOGIN ATTEMPT END ===");
+
+            return createUserResponseDTO(String.valueOf(user.getId()), token, "Login successful", "true");
+        } catch (Exception e) {
+            log.error("Failed to login: {}", e.getMessage(), e);
+            return createUserResponseDTO("", "", "Login failed: Invalid credentials", "false");
+        }
+    }
+
+    // Event publishing methods
+    private void publishUserCreatedEvent(User user) {
+        try {
+            UserEventDTO event = UserEventDTO.builder()
+                    .userId(user.getId())
+                    .username(user.getUsername())
+                    .email(user.getEmail())
+                    .timestamp(LocalDateTime.now())
+                    .roles(user.getRoles().stream().map(Role::getName).toList())
+                    .location(user.getLocation())
+                    .deviceType(user.getDeviceType())
+                    .isActive(user.isActive())
+                    .build();
+
+            userEventPublisher.publishUserCreated(event);
+        } catch (Exception e) {
+            log.error("Failed to publish user created event: {}", e.getMessage());
+        }
+    }
+
+    private void publishLoginEvent(User user) {
+        try {
+            UserEventDTO event = UserEventDTO.builder()
+                    .userId(user.getId())
+                    .username(user.getUsername())
+                    .email(user.getEmail())
+                    .timestamp(LocalDateTime.now())
+                    .roles(user.getRoles().stream().map(Role::getName).toList())
+                    .location(user.getLocation())
+                    .deviceType(user.getDeviceType())
+                    .isActive(user.isActive())
+                    .build();
+
+            userEventPublisher.publishUserLogin(event);
+        } catch (Exception e) {
+            log.error("Failed to publish login event: {}", e.getMessage());
         }
     }
 

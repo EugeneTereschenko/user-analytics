@@ -120,6 +120,7 @@ public class User implements UserDetails {
         private int loginCount;
         private LocalDate signupDate;
         private LocalDateTime lastLogin;
+        private int activityCount;
         private boolean isActive;
         private boolean isTwoFactorEnabled;
         private String location;
@@ -173,6 +174,11 @@ public class User implements UserDetails {
             return this;
         }
 
+        public Builder activityCount(int activityCount) {
+            this.activityCount = activityCount;
+            return this;
+        }
+
         public Builder isActive(boolean isActive) {
             this.isActive = isActive;
             return this;
@@ -219,6 +225,7 @@ public class User implements UserDetails {
             user.loginCount = this.loginCount;
             user.signupDate = this.signupDate;
             user.lastLogin = this.lastLogin;
+            user.activityCount = this.activityCount;
             user.isActive = this.isActive;
             user.isTwoFactorEnabled = this.isTwoFactorEnabled;
             user.location = this.location;

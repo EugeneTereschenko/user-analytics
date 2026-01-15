@@ -24,6 +24,20 @@ spring:
     show-sql: false
     open-in-view: false  # ← Add this to fix the warning
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: analytics-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.example.demo.dto"
+        spring.json.value.default.type: com.example.demo.dto.UserEventDTO
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
