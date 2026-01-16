@@ -13,7 +13,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Data
 public class Role {
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
     private String name;
 

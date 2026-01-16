@@ -7,6 +7,7 @@
 package com.example.authservice.service;
 
 import com.example.authservice.dto.*;
+import com.example.authservice.event.UserEventPublisher;
 import com.example.authservice.exception.AuthException;
 import com.example.authservice.exception.ResourceNotFoundException;
 import com.example.authservice.model.Permission;
@@ -38,6 +39,7 @@ public class AuthService {
     private final PermissionRepository permissionRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final UserEventPublisher userEventPublisher;
 
     @Transactional
     public AuthResponse login(AuthRequest request) {
@@ -71,6 +73,10 @@ public class AuthService {
         // Reset failed login attempts on successful login
         user.resetFailedLoginAttempts();
         user.setLastLogin(LocalDateTime.now());
+
+
+        publishLoginEvent(user);
+
         userRepository.save(user);
 
         // Generate tokens
@@ -142,6 +148,8 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
         log.info("User registered successfully: {}", savedUser.getUsername());
+
+        publishUserCreatedEvent(savedUser);
 
         // Generate tokens
         String token = jwtUtil.generateToken(savedUser);
@@ -275,6 +283,46 @@ public class AuthService {
         log.info("Email verified for user: {}", user.getUsername());
 
         return ApiResponse.success("Email verified successfully");
+    }
+
+
+    // Event publishing methods
+    private void publishUserCreatedEvent(User user) {
+        try {
+            UserEventDTO event = UserEventDTO.builder()
+                    .userId(user.getId())
+                    .username(user.getUsername())
+                    .email(user.getEmail())
+                    .timestamp(LocalDateTime.now())
+                    .roles(user.getRoles().stream().map(Role::getName).toList())
+                    .location("")
+                    .deviceType("")
+                    .isActive(true)
+                    .build();
+
+            userEventPublisher.publishUserCreated(event);
+        } catch (Exception e) {
+            log.error("Failed to publish user created event", e);
+        }
+    }
+
+    private void publishLoginEvent(User user) {
+        try {
+            UserEventDTO event = UserEventDTO.builder()
+                    .userId(user.getId())
+                    .username(user.getUsername())
+                    .email(user.getEmail())
+                    .timestamp(LocalDateTime.now())
+                    .roles(user.getRoles().stream().map(Role::getName).toList())
+                    .location("")
+                    .deviceType("")
+                    .isActive(true)
+                    .build();
+
+            userEventPublisher.publishUserLogin(event);
+        } catch (Exception e) {
+            log.error("Failed to publish login event", e);
+        }
     }
 
     private AuthResponse.UserInfo mapToUserInfo(User user) {

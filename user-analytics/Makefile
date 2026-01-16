@@ -2,7 +2,8 @@
         doctorservice doctorservice-up doctorservice-down \
         billingservice billingservice-up billingservice-down \
         prescriptionservice prescriptionservice-up prescriptionservice-down \
-        auth-service auth-service-up auth-service-down
+        auth-service auth-service-up auth-service-down \
+        kafka kafka-up kafka-down
 
 help:
 	@echo "Available commands:"
@@ -13,6 +14,9 @@ help:
 	@echo "  restart   Restart all services"
 	@echo "  clean     Remove all services, volumes, and unused data"
 	@echo "  postgres  Start only the postgres service"
+	@echo "  kafka     Build only the kafka service"
+	@echo "  kafka-up  Start only the kafka service"
+	@echo "  kafka-down Stop only the kafka service"
 	@echo "  patientservice  Build only the patient-service"
 	@echo "  patientservice-up  Start only the patient-service"
 	@echo "  patientservice-down  Stop only the patient-service"
@@ -66,6 +70,15 @@ clean:
 
 postgres:
 	docker-compose up -d postgres
+
+kafka:
+	docker-compose build kafka
+
+kafka-up:
+	docker-compose up -d kafka
+
+kafka-down:
+	docker-compose stop kafka
 
 patientservice:
 	docker-compose build patient-service
