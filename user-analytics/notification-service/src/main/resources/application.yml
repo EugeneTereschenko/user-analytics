@@ -1,6 +1,8 @@
 spring:
   application:
     name: notification-service
+  main:
+    allow-bean-definition-overriding: true
 
   datasource:
     url: jdbc:postgresql://localhost:5432/notification_db
@@ -81,6 +83,22 @@ eureka:
     fetch-registry: true
   instance:
     prefer-ip-address: true
+
+# Auth Service Configuration
+auth:
+  service:
+    url: http://auth-service:8087
+
+# Feign Configuration
+feign:
+  circuitbreaker:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: BASIC
 
 # Logging
 logging:

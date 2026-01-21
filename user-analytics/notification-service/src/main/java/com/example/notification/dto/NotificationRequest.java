@@ -6,6 +6,8 @@
 
 package com.example.notification.dto;
 
+import com.example.common.security.util.SecurityUtils;
+import com.example.notification.exception.UnauthorizedException;
 import com.example.notification.model.NotificationChannel;
 import com.example.notification.model.NotificationType;
 import jakarta.validation.constraints.Email;
@@ -48,4 +50,15 @@ public class NotificationRequest {
     private LocalDateTime scheduledTime;
 
     private Map<String, Object> metadata;
+
+    private Long userId; // ID of the user who performed the action
+
+
+    public void checkUserId() {
+        if (this.userId == null) {
+            Long currentUserId = SecurityUtils.getCurrentUserId()
+                    .orElseThrow(() -> new UnauthorizedException("User not authenticated"));
+            this.userId = currentUserId;
+        }
+    }
 }
