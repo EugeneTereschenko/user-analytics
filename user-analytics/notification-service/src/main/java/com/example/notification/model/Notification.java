@@ -73,6 +73,9 @@ public class Notification {
     @Column(name = "metadata", columnDefinition = "TEXT")
     private String metadata; // JSON string for additional data
 
+    @Column(name = "user_id")
+    private Long userId;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

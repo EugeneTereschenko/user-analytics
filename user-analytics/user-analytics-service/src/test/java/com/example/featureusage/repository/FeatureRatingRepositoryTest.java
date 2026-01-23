@@ -7,12 +7,15 @@
 package com.example.featureusage.repository;
 
 import com.example.demo.UserAnalyticsJavaApplication;
+import com.example.demo.dto.UserEventDTO;
 import com.example.featureusage.model.FeatureRating;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -29,6 +32,9 @@ class FeatureRatingRepositoryTest {
 
     @Autowired
     private FeatureRatingRepository featureRatingRepository;
+
+    @MockBean
+    private KafkaTemplate<String, UserEventDTO> kafkaTemplate;
 
     @Test
     @DisplayName("findByFeatureName returns correct ratings")

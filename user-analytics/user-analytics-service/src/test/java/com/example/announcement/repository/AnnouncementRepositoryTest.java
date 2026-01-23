@@ -11,12 +11,15 @@ import com.example.announcement.model.Announcement;
 import com.example.announcement.model.AnnouncementCategory;
 import com.example.announcement.model.AnnouncementPriority;
 import com.example.demo.UserAnalyticsJavaApplication;
+import com.example.demo.dto.UserEventDTO;
 import com.example.demo.testutil.AnnouncementTestDataBuilder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -33,6 +36,10 @@ class AnnouncementRepositoryTest {
 
     @Autowired
     private AnnouncementRepository announcementRepository;
+
+
+    @MockBean
+    private KafkaTemplate<String, UserEventDTO> kafkaTemplate;
 
     @Test
     @DisplayName("Should find by priority")

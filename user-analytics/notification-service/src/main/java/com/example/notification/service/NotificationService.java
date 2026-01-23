@@ -9,7 +9,6 @@ package com.example.notification.service;
 import com.example.notification.dto.NotificationRequest;
 import com.example.notification.dto.NotificationResponse;
 import com.example.notification.model.Notification;
-import com.example.notification.model.NotificationChannel;
 import com.example.notification.model.NotificationStatus;
 import com.example.notification.repository.NotificationRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +38,8 @@ public class NotificationService {
     public NotificationResponse createNotification(NotificationRequest request) {
         log.info("Creating notification for recipient: {}", request.getRecipientId());
 
+        request.checkUserId();
+
         Notification notification = Notification.builder()
                 .recipientId(request.getRecipientId())
                 .recipientEmail(request.getRecipientEmail())
@@ -49,6 +50,7 @@ public class NotificationService {
                 .subject(request.getSubject())
                 .message(request.getMessage())
                 .scheduledTime(request.getScheduledTime())
+                .userId(request.getUserId())
                 .status(request.getScheduledTime() != null ?
                         NotificationStatus.SCHEDULED : NotificationStatus.PENDING)
                 .retryCount(0)

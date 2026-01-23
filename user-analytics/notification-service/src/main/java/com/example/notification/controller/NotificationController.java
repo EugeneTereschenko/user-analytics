@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class NotificationController {
      * Create and send notification
      */
     @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<NotificationResponse> createNotification(
             @Valid @RequestBody NotificationRequest request) {
         log.info("Creating notification for recipient: {}", request.getRecipientId());
@@ -41,6 +43,7 @@ public class NotificationController {
      * Get notifications for a recipient
      */
     @GetMapping("/recipient/{recipientId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<List<NotificationResponse>> getNotificationsByRecipient(
             @PathVariable Long recipientId) {
         log.info("Fetching notifications for recipient: {}", recipientId);
@@ -53,6 +56,7 @@ public class NotificationController {
      * Get notification by ID
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<NotificationResponse> getNotificationById(@PathVariable Long id) {
         log.info("Fetching notification: {}", id);
         NotificationResponse notification = notificationService.getNotificationById(id);
@@ -63,6 +67,7 @@ public class NotificationController {
      * Cancel scheduled notification
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<Void> cancelNotification(@PathVariable Long id) {
         log.info("Cancelling notification: {}", id);
         notificationService.cancelNotification(id);
@@ -73,6 +78,7 @@ public class NotificationController {
      * Manually trigger scheduled notifications processing
      */
     @PostMapping("/process-scheduled")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<String> processScheduledNotifications() {
         log.info("Manual trigger: processing scheduled notifications");
         notificationService.processScheduledNotifications();
@@ -83,6 +89,7 @@ public class NotificationController {
      * Manually retry failed notifications
      */
     @PostMapping("/retry-failed")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_STAFF')")
     public ResponseEntity<String> retryFailedNotifications() {
         log.info("Manual trigger: retrying failed notifications");
         notificationService.retryFailedNotifications(3);
