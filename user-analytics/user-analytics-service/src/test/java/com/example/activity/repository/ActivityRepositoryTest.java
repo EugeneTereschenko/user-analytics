@@ -9,6 +9,7 @@ package com.example.activity.repository;
 import com.example.activity.model.Activity;
 import com.example.activity.model.ActivityType;
 import com.example.demo.UserAnalyticsJavaApplication;
+import com.example.demo.dto.UserEventDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,8 +18,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -38,6 +41,9 @@ class ActivityRepositoryTest {
 
     @Autowired
     private ActivityRepository activityRepository;
+
+    @MockBean
+    private KafkaTemplate<String, UserEventDTO> kafkaTemplate;
 
     @TestConfiguration
     static class MockHttpServletRequestConfig {

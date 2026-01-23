@@ -7,6 +7,7 @@
 package com.example.notification.repository;
 
 import com.example.demo.UserAnalyticsJavaApplication;
+import com.example.demo.dto.UserEventDTO;
 import com.example.notification.model.Notification;
 import com.example.notification.model.NotificationPriority;
 import com.example.notification.model.NotificationType;
@@ -15,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -33,6 +36,9 @@ class NotificationRepositoryTest {
 
     @Autowired
     private NotificationRepository notificationRepository;
+
+    @MockBean
+    private KafkaTemplate<String, UserEventDTO> kafkaTemplate;
 
     @Test
     @DisplayName("Should save and find notification by title")

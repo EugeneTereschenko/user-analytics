@@ -6,6 +6,7 @@
 
 package com.example.featureusage.repository;
 
+import com.example.demo.dto.UserEventDTO;
 import com.example.demo.testutil.FeatureUsageTestDataBuilder;
 import com.example.featureusage.model.FeatureUsage;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import com.example.demo.UserAnalyticsJavaApplication;
@@ -30,6 +33,9 @@ class FeatureUsageRepositoryTest {
 
     @Autowired
     private FeatureUsageRepository featureUsageRepository;
+
+    @MockBean
+    private KafkaTemplate<String, UserEventDTO> kafkaTemplate;
 
     @Test
     @DisplayName("findByUserId returns correct usages")
