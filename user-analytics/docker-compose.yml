@@ -185,6 +185,20 @@ services:
       - healthcare-network
     restart: on-failure
 
+  notification-service:
+    build:
+      context: .
+      dockerfile: notification-service/Dockerfile
+    ports:
+      - "8089:8089"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - postgres
+      #- kafka
+    restart: unless-stopped
+
+
   auth-service:
     build:
       context: .

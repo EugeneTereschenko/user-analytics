@@ -45,6 +45,10 @@ help:
 	@echo "  auth-service                   Build only the auth-service"
 	@echo "  auth-service-up                Start only the auth-service"
 	@echo "  auth-service-down              Stop only the auth-service"
+	@echo "  notificationservice             Build only the notification-service"
+	@echo "  notificationservice-up          Start only the notification-service"
+	@echo "  notificationservice-down        Stop only the notification-service"
+
 
 
 
@@ -160,4 +164,13 @@ auth-service-up:
 
 auth-service-down:
 	docker-compose stop auth-service
+
+notificationservice:
+	docker-compose build notification-service
+
+notificationservice-up:
+	docker-compose up -d notification-service
+
+notificationservice-down:
+	docker-compose stop notification-service
 
