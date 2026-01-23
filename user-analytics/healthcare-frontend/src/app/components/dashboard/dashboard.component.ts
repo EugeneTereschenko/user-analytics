@@ -90,6 +90,12 @@ import { User } from '../../models/user.model';
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link" routerLink="/notifications" routerLinkActive="active">
+                  <i class="bi bi-bell me-2"></i>
+                  Notifications
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" href="#">
                   <i class="bi bi-file-medical me-2"></i>
                   Medical Records

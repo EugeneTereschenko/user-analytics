@@ -13,7 +13,12 @@ import { Doctor } from '../../../models/doctor.model';
       <div class="row justify-content-center">
         <div class="col-lg-10">
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="bi bi-person-badge me-2"></i>Doctor Profile</h2>
+            <div>
+              <button class="btn btn-outline-secondary btn-sm mb-2" routerLink="/dashboard">
+                <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+              </button>
+              <h2><i class="bi bi-person-badge me-2"></i>Doctor Profile</h2>
+            </div>
             <button class="btn btn-outline-secondary" routerLink="/doctors">
               <i class="bi bi-arrow-left me-2"></i>Back to List
             </button>

@@ -13,6 +13,9 @@ import { Doctor, DoctorStatus } from '../../../models/doctor.model';
     <div class="container-fluid py-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
+          <button class="btn btn-outline-secondary btn-sm mb-2" routerLink="/dashboard">
+            <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+          </button>
           <h2 class="mb-1"><i class="bi bi-hospital me-2"></i>Doctors</h2>
           <p class="text-muted mb-0">Manage doctor profiles and information</p>
         </div>

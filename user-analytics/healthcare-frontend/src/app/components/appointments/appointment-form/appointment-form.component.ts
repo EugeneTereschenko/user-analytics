@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { AppointmentService } from '../../../services/appointment.service';
 import { AuthService } from '../../../services/auth.service';
 import { AppointmentType, AppointmentStatus } from '../../../models/appointment.model';
@@ -9,11 +9,14 @@ import { AppointmentType, AppointmentStatus } from '../../../models/appointment.
 @Component({
   selector: 'app-appointment-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   template: `
     <div class="container py-4">
       <div class="row justify-content-center">
         <div class="col-lg-8">
+          <button class="btn btn-outline-secondary btn-sm mb-3" routerLink="/dashboard">
+            <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+          </button>
           <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
               <h4 class="mb-0">

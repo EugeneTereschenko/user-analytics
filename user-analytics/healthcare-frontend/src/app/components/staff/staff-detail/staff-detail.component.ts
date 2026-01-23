@@ -12,10 +12,15 @@ import { Staff } from '../../../models/staff.model';
     <div class="container py-4">
       <div class="row justify-content-center">
         <div class="col-lg-10">
-          <div class="d-flex justify-content-between mb-4">
-            <h2><i class="bi bi-person-badge me-2"></i>Staff Profile</h2>
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <button class="btn btn-outline-secondary btn-sm mb-2" routerLink="/dashboard">
+                <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+              </button>
+              <h2><i class="bi bi-person-badge me-2"></i>Staff Profile</h2>
+            </div>
             <button class="btn btn-outline-secondary" routerLink="/staff">
-              <i class="bi bi-arrow-left me-2"></i>Back
+              <i class="bi bi-arrow-left me-2"></i>Back to List
             </button>
           </div>
 

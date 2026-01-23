@@ -1,0 +1,26 @@
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border: none;
+}
+
+.card-header {
+  border-bottom: none;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.text-danger {
+  color: #dc3545;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15rem;
+}

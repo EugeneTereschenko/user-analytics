@@ -1,0 +1,21 @@
+.container {
+  max-width: 1200px;
+}
+
+.table {
+  background-color: white;
+}
+
+.badge {
+  font-size: 0.85rem;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}

@@ -13,6 +13,9 @@ import { Staff, StaffRole, StaffStatus } from '../../../models/staff.model';
     <div class="container-fluid py-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
+          <button class="btn btn-outline-secondary btn-sm mb-2" routerLink="/dashboard">
+            <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+          </button>
           <h2 class="mb-1"><i class="bi bi-people me-2"></i>Staff Members</h2>
           <p class="text-muted mb-0">Manage staff members and assignments</p>
         </div>

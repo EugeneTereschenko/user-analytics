@@ -19,6 +19,8 @@ import { PrescriptionFormComponent } from './components/prescriptions/prescripti
 import { InvoiceListComponent } from './components/billing/invoice-list/invoice-list.component';
 import { InvoiceFormComponent } from './components/billing/invoice-form/invoice-form.component';
 import { BillingDashboardComponent } from './components/billing/billing-dashboard/billing-dashboard.component';
+import { NotificationListComponent } from './components/notifications/notification-list/notification-list.component';
+import { NotificationCreateComponent } from './components/notifications/notification-create/notification-create.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -84,6 +86,14 @@ export const routes: Routes = [
       { path: 'invoices', component: InvoiceListComponent },
       { path: 'invoices/create', component: InvoiceFormComponent },
       { path: 'invoices/edit/:id', component: InvoiceFormComponent }
+    ]
+  },
+  {
+    path: 'notifications',
+    canActivate: [authGuard],
+    children: [
+      { path: '', component: NotificationListComponent },
+      { path: 'create', component: NotificationCreateComponent }
     ]
   },
   { path: '**', redirectTo: '/login' }
