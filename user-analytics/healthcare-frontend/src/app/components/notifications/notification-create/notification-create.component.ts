@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NotificationService } from '../../../services/notification.service';
 import { Notification, NotificationType, NotificationChannel } from '../../../models/notification.model';
 
 @Component({
   selector: 'app-notification-create',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './notification-create.component.html',
   styleUrls: ['./notification-create.component.css']
 })
@@ -52,5 +52,9 @@ export class NotificationCreateComponent {
 
   cancel() {
     this.router.navigate(['/notifications']);
+  }
+
+  formatEnumValue(value: string): string {
+    return value.replace(/_/g, ' ');
   }
 }

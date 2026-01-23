@@ -1,18 +1,21 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AppointmentService } from '../../../services/appointment.service';
 import { Appointment, AppointmentStatus, AppointmentType } from '../../../models/appointment.model';
 
 @Component({
   selector: 'app-appointment-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   template: `
     <div class="container-fluid py-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
+          <button class="btn btn-outline-secondary btn-sm mb-2" routerLink="/dashboard">
+            <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+          </button>
           <h2 class="mb-1"><i class="bi bi-calendar-check me-2"></i>Appointments</h2>
           <p class="text-muted mb-0">Manage and view all appointments</p>
         </div>

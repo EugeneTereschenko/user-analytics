@@ -3,9 +3,14 @@
   <div class="row mb-4">
     <div class="col-12">
       <div class="d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
-          <i class="bi bi-activity fs-2 text-primary me-3"></i>
-          <h1 class="h2 mb-0">Patient Management System</h1>
+        <div>
+          <button class="btn btn-outline-secondary btn-sm mb-2" routerLink="/dashboard">
+            <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+          </button>
+          <div class="d-flex align-items-center">
+            <i class="bi bi-activity fs-2 text-primary me-3"></i>
+            <h1 class="h2 mb-0">Patient Management System</h1>
+          </div>
         </div>
         <button class="btn btn-primary" (click)="createPatient()">
           <i class="bi bi-plus-lg me-2"></i>

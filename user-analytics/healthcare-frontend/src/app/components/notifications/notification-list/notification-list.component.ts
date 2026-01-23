@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { NotificationService } from '../../../services/notification.service';
 import { Notification } from '../../../models/notification.model';
 
 @Component({
   selector: 'app-notification-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './notification-list.component.html',
   styleUrls: ['./notification-list.component.css']
 })
