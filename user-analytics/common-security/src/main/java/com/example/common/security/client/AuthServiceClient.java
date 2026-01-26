@@ -13,11 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(
-        name = "auth-service",
-        path = "/api/auth",
-        fallback = AuthServiceClientFallback.class
-)
+@FeignClient(name = "auth-service", url = "${auth.service.url:}", path = "/api/auth", fallback = AuthServiceClientFallback.class)
 public interface AuthServiceClient {
 
     @PostMapping("/validate")
