@@ -1,0 +1,37 @@
+<div class="container mt-4">
+  <h2>{{ isEdit ? 'Edit Medical Record' : 'Create Medical Record' }}</h2>
+  <form [formGroup]="recordForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="patientId" class="form-label">Patient ID</label>
+      <input type="number" class="form-control" id="patientId" formControlName="patientId" required>
+    </div>
+    <div class="mb-3">
+      <label for="doctorId" class="form-label">Doctor ID</label>
+      <input type="number" class="form-control" id="doctorId" formControlName="doctorId" required>
+    </div>
+    <div class="mb-3">
+      <label for="recordDate" class="form-label">Record Date</label>
+      <input type="date" class="form-control" id="recordDate" formControlName="recordDate" required>
+    </div>
+    <div class="mb-3">
+      <label for="recordType" class="form-label">Record Type</label>
+      <input type="text" class="form-control" id="recordType" formControlName="recordType" required>
+    </div>
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" class="form-control" id="title" formControlName="title">
+    </div>
+    <div class="mb-3">
+      <label for="diagnosis" class="form-label">Diagnosis</label>
+      <textarea class="form-control" id="diagnosis" formControlName="diagnosis" rows="3"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="notes" class="form-label">Notes</label>
+      <textarea class="form-control" id="notes" formControlName="notes" rows="4"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="!recordForm.valid">
+      {{ isEdit ? 'Update' : 'Create' }}
+    </button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
+  </form>
+</div>

@@ -21,6 +21,9 @@ import { InvoiceFormComponent } from './components/billing/invoice-form/invoice-
 import { BillingDashboardComponent } from './components/billing/billing-dashboard/billing-dashboard.component';
 import { NotificationListComponent } from './components/notifications/notification-list/notification-list.component';
 import { NotificationCreateComponent } from './components/notifications/notification-create/notification-create.component';
+import { MedicalRecordListComponent } from './components/medical-records/medical-record-list/medical-record-list.component';
+import { MedicalRecordDetailComponent } from './components/medical-records/medical-record-detail/medical-record-detail.component';
+import { MedicalRecordFormComponent } from './components/medical-records/medical-record-form/medical-record-form.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -94,6 +97,16 @@ export const routes: Routes = [
     children: [
       { path: '', component: NotificationListComponent },
       { path: 'create', component: NotificationCreateComponent }
+    ]
+  },
+  {
+    path: 'medical-records',
+    canActivate: [authGuard],
+    children: [
+      { path: '', component: MedicalRecordListComponent },
+      { path: 'new', component: MedicalRecordFormComponent },
+      { path: ':id', component: MedicalRecordDetailComponent },
+      { path: ':id/edit', component: MedicalRecordFormComponent }
     ]
   },
   { path: '**', redirectTo: '/login' }

@@ -96,7 +96,7 @@ import { User } from '../../models/user.model';
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" routerLink="/medical-records" routerLinkActive="active">
                   <i class="bi bi-file-medical me-2"></i>
                   Medical Records
                 </a>
