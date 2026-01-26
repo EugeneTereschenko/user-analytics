@@ -113,6 +113,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - AUTH_SERVICE_URL=http://auth-service:8087
     depends_on:
       postgres:
         condition: service_healthy

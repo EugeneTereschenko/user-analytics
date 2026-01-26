@@ -85,7 +85,7 @@ medical-record:
 # Auth Service Configuration
 auth:
   service:
-    url: http://auth-service:8087
+    url: http://localhost:8087
 
 # Feign Configuration
 feign:
